@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
         // הדרך הנכונה לגשת ל־NavController
         NavHostFragment navHostFragment = (NavHostFragment)
                 getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_profile)
                 .build();
 
-       // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 }
