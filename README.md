@@ -2,6 +2,8 @@
 
 **Developed by:** Shani Halali & Ori Katz  
 **Partnered with:** Lower Galilee Regional Council
+**Demo presentation :**  [App Mockup and progress](https://www.canva.com/design/DAGjeCVwHMA/FmLA8zXeIHU-XrDG9bvl2w/edit)  
+
 
 ---
 
