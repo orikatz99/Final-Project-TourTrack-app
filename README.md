@@ -1,4 +1,4 @@
-##  TourTrack – Demo Version
+## 📱 TourTrack – Demo Version
 
 **Developed by:** Shani Halali & Ori Katz  
 **Partnered with:** Lower Galilee Regional Council
@@ -27,7 +27,7 @@ The app enables real-time sharing of trail conditions, local recommendations, an
 ##  Screens & Navigation Implemented:
 All of them in till this point are Static
 - ✅ Welcome screen with SIGN IN / LOG IN
-- ✅ Preferences screen (interests, trail difficulty)
+- ✅ Preferences screen (interests areas)
 - ✅ Main screen with map and report placeholders
 - ✅ Bottom navigation bar with:
   - Home 
