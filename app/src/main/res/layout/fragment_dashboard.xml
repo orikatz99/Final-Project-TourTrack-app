@@ -23,6 +23,8 @@
             android:background="@color/white"
             android:drawablePadding="8dp"/>
 
+
+
         <!-- Connected Friends section -->
         <TextView
             android:layout_width="wrap_content"
@@ -32,16 +34,28 @@
             android:padding="8dp"
             android:textSize="30sp"/>
 
-        <!-- Notifications / Messages-->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/connected_friends_recycler"
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:orientation="horizontal"
-            android:overScrollMode="never"
-            tools:listitem="@layout/horizontal_friend" />
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="1dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:backgroundTint="@color/button_cream">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/connected_friends_recycler"
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:paddingStart="1dp"
+                android:paddingEnd="8dp"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                tools:listitem="@layout/horizontal_friend"
+                android:orientation="horizontal"/>
+        </androidx.cardview.widget.CardView>
+
 
         <!-- Tabs -->
         <LinearLayout
