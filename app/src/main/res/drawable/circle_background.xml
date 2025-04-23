@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <!-- צבע הרקע של העיגול -->
+    <solid android:color="#D6EAF8" />
+
+    <!-- גבול עדין (אופציונלי) -->
+    <stroke
+        android:width="2dp"
+        android:color="#AED6F1" />
+</shape>

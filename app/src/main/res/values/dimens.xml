@@ -3,4 +3,19 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+
+    <dimen name="poster_width">80dp</dimen>
+    <dimen name="poster_height">240dp</dimen>
+    <dimen name="poster_vertical_margin">5dp</dimen>
+    <dimen name="poster_corner_radius">20dp</dimen>
+    <dimen name="poster_elevation">10dp</dimen>
+    <dimen name="data_start_margin">85dp</dimen>
+    <dimen name="data_end_margin">5dp</dimen>
+    <dimen name="data_elevation">8dp</dimen>
+    <dimen name="heart_dimens">30dp</dimen>
+    <dimen name="heart_margin">6dp</dimen>
+    <dimen name="title_text_size">18sp</dimen>
+    <dimen name="data_text_size">11sp</dimen>
+    <dimen name="mrg_start_name">114dp</dimen>
 </resources>

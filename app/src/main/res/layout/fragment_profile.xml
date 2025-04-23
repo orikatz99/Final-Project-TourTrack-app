@@ -3,65 +3,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green_background"
+    android:background="@drawable/probackdark"
     android:padding="16dp">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Toolbar / Top bar -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingBottom="16dp">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/user"
-                android:contentDescription="Profile Icon" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Profile Settings"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:paddingStart="8dp" />
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_launcher_foreground"
-                android:contentDescription="Logout Icon" />
-        </LinearLayout>
 
         <!-- Profile picture and name -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="10dp"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="12dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:background="@color/azur"
             android:padding="16dp">
 
             <ImageView
-                android:layout_width="72dp"
-                android:layout_height="72dp"
+                android:id="@+id/profile_image"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:src="@drawable/user"
-                android:scaleType="centerCrop"
-                android:layout_marginEnd="16dp"
-                android:contentDescription="Profile Image" />
+                android:scaleType="centerInside"
+                android:background="@drawable/circle_background"
+                android:clipToOutline="true" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginStart="20dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -69,17 +51,18 @@
                     android:layout_height="wrap_content"
                     android:text="Alexa Woods"
                     android:textStyle="bold"
-                    android:textSize="18sp"
+                    android:textSize="25sp"
                     android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Trail Enthusiast"
-                    android:textSize="14sp"
+                    android:textSize="18sp"
                     android:textColor="@color/black" />
             </LinearLayout>
         </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <!-- Card 1: Account Details -->
         <androidx.cardview.widget.CardView
@@ -99,30 +82,35 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Account Details"
-                    android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                <ImageButton
+                    android:id="@+id/IB_edit"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_alignParentEnd="true"
-                    android:src="@drawable/user"
-                    android:contentDescription="Edit" />
+                    android:src="@drawable/pencil"
+                    android:scaleType="centerInside"
+                    android:background="@android:color/transparent"
+                    />
 
                 <TextView
                     android:layout_below="@id/profile_account_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
+                    android:textSize="17sp"
                     android:text="Email: alexa.woods@example.com"
                     android:textColor="@color/black" />
 
                 <TextView
                     android:layout_below="@id/profile_account_title"
-                    android:layout_marginTop="36dp"
+                    android:layout_marginTop="40dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="17sp"
                     android:text="Phone: +1-234-567-8901"
                     android:textColor="@color/black" />
             </RelativeLayout>
@@ -148,18 +136,20 @@
                     android:text="Privacy Settings"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="20sp" />
 
                 <CheckBox
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Profile Visibility"
+                    android:textSize="17sp"
                     android:textColor="@color/black" />
 
                 <CheckBox
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Location Sharing"
+                    android:textSize="17sp"
                     android:textColor="@color/black" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -184,18 +174,20 @@
                     android:text="Notification Preferences"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="20sp" />
 
                 <CheckBox
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Email Notifications"
+                    android:textSize="17sp"
                     android:textColor="@color/black" />
 
                 <CheckBox
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Push Notifications"
+                    android:textSize="17sp"
                     android:textColor="@color/black" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>

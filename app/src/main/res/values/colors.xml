@@ -12,6 +12,7 @@
 <color name="text_black">#000000</color>
 <color name="accent_dark">#3E4A3F</color>
 <color name="orange_selected">#FFCC80</color> <!-- כתום -->
-<color name="gray_unselected">#8E8E93</color> <!-- אפור כהה -->
+<color name="proile_card">#FBE9E7</color>
+    <color name="azur">#E0F2F1</color>
 
 </resources>
