@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import Adapter.connectedAdapter;
+import Adapter.verticalPeopleAdapter;
 
 public class DashboardFragment extends Fragment {
 
@@ -46,6 +47,19 @@ public class DashboardFragment extends Fragment {
         binding.connectedFriendsRecycler.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.connectedFriendsRecycler.setAdapter(new connectedAdapter(demoList));
+
+        List<verticalPeopleAdapter.Person> people = Arrays.asList(
+                new verticalPeopleAdapter.Person("Shani", R.drawable.user),
+                new verticalPeopleAdapter.Person("Ori", R.drawable.user),
+                new verticalPeopleAdapter.Person("Lior", R.drawable.user),
+                new verticalPeopleAdapter.Person("Ran", R.drawable.user),
+                new verticalPeopleAdapter.Person("Eden", R.drawable.user),
+                new verticalPeopleAdapter.Person("Romy", R.drawable.user)
+        );
+
+        verticalPeopleAdapter adapter = new verticalPeopleAdapter(people);
+        binding.messagesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.messagesRecycler.setAdapter(adapter);
 
         return root;
     }

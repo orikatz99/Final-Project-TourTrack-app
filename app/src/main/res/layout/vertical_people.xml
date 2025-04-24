@@ -8,7 +8,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingStart="10dp">
 
         <!-- Background ImageView -->
 
@@ -16,8 +17,8 @@
         <!-- Foreground ImageView (Player Image) -->
         <ImageView
             android:id="@+id/profile_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/user"
             android:scaleType="centerInside"
             android:background="@drawable/circle_background"
@@ -41,7 +42,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="60dp">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/player_LBL_name"
@@ -62,7 +63,7 @@
                 android:id="@+id/IB_whatsapp"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_marginTop="5dp"
+
                 android:layout_marginStart="250dp"
                 android:src="@drawable/whatsapp"
                 android:scaleType="centerInside"
@@ -74,7 +75,7 @@
                 android:id="@+id/list_BTN_whatsapp"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
-                android:layout_marginTop="7dp"
+
                 android:layout_marginStart="170dp"
                 android:scaleType="centerCrop"
                 app:iconSize="40dp"
