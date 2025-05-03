@@ -13,10 +13,12 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
+            android:name=".Login"
+            android:exported="false" />
+        <activity
             android:name=".ui.preferences.PreferencesActivity"
             android:exported="false"
-            android:theme="@style/Theme.MyApplication" />
-        <!-- StartActivity נפתח ראשון -->
+            android:theme="@style/Theme.MyApplication" /> <!-- StartActivity נפתח ראשון -->
         <activity
             android:name=".ui.start.StartActivity"
             android:exported="true"

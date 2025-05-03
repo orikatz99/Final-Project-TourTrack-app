@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@drawable/big_back"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="250dp"
+        android:background="@color/white"
+        android:layout_marginHorizontal="32dp"
+
+        android:layout_height="wrap_content">
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginVertical="8dp"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:hint="Enter_email_address"
+                android:layout_height="wrap_content"
+
+                android:backgroundTint="@android:color/transparent"
+                android:inputType="textEmailAddress"
+                android:id="@+id/email_login"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginVertical="8dp"
+            app:passwordToggleEnabled="true"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:hint="enter_password"
+                android:backgroundTint="@android:color/transparent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:id="@+id/password_login"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+        <Button
+            android:id="@+id/btnSendReport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:backgroundTint="#FFF5CC"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+    </LinearLayout>
+        <ImageView
+            android:id="@+id/googleSignInBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/signinbutton"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginHorizontal="42dp"
+            android:textAllCaps="false"
+            android:fontFamily="@font/play_fair_display_extra_bold"
+            />
+        <Button
+            android:id="@+id/toRegisterBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:textColor="@color/accent_dark"
+            android:text="Don't have an account? Signup now"
+            android:padding="8dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginHorizontal="42dp"
+            android:textAllCaps="false"
+            android:fontFamily="@font/play_fair_display_extra_bold"
+            />
+
+
+
+</LinearLayout>

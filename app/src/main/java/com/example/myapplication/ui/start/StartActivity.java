@@ -28,6 +28,10 @@ public class StartActivity extends AppCompatActivity {
 
         // SIGN IN --> PREFERENCES
         btnSignIn.setOnClickListener(v -> {
+          /*  Intent intent = new Intent(StartActivity.this, PreferencesActivity.class);
+            startActivity(intent);*/
+
+
             Intent intent = new Intent(StartActivity.this, PreferencesActivity.class);
             startActivity(intent);
         });
