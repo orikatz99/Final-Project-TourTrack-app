@@ -6,8 +6,10 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.Login;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.SignUp;
 import com.example.myapplication.ui.preferences.PreferencesActivity;
 
 public class StartActivity extends AppCompatActivity {
@@ -19,20 +21,20 @@ public class StartActivity extends AppCompatActivity {
         Button btnLogin = findViewById(R.id.btnLogin);
         Button btnSignIn = findViewById(R.id.btnSignIn);
 
-        // LOGIN --> MAIN ACTIVITY (יגיע ל־HomeFragment כברירת מחדל)
+        // LOGIN --> LOGIN
         btnLogin.setOnClickListener(v -> {
-            Intent intent = new Intent(StartActivity.this, MainActivity.class);
+            Intent intent = new Intent(StartActivity.this, Login.class);
             startActivity(intent);
             finish(); // לא לחזור אחורה
         });
 
-        // SIGN IN --> PREFERENCES
+        // SIGN UP --> sign up
         btnSignIn.setOnClickListener(v -> {
           /*  Intent intent = new Intent(StartActivity.this, PreferencesActivity.class);
             startActivity(intent);*/
 
 
-            Intent intent = new Intent(StartActivity.this, PreferencesActivity.class);
+            Intent intent = new Intent(StartActivity.this, SignUp.class);
             startActivity(intent);
         });
     }
