@@ -2,7 +2,6 @@ const User = require('../models/User'); // Import the User model
 
 // Update user's preferences
 exports.updatePreferences = async(req, res) => {
-    console.log('Updating user preferences...'); // Log the request for debugging
 
     const { id } = req.params; // Get user ID from the URL
     const { preferences } = req.body; // Get preferences array from the request body
