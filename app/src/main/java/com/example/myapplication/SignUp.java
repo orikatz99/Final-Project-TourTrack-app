@@ -12,6 +12,8 @@ import com.example.myapplication.network.SignUpRequest;
 import com.example.myapplication.network.SignUpResponse;
 import com.example.myapplication.ui.preferences.PreferencesActivity;
 import com.google.android.material.textfield.TextInputEditText;
+import com.example.myapplication.ui.preferences.PreferencesActivity;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -61,6 +63,8 @@ public class SignUp extends AppCompatActivity {
 
     void signUpButton(){
         btnSignup.setOnClickListener(v -> {
+            Intent intent = new Intent(SignUp.this, PreferencesActivity.class);
+            startActivity(intent);
              firstName = editFirstN.getText().toString();
              lastName = editLastN.getText().toString();
              email = editEmail.getText().toString();

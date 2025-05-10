@@ -46,6 +46,7 @@ exports.signUpUser = async (req, res) => {
 };
 
 // Update user's preferences
+exports.updatePreferences = async(req, res) => {
 exports.updatePreferences = async (req, res) => {
     console.log('Updating user preferences...');
 
