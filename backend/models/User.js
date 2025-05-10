@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
 
-// Temporary User schema – for testing preferences
 const userSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-    password: String,
-    preferences: [String] // ← the key field for Step 3
+    firstName: { type: String, required: true },
+    lastName:  { type: String, required: true },
+    email:     { type: String, required: true, unique: true },
+    password:  { type: String, required: true },
+    phone:     { type: String, required: true, unique: true },
+    birthDate: { type: String }, // שמור כתאריך בפורמט מחרוזת כמו "01/01/2000"
+    preferences: { type: [String], default: [] }
 });
 
 module.exports = mongoose.model('User', userSchema);
