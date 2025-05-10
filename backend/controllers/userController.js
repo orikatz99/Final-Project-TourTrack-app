@@ -2,7 +2,7 @@ const User = require('../models/User'); // Import the User model
 const bcrypt = require('bcryptjs');
 
 // Register a new user
-exports.signUpUser = async (req, res) => {
+exports.signUpUser = async(req, res) => {
     const { firstName, lastName, email, password, phone, birthDate } = req.body;
 
     if (!firstName || !lastName || !email || !password || !phone) {
@@ -47,47 +47,45 @@ exports.signUpUser = async (req, res) => {
 
 // Update user's preferences
 exports.updatePreferences = async(req, res) => {
-exports.updatePreferences = async (req, res) => {
-    console.log('Updating user preferences...');
+        exports.updatePreferences = async(req, res) => {
+            console.log('Updating user preferences...');
 
-    const { id } = req.params;
-    const { preferences } = req.body;
+            const { id } = req.params;
+            const { preferences } = req.body;
 
-    try {
-        const user = await User.findByIdAndUpdate(
-            id,
-            { preferences },
-            { new: true }
-        );
+            try {
+                const user = await User.findByIdAndUpdate(
+                    id, { preferences }, { new: true }
+                );
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+                if (!user) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
 
-        res.json({ message: 'Preferences updated successfully', user });
-    } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
-    }
-};
+                res.json({ message: 'Preferences updated successfully', user });
+            } catch (error) {
+                res.status(500).json({ message: 'Server error', error: error.message });
+            }
+        };
 
-// Login user
-exports.loginUser = async (req, res) => {
-    const { email, password } = req.body;
+        // Login user
+        exports.loginUser = async(req, res) => {
+            const { email, password } = req.body;
 
-    try {
-        const user = await User.findOne({ email });
+            try {
+                const user = await User.findOne({ email });
 
-        if (!user) {
-            return res.status(401).json({ message: 'Email not found' });
-        }
+                if (!user) {
+                    return res.status(401).json({ message: 'Email not found' });
+                }
 
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(401).json({ message: 'Incorrect password' });
-        }
+                const isMatch = await bcrypt.compare(password, user.password);
+                if (!isMatch) {
+                    return res.status(401).json({ message: 'Incorrect password' });
+                }
 
-        res.status(200).json({ message: 'Login successful', user });
-    } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
-    }
-};
+                res.status(200).json({ message: 'Login successful', user });
+            } catch (error) {
+                res.status(500).json({ message: 'Server error', error: error.message });
+            }
+        };
