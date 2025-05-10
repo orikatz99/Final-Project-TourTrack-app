@@ -10,8 +10,9 @@ import retrofit2.http.Path;
 
 public interface ApiService {
 
-    @PUT("api/users/preferences/{id}")
-    Call<Void> updatePreferences(@Path("id") String userId, @Body PreferencesRequest preferences);
+    @PUT("api/users/preferences")
+    Call<Void> updatePreferences(@Body PreferencesRequest preferences);
+
 
     @POST("api/users/signup")
     Call<SignUpResponse> signUp(@Body SignUpRequest signUpRequest);

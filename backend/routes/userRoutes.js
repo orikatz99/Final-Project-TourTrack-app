@@ -1,14 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { updatePreferences, signUpUser, loginUser } = require('../controllers/userController'); // הוספנו loginUser
+const { updatePreferences, signUpUser, loginUser } = require('../controllers/userController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
-// route to update user preferences
-router.put('/preferences/:id', updatePreferences);
+router.put('/preferences', authMiddleware, updatePreferences);
 
-// route to register a new user (sign up)
 router.post('/signup', signUpUser);
 
-// ✅ route to login user
 router.post('/login', loginUser);
 
 module.exports = router;
