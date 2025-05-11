@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.preferences;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
@@ -7,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.models.PreferencesRequest;
 import com.example.myapplication.network.ApiService;
@@ -22,7 +25,6 @@ import retrofit2.Response;
 public class PreferencesActivity extends AppCompatActivity {
 
     private List<String> selected = new ArrayList<>();
-    private final String userId = "68177e66ee59e6d4a7fa030b"; // ← ה-ID שלך ממונגו
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,25 +52,36 @@ public class PreferencesActivity extends AppCompatActivity {
             if (selected.isEmpty()) {
                 Toast.makeText(this, "Please select at least one category", Toast.LENGTH_SHORT).show();
             } else {
-                PreferencesRequest request = new PreferencesRequest(selected);
-                ApiService apiService = RetrofitClient.getApiService();
+                // שליפת הטוקן מה־SharedPreferences
+                SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                String token = prefs.getString("token", null);
 
-                apiService.updatePreferences(userId, request).enqueue(new Callback<Void>() {
+                if (token == null) {
+                    Toast.makeText(this, "Token not found. Please log in again.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                PreferencesRequest request = new PreferencesRequest(selected);
+                ApiService apiService = RetrofitClient.getApiServiceWithAuth(token);
+
+                apiService.updatePreferences(request).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
-                            runOnUiThread(() ->
-                                    Toast.makeText(PreferencesActivity.this, "Preferences saved!", Toast.LENGTH_SHORT).show());
+                            Toast.makeText(PreferencesActivity.this, "Preferences saved!", Toast.LENGTH_SHORT).show();
+
+                            // מעבר ל־MainActivity
+                            Intent intent = new Intent(PreferencesActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish(); // סוגר את המסך הנוכחי כדי למנוע חזרה אליו
                         } else {
-                            runOnUiThread(() ->
-                                    Toast.makeText(PreferencesActivity.this, "Error: " + response.code(), Toast.LENGTH_SHORT).show());
+                            Toast.makeText(PreferencesActivity.this, "Error: " + response.code(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        runOnUiThread(() ->
-                                Toast.makeText(PreferencesActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_LONG).show());
+                        Toast.makeText(PreferencesActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
             }

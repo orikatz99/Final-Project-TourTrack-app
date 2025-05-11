@@ -1,8 +1,9 @@
-const User = require('../models/User'); // Import the User model
+const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 // Register a new user
-exports.signUpUser = async (req, res) => {
+exports.signUpUser = async(req, res) => {
     const { firstName, lastName, email, password, phone, birthDate } = req.body;
 
     if (!firstName || !lastName || !email || !password || !phone) {
@@ -10,22 +11,18 @@ exports.signUpUser = async (req, res) => {
     }
 
     try {
-        // Check if email already exists
         const existingEmail = await User.findOne({ email });
         if (existingEmail) {
             return res.status(409).json({ message: 'Email already exists' });
         }
 
-        // Check if phone already exists
         const existingPhone = await User.findOne({ phone });
         if (existingPhone) {
             return res.status(409).json({ message: 'Phone already exists' });
         }
 
-        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create new user
         const newUser = new User({
             firstName,
             lastName,
@@ -38,31 +35,36 @@ exports.signUpUser = async (req, res) => {
 
         await newUser.save();
 
-        return res.status(201).json({ message: 'User registered successfully' });
+        // Create token for the new user
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+            expiresIn: '7d'
+        });
+
+        return res.status(201).json({
+            message: 'User registered successfully',
+            token,
+            user: {
+                id: newUser._id,
+                email: newUser.email,
+                firstName: newUser.firstName,
+                preferences: newUser.preferences
+            }
+        });
     } catch (error) {
         console.error('Error registering user:', error);
         return res.status(500).json({ message: 'Server error' });
     }
 };
 
-// Update user's preferences
 exports.updatePreferences = async(req, res) => {
-exports.updatePreferences = async (req, res) => {
-    console.log('Updating user preferences...');
-
-    const { id } = req.params;
-    const { preferences } = req.body;
-
     try {
-        const user = await User.findByIdAndUpdate(
-            id,
-            { preferences },
-            { new: true }
-        );
-
+        const user = await User.findById(req.user._id); // req.user is set by authMiddleware
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
+
+        user.preferences = req.body.preferences;
+        await user.save();
 
         res.json({ message: 'Preferences updated successfully', user });
     } catch (error) {
@@ -70,13 +72,13 @@ exports.updatePreferences = async (req, res) => {
     }
 };
 
+
 // Login user
-exports.loginUser = async (req, res) => {
+exports.loginUser = async(req, res) => {
     const { email, password } = req.body;
 
     try {
         const user = await User.findOne({ email });
-
         if (!user) {
             return res.status(401).json({ message: 'Email not found' });
         }
@@ -86,7 +88,20 @@ exports.loginUser = async (req, res) => {
             return res.status(401).json({ message: 'Incorrect password' });
         }
 
-        res.status(200).json({ message: 'Login successful', user });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+            expiresIn: '7d'
+        });
+
+        res.status(200).json({
+            message: 'Login successful',
+            token,
+            user: {
+                id: user._id,
+                email: user.email,
+                firstName: user.firstName,
+                preferences: user.preferences
+            }
+        });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }

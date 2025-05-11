@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E7F1E8"
-    tools:context=".ui.start.StartActivity"
-    android:padding="32dp">
+    android:padding="24dp"
+    tools:context=".ui.start.StartActivity">
 
     <!-- כותרת -->
     <TextView
@@ -15,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TourTrack"
-        android:textSize="36sp"
+        android:textSize="32sp"
         android:textStyle="bold"
         android:textColor="#000000"
         android:fontFamily="@font/play_fair_display_regular"
@@ -26,23 +27,27 @@
     <!-- תמונה -->
     <ImageView
         android:id="@+id/ivImage"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:src="@drawable/hikers"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.6"
+        app:layout_constraintHeight_percent="0.3"
         android:layout_marginTop="24dp" />
 
     <!-- תיאור -->
     <TextView
         android:id="@+id/tvSubtitle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Not just a map -\na community for travelers"
-        android:textSize="28sp"
+        android:textSize="20sp"
         android:textColor="#000000"
         android:textAlignment="center"
+        android:gravity="center"
         android:fontFamily="@font/play_fair_display_regular"
         app:layout_constraintTop_toBottomOf="@id/ivImage"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,39 +57,40 @@
     <!-- כפתורים -->
     <LinearLayout
         android:id="@+id/buttonLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/tvSubtitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="36dp">
+        android:layout_marginTop="32dp"
+        app:layout_constraintWidth_percent="0.8">
 
         <Button
             android:id="@+id/btnLogin"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="48dp"
-            android:text="Log In"
-            android:textSize="18sp"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
+            android:layout_weight="1"
+            android:text="LOG IN"
+            android:textSize="12sp"
             android:backgroundTint="#F5F5DC"
             android:textColor="#000000"
-            android:layout_marginEnd="16dp"
-            android:fontFamily="@font/play_fair_display_extra_bold"/>
+            android:fontFamily="@font/play_fair_display_extra_bold"
+            android:layout_marginEnd="8dp" />
 
         <Button
             android:id="@+id/btnSignIn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="48dp"
-            android:text="Sign up"
-            android:textSize="18sp"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
+            android:layout_weight="1"
+            android:text="SIGN UP"
+            android:textSize="12sp"
             android:backgroundTint="#F5F5DC"
             android:textColor="#000000"
-            android:fontFamily="@font/play_fair_display_extra_bold"/>
+            android:fontFamily="@font/play_fair_display_extra_bold"
+            android:layout_marginStart="8dp" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
