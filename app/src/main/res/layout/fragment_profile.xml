@@ -46,6 +46,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Alexa Woods"
@@ -54,6 +55,7 @@
                         android:textColor="@color/black" />
 
                     <TextView
+                        android:id="@+id/user_role"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Trail Enthusiast"
@@ -88,21 +90,21 @@
 
 
                 <TextView
+                    android:id="@+id/tv_email"
                     android:layout_below="@id/profile_account_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="5dp"
                     android:textSize="15sp"
                     android:text="Email: alexa.woods@example.com"
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:layout_below="@id/profile_account_title"
-                    android:layout_marginTop="40dp"
+                    android:id="@+id/tv_phone"
+                    android:layout_below="@id/tv_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="4dp"
                     android:textSize="15sp"
                     android:text="Phone: +1-234-567-8901"
                     android:textColor="@color/black" />

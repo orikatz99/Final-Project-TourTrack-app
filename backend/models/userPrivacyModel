@@ -1,0 +1,19 @@
+const mongoose = require('mongoose');
+
+const userPrivacyAndNotificationsSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    privacySettings: {
+        LocationSharing: { type: Boolean, default: true },
+        ShowOnlineStatus: { type: Boolean, default: true },
+        AllowPhoneCalls: { type: Boolean, default: true },
+        EnableWhatsapp: { type: Boolean, default: true },
+        ShowEmailToOthers: { type: Boolean, default: true },
+    },
+    notificationsSettings: {
+        emailNotifications: { type: Boolean, default: true },
+        pushNotifications: { type: Boolean, default: true }
+    }
+});
+
+const UserPrivacy = mongoose.model('UserPrivacy', userPrivacyAndNotificationsSchema);
+module.exports = UserPrivacy;

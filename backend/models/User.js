@@ -10,4 +10,6 @@ const userSchema = new mongoose.Schema({
     preferences: { type: [String], default: [] }
 });
 
+
+
 module.exports = mongoose.model('User', userSchema);
