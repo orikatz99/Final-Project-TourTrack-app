@@ -16,6 +16,8 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONObject;
+
 import java.util.Calendar;
 
 import retrofit2.Call;
@@ -25,45 +27,89 @@ import retrofit2.Response;
 public class SignUp extends AppCompatActivity {
 
     private Calendar birthDate;
+    private TextInputEditText editFirstN, editLastN, editEmail, editPassword, editPhone, editDate;
+    private Button btnLogin, btnSignup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        Button btnLogin = findViewById(R.id.btn_to_login);
-        Button btnSignup = findViewById(R.id.btn_Sign_up);
-        TextInputEditText editDate = findViewById(R.id.edit_date);
+        // Initialize views
+        findViews();
 
-        // מעבר למסך התחברות
+        // Navigate to login screen
         btnLogin.setOnClickListener(v -> {
             Intent intent = new Intent(SignUp.this, Login.class);
             startActivity(intent);
         });
 
-        // הרשמה
-        btnSignup.setOnClickListener(v -> {
-            String firstName = ((TextInputEditText) findViewById(R.id.firstN_signup)).getText().toString();
-            String lastName = ((TextInputEditText) findViewById(R.id.lastN_signup)).getText().toString();
-            String email = ((TextInputEditText) findViewById(R.id.email_signup)).getText().toString();
-            String password = ((TextInputEditText) findViewById(R.id.password_signup)).getText().toString();
-            String phone = ((TextInputEditText) findViewById(R.id.phone_signup)).getText().toString();
-            String birthDateStr = editDate.getText().toString();
+        // Set date picker dialog on birth date field
+        editDate.setOnClickListener(v -> openTripDatePicker());
 
+        // Sign-up logic
+        btnSignup.setOnClickListener(v -> {
+            String firstName = editFirstN.getText().toString().trim();
+            String lastName = editLastN.getText().toString().trim();
+            String email = editEmail.getText().toString().trim();
+            String password = editPassword.getText().toString().trim();
+            String phone = editPhone.getText().toString().trim();
+
+            // Validate input fields
+            if (firstName.isEmpty()) {
+                editFirstN.setError("Please enter your first name");
+                return;
+            }
+            if (lastName.isEmpty()) {
+                editLastN.setError("Please enter your last name");
+                return;
+            }
+            if (email.isEmpty()) {
+                editEmail.setError("Please enter your email");
+                return;
+            }
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                editEmail.setError("Invalid email address");
+                return;
+            }
+            if (phone.isEmpty()) {
+                editPhone.setError("Please enter your phone number");
+                return;
+            }
+            if (!phone.matches("\\d{10}")) {
+                editPhone.setError("Phone number must be 10 digits");
+                return;
+            }
+            if (password.length() < 6) {
+                editPassword.setError("Password must be at least 6 characters");
+                return;
+            }
+            if (birthDate == null) {
+                editDate.setError("Please select your birth date");
+                return;
+            }
+
+            // Format birth date as string
+            String birthDateStr = birthDate.get(Calendar.DAY_OF_MONTH) + "/" +
+                    (birthDate.get(Calendar.MONTH) + 1) + "/" +
+                    birthDate.get(Calendar.YEAR);
+
+            // Create request object
             SignUpRequest request = new SignUpRequest(firstName, lastName, email, password, phone, birthDateStr);
             ApiService apiService = RetrofitClient.getApiService();
 
+            // Call API
             apiService.signUp(request).enqueue(new Callback<SignUpResponse>() {
                 @Override
                 public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         String token = response.body().getToken();
 
-                        // שמירת הטוקן בזיכרון
+                        // Save token in SharedPreferences
                         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                         prefs.edit().putString("token", token).apply();
 
-                        // מעבר למסך העדפות
+                        // Go to preferences screen
                         Intent intent = new Intent(SignUp.this, PreferencesActivity.class);
                         startActivity(intent);
                         finish();
@@ -78,11 +124,21 @@ public class SignUp extends AppCompatActivity {
                 }
             });
         });
-
-        // בחירת תאריך בלחיצה
-        editDate.setOnClickListener(v -> openTripDatePicker());
     }
 
+    // Initialize UI components
+    private void findViews() {
+        editFirstN = findViewById(R.id.firstN_signup);
+        editLastN = findViewById(R.id.lastN_signup);
+        editEmail = findViewById(R.id.email_signup);
+        editPassword = findViewById(R.id.password_signup);
+        editPhone = findViewById(R.id.phone_signup);
+        editDate = findViewById(R.id.edit_date);
+        btnLogin = findViewById(R.id.btn_to_login);
+        btnSignup = findViewById(R.id.btn_Sign_up);
+    }
+
+    // Show a date picker dialog for selecting birth date
     private void openTripDatePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -96,13 +152,13 @@ public class SignUp extends AppCompatActivity {
                     birthDate.set(year1, monthOfYear, dayOfMonth);
 
                     String updatedBirthDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1;
-                    TextInputEditText editDate = findViewById(R.id.edit_date);
                     editDate.setText(updatedBirthDate);
                 },
                 year, month, day
         );
 
-        datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis()); // לא לאפשר תאריך עתידי
+        // Disallow future dates
+        datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
         datePickerDialog.show();
     }
 }

@@ -13,13 +13,18 @@ exports.signUpUser = async (req, res) => {
 
     try {
         const existingEmail = await User.findOne({ email });
-        if (existingEmail) {
-            return res.status(409).json({ message: 'Email already exists' });
+        const existingPhone = await User.findOne({ phone });
+
+        if (existingEmail && existingPhone) {
+            return res.status(200).json({ success: false, message: 'This email and phone number are already in use.' });
         }
 
-        const existingPhone = await User.findOne({ phone });
+        if (existingEmail) {
+            return res.status(200).json({ success: false, message: 'This email is already registered.' });
+        }
+
         if (existingPhone) {
-            return res.status(409).json({ message: 'Phone already exists' });
+            return res.status(200).json({ success: false, message: 'This phone number is already registered.' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
