@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -67,7 +68,17 @@ public class Login extends AppCompatActivity {
             apiService.login(loginRequest).enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                    if (response.isSuccessful()) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        // שמירת token ו-userId ב-SharedPreferences
+                        String token = response.body().getToken();
+                        String userId = response.body().getUser().getId();
+
+                        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                        prefs.edit()
+                                .putString("token", token)
+                                .putString("userId", userId)
+                                .apply();
+
                         Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(Login.this, MainActivity.class));
                         finish(); // לא לחזור אחורה
