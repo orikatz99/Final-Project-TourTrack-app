@@ -108,6 +108,9 @@ public class SignUp extends AppCompatActivity {
                         // Save token in SharedPreferences
                         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                         prefs.edit().putString("token", token).apply();
+                        String userId = response.body().getUser().getId();
+                        prefs.edit().putString("userId", userId).apply();
+
 
                         // Go to preferences screen
                         Intent intent = new Intent(SignUp.this, PreferencesActivity.class);

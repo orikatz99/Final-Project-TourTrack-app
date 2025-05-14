@@ -1,5 +1,6 @@
 package com.example.myapplication.network;
 
+import com.example.myapplication.models.LocationUpdateRequest;
 import com.example.myapplication.models.PreferencesRequest;
 
 import java.util.Map;
@@ -36,5 +37,8 @@ public interface ApiService {
     // update privacy settings
     @PUT("api/users/privacy")
     Call<Void> updatePrivacySettings(@Header("Authorization") String token, @Body Map<String, Object> body);
+
+    @PUT("api/users/location/{id}")
+    Call<Void> updateLocation(@Path("id") String userId, @Body LocationUpdateRequest location);
 
 }
