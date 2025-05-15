@@ -1,4 +1,4 @@
-package com.example.myapplication.network;
+package com.example.myapplication.models;
 public class SignUpResponse {
     private String message;
     private String token;

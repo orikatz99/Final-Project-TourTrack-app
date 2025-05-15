@@ -1,7 +1,13 @@
 package com.example.myapplication.network;
 
 import com.example.myapplication.models.LocationUpdateRequest;
+import com.example.myapplication.models.LoginRequest;
+import com.example.myapplication.models.LoginResponse;
 import com.example.myapplication.models.PreferencesRequest;
+import com.example.myapplication.models.PrivacyResponseWrapper;
+import com.example.myapplication.models.SignUpRequest;
+import com.example.myapplication.models.SignUpResponse;
+import com.example.myapplication.models.UserInfoResponse;
 
 import java.util.Map;
 

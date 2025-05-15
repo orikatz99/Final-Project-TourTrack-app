@@ -13,9 +13,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
 import com.example.myapplication.network.ApiService;
-import com.example.myapplication.network.PrivacyResponseWrapper;
+import com.example.myapplication.models.PrivacyResponseWrapper;
 import com.example.myapplication.network.RetrofitClient;
-import com.example.myapplication.network.UserInfoResponse;
+import com.example.myapplication.models.UserInfoResponse;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -15,12 +15,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentHomeBinding;
 import com.example.myapplication.network.ApiService;
 import com.example.myapplication.network.RetrofitClient;
+import com.example.myapplication.network.WeatherApiClient;
+import com.example.myapplication.network.WeatherService;
 import com.example.myapplication.models.LocationUpdateRequest;
+import com.example.myapplication.models.WeatherResponse;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,6 +45,8 @@ public class HomeFragment extends Fragment {
     private GoogleMap map;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
+    ImageView iv_weather_icon;
+    TextView tv_weather_discription_and_temp, tv_humidity, tv_wind_speed, tv_weather_precipitation;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -46,6 +54,13 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         requireActivity().setTitle("TourTrack");
+
+        // אתחול של TextView-ים מתוך binding
+        tv_weather_discription_and_temp = binding.tvWeatherDiscriptionAndTemp;
+        tv_humidity = binding.tvWeatherHumidity;
+        tv_wind_speed = binding.tvWeatherWind;
+        tv_weather_precipitation = binding.tvWeatherPrecipitation;
+
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
@@ -73,6 +88,7 @@ public class HomeFragment extends Fragment {
                         map.addMarker(new MarkerOptions().position(latLng).title("You are here"));
 
                         sendLocationToServer(location);
+                        fetchWeather(location.getLatitude(), location.getLongitude());
                     } else {
                         Log.e("Map", "❌ Location is null");
                     }
@@ -81,6 +97,49 @@ public class HomeFragment extends Fragment {
         }
 
         return binding.getRoot();
+    }
+
+    private void fetchWeather(double lat, double lon) {
+        String apiKey = "2ac4b8424a6eec7145c42467fda68ddf";
+        String units = "metric";
+        String lang = "he";
+        Log.d("Weather", "📍 Fetching weather for lat: " + lat + ", lon: " + lon);
+
+        WeatherService weatherService = WeatherApiClient.getClient();
+
+        Call<WeatherResponse> call = weatherService.getWeatherByLocation(lat, lon, apiKey, units, lang);
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d("Weather", "🔍 Requesting URL: https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey + "&units=metric&lang=he");
+
+                    WeatherResponse weather = response.body();
+                    String description = weather.getWeather().get(0).getDescription();
+                    double temp = weather.getMain().getTemp();
+                    int humidity = weather.getMain().getHumidity();
+                    double wind = weather.getWind().getSpeed();
+                    double rain = (weather.getRain() != null) ? weather.getRain().getOneHour() : 0.0;
+
+                    Log.d("Weather", "☀️ " + description + ", 🌡 " + temp + "°C, 💧 " + humidity + "%, 💨 " + wind + " קמ\"ש, ☔ " + rain + " מ\"מ");
+
+                    requireActivity().runOnUiThread(() -> {
+                        tv_weather_discription_and_temp.setText( description +" , " + temp + "°C");
+                        tv_humidity.setText("Humidity: " + humidity + "%");
+                        tv_wind_speed.setText("Wind: " + wind + " Km/h");
+                        tv_weather_precipitation.setText("Precipitation: " + rain + "%");
+                    });
+
+                } else {
+                    Log.e("Weather", "❌ Failed to get weather data. Code: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                Log.e("Weather", "❌ Error: " + t.getMessage());
+            }
+        });
     }
 
     private void sendLocationToServer(Location location) {

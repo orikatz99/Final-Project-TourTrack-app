@@ -1,4 +1,4 @@
-package com.example.myapplication.network;
+package com.example.myapplication.models;
 
 public class LoginRequest {
     private String email;

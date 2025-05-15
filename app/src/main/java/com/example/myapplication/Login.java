@@ -9,10 +9,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.network.ApiService;
-import com.example.myapplication.network.LoginRequest;
-import com.example.myapplication.network.LoginResponse;
+import com.example.myapplication.models.LoginRequest;
+import com.example.myapplication.models.LoginResponse;
 import com.example.myapplication.network.RetrofitClient;
-import com.example.myapplication.ui.start.StartActivity;
 import com.google.android.material.textfield.TextInputEditText;
 
 import retrofit2.Call;

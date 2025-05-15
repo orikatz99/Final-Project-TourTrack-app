@@ -7,16 +7,14 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.myapplication.network.SignUpRequest;
-import com.example.myapplication.network.SignUpResponse;
+import com.example.myapplication.models.SignUpRequest;
+import com.example.myapplication.models.SignUpResponse;
 import com.example.myapplication.network.ApiService;
 import com.example.myapplication.network.RetrofitClient;
 import com.example.myapplication.ui.preferences.PreferencesActivity;
 import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import org.json.JSONObject;
 
 import java.util.Calendar;
 

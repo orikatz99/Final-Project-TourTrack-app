@@ -1,4 +1,4 @@
-package com.example.myapplication.network;
+package com.example.myapplication.models;
 
 public class PrivacyResponseWrapper {
     private PrivacyData data;
