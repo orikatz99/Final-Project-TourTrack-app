@@ -1,5 +1,7 @@
 package Adapter;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -54,9 +56,13 @@ public class verticalPeopleAdapter extends RecyclerView.Adapter<verticalPeopleAd
             // TODO: Open WhatsApp
         });
 
-        holder.binding.listBTNWhatsapp.setOnClickListener(v -> {
-            // TODO: Make phone call
+        holder.binding.listBTNCalls.setOnClickListener(v -> {
+            String phoneNumber = "0556618801"; // TODO: Make phone call by - specific phone number!
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse("tel:" + phoneNumber));
+            v.getContext().startActivity(intent);
         });
+
     }
 
     @Override

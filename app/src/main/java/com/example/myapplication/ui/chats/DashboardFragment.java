@@ -33,14 +33,14 @@ public class DashboardFragment extends Fragment {
         List<connectedAdapter.Person> demoList = Arrays.asList(
                 new connectedAdapter.Person("Shani", R.drawable.user),
                 new connectedAdapter.Person("Ori", R.drawable.user),
-                new connectedAdapter.Person("Gal", R.drawable.user),
-               new connectedAdapter.Person("Lior", R.drawable.user),
-                new connectedAdapter.Person("Ori", R.drawable.user),
-                new connectedAdapter.Person("Gal", R.drawable.user),
-                new connectedAdapter.Person("Gal", R.drawable.user),
                 new connectedAdapter.Person("Lior", R.drawable.user),
-                new connectedAdapter.Person("Ori", R.drawable.user),
-                new connectedAdapter.Person("Gal", R.drawable.user)
+               new connectedAdapter.Person("Amit", R.drawable.user),
+                new connectedAdapter.Person("May", R.drawable.user),
+                new connectedAdapter.Person("Roni", R.drawable.user),
+                new connectedAdapter.Person("Shaked", R.drawable.user),
+                new connectedAdapter.Person("Gal", R.drawable.user),
+                new connectedAdapter.Person("Tal", R.drawable.user),
+                new connectedAdapter.Person("Gershon", R.drawable.user)
         );
 
         // הגדרת RecyclerView

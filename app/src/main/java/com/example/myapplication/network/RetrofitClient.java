@@ -11,8 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.io.IOException;
 
 public class RetrofitClient {
-    private static final String BASE_URL = "http://192.168.9.223:5000/";
-
+    private static final String BASE_URL = "http://192.168.173.223:5000/";
 
     private static Retrofit retrofit = null;
 
