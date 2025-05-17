@@ -8,7 +8,9 @@ import com.example.myapplication.models.PrivacyResponseWrapper;
 import com.example.myapplication.models.SignUpRequest;
 import com.example.myapplication.models.SignUpResponse;
 import com.example.myapplication.models.UserInfoResponse;
+import com.example.myapplication.models.UserLocationResponse;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -46,5 +48,10 @@ public interface ApiService {
 
     @PUT("api/users/location/{id}")
     Call<Void> updateLocation(@Path("id") String userId, @Body LocationUpdateRequest location);
+
+    @GET("api/users/nearby-users/{id}")
+    Call<List<UserLocationResponse>> getNearbyUsers(@Path("id") String userId);
+
+
 
 }
