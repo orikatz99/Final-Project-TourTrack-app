@@ -55,11 +55,13 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         requireActivity().setTitle("TourTrack");
 
-        // אתחול של TextView-ים מתוך binding
+        //  binding
         tv_weather_discription_and_temp = binding.tvWeatherDiscriptionAndTemp;
         tv_humidity = binding.tvWeatherHumidity;
         tv_wind_speed = binding.tvWeatherWind;
         tv_weather_precipitation = binding.tvWeatherPrecipitation;
+        iv_weather_icon = binding.ivWeatherIcon;
+
 
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
@@ -122,7 +124,8 @@ public class HomeFragment extends Fragment {
                     double rain = (weather.getRain() != null) ? weather.getRain().getOneHour() : 0.0;
 
                     Log.d("Weather", "☀️ " + description + ", 🌡 " + temp + "°C, 💧 " + humidity + "%, 💨 " + wind + " קמ\"ש, ☔ " + rain + " מ\"מ");
-
+                    int conditionId = weather.getWeather().get(0).getId();
+                    getWeatherIconResource(conditionId);
                     requireActivity().runOnUiThread(() -> {
                         tv_weather_discription_and_temp.setText( description +" , " + temp + "°C");
                         tv_humidity.setText("Humidity: " + humidity + "%");
@@ -141,6 +144,34 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
+
+    private void getWeatherIconResource(int conditionId) {
+        if (conditionId >= 200 && conditionId <= 232) {
+            iv_weather_icon.setImageResource(R.drawable.thunder);
+        } else if (conditionId >= 300 && conditionId <= 321) {
+            iv_weather_icon.setImageResource(R.drawable.drizzle);
+
+        } else if (conditionId >= 500 && conditionId <= 531) {
+            iv_weather_icon.setImageResource(R.drawable.rain);
+
+        } else if (conditionId >= 600 && conditionId <= 622) {
+            iv_weather_icon.setImageResource(R.drawable.snowing);
+
+        } else if (conditionId >= 701 && conditionId <= 781) {
+            iv_weather_icon.setImageResource(R.drawable.fog);
+
+        } else if (conditionId == 800) {
+            iv_weather_icon.setImageResource(R.drawable.ic_sun);
+
+        } else if (conditionId >= 801 && conditionId <= 804) {
+            iv_weather_icon.setImageResource(R.drawable.cloud);
+        } else {
+            iv_weather_icon.setImageResource(R.drawable.cloud);
+
+        }
+    }
+
 
     private void sendLocationToServer(Location location) {
         Log.d("Map", "🟢 sendLocationToServer called");
