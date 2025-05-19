@@ -44,8 +44,8 @@ public class PreferencesActivity extends AppCompatActivity {
         setupSelectableButton(R.id.btnHistorical, "Historical");
         setupSelectableButton(R.id.btnWildlife, "Wildlife");
         setupSelectableButton(R.id.btnScenic, "Scenic");
-        setupSelectableButton(R.id.btnMuseum, "Museum");
-        setupSelectableButton(R.id.btnValley, "Valley");
+        setupSelectableButton(R.id.btnAgriculture, "Agriculture");
+        setupSelectableButton(R.id.btnField, "Field");
 
         Button btnContinue = findViewById(R.id.btnContinue);
         btnContinue.setOnClickListener(v -> {

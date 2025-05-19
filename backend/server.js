@@ -21,6 +21,10 @@ app.use(express.json()); // Parse incoming JSON requests
 const userRoutes = require('./routes/userRoutes');
 app.use('/api/users', userRoutes); // All routes under /api/users will be handled here
 
+const routeRoutes = require('./routes/routeRoutes');
+app.use('/api/routes', routeRoutes);
+
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {

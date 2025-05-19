@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentHomeBinding;
 import com.example.myapplication.models.LocationUpdateRequest;
+import com.example.myapplication.models.RouteModel;
 import com.example.myapplication.models.UserLocationResponse;
 import com.example.myapplication.models.WeatherResponse;
 import com.example.myapplication.network.ApiService;
@@ -35,8 +36,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -52,6 +55,9 @@ public class HomeFragment extends Fragment {
     private static final long LOCATION_INTERVAL = 30 * 1000;
     private Handler locationHandler = new Handler(Looper.getMainLooper());
     private Runnable locationRunnable;
+
+    private boolean movedToLocationYet = false;
+    private List<Marker> nearbyUserMarkers = new ArrayList<>();
 
     ImageView iv_weather_icon;
     TextView tv_weather_discription_and_temp, tv_humidity, tv_wind_speed, tv_weather_precipitation;
@@ -87,12 +93,16 @@ public class HomeFragment extends Fragment {
                 fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
                     if (location != null) {
                         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                        if (!movedToLocationYet) {
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                            movedToLocationYet = true;
+                        }
                         map.addMarker(new MarkerOptions().position(latLng).title("You are here"));
 
                         sendLocationToServer(location);
                         fetchWeather(location.getLatitude(), location.getLongitude());
                         fetchNearbyUsers(location);
+                        fetchAndDisplayRoutes();
                     }
                 });
             });
@@ -130,23 +140,47 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<List<UserLocationResponse>> call, Response<List<UserLocationResponse>> response) {
                 if (response.isSuccessful() && response.body() != null && map != null) {
-                    map.clear();
+                    for (Marker marker : nearbyUserMarkers) {
+                        marker.remove();
+                    }
+                    nearbyUserMarkers.clear();
+
                     LatLng myLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                     map.addMarker(new MarkerOptions().position(myLatLng).title("You are here"));
 
                     for (UserLocationResponse user : response.body()) {
                         LatLng userLatLng = new LatLng(user.getLat(), user.getLng());
-                        map.addMarker(new MarkerOptions()
+                        Marker marker = map.addMarker(new MarkerOptions()
                                 .position(userLatLng)
                                 .title("Nearby user")
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        nearbyUserMarkers.add(marker);
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<List<UserLocationResponse>> call, Throwable t) {
+            public void onFailure(Call<List<UserLocationResponse>> call, Throwable t) {}
+        });
+    }
+
+    private void fetchAndDisplayRoutes() {
+        ApiService apiService = RetrofitClient.getApiService();
+        apiService.getAllRoutes().enqueue(new Callback<List<RouteModel>>() {
+            @Override
+            public void onResponse(Call<List<RouteModel>> call, Response<List<RouteModel>> response) {
+                if (response.isSuccessful() && response.body() != null && map != null) {
+                    for (RouteModel route : response.body()) {
+                        LatLng position = new LatLng(route.latitude, route.longitude);
+                        map.addMarker(new MarkerOptions()
+                                .position(position)
+                                .title(route.name));
+                    }
+                }
             }
+
+            @Override
+            public void onFailure(Call<List<RouteModel>> call, Throwable t) {}
         });
     }
 
@@ -180,8 +214,7 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<WeatherResponse> call, Throwable t) {
-            }
+            public void onFailure(Call<WeatherResponse> call, Throwable t) {}
         });
     }
 

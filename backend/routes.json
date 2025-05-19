@@ -1,0 +1,71 @@
+[{
+        "name": "הר דבורה",
+        "difficulty": "בינוני",
+        "lengthKm": 5,
+        "tags": "Scenic, Historical,Mountain",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Mount_Dvora.jpg",
+        "description": "עלייה מתונה עם תצפית",
+        "latitude": 32.702348,
+        "longitude": 35.350106
+    },
+    {
+        "name": "הר תבור",
+        "difficulty": "קשה",
+        "lengthKm": 3,
+        "tags": "Scenic, Historical, Mountain",
+        "imageUrl": "https://static.wixstatic.com/media/a4e494_9c151e9c74604c7b8a19f16914cbe4e4~mv2.jpg",
+        "description": "עלייה מאתגרת עם תצפית מרהיבה",
+        "latitude": 32.687982,
+        "longitude": 35.390809
+    },
+    {
+        "name": "נחל תבור",
+        "difficulty": "קל",
+        "lengthKm": 8,
+        "tags": "River, Waterfall, Scenic",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Tavor_Stream.jpg",
+        "description": "הליכה לאורך הנחל מוצל בחלקו",
+        "latitude": 32.645493,
+        "longitude": 35.45379
+    },
+    {
+        "name": "עין רכש",
+        "difficulty": "קל",
+        "lengthKm": 5,
+        "tags": "Lake, Wildlife",
+        "imageUrl": "https://www.tiuli.com/image/59bf260294154f4656b11ad27fbd263e.jpg",
+        "description": "הליכה מישורית עד נביעת מים נקיים",
+        "latitude": 32.659756,
+        "longitude": 35.472046
+    },
+    {
+        "name": "רמת סירין",
+        "difficulty": "בינוני",
+        "lengthKm": 7,
+        "tags": "Mountain, Field, Agriculture",
+        "imageUrl": "https://www.tiuli.com/image/06af5263a7c344b34429e7608e8d6f5f.jpg",
+        "description": "הליכה בין שדות בעלייה מתונה",
+        "latitude": 32.648882,
+        "longitude": 35.517544
+    },
+    {
+        "name": "יבנאל",
+        "difficulty": "בינוני",
+        "lengthKm": 6,
+        "tags": "Scenic, Historical",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/44/Breslev_Synagogue.JPG",
+        "description": "איזור עירוני היסטוריה של האיזור",
+        "latitude": 32.70412959,
+        "longitude": 35.50753051
+    },
+    {
+        "name": "נחל אדמי",
+        "difficulty": "קל",
+        "lengthKm": 5,
+        "tags": "Agriculture, Field",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/%D7%A0%D7%97%D7%9C_%D7%90%D7%93%D7%9E%D7%99_.jpg/1024px-%D7%A0%D7%97%D7%9C_%D7%90%D7%93%D7%9E%D7%99_.jpg",
+        "description": "הליכה בשטחי מרעה וחקלאות",
+        "latitude": 32.7490493,
+        "longitude": 35.45482346
+    }
+]

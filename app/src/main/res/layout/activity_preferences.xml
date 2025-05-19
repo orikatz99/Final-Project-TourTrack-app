@@ -63,8 +63,8 @@
         <Button android:id="@+id/btnHistorical" style="@style/TrailButtonStyle" android:text="HISTORICAL" app:layout_flexBasisPercent="28%"/>
         <Button android:id="@+id/btnWildlife" style="@style/TrailButtonStyle" android:text="WILDLIFE" app:layout_flexBasisPercent="28%"/>
         <Button android:id="@+id/btnScenic" style="@style/TrailButtonStyle" android:text="SCENIC" app:layout_flexBasisPercent="28%"/>
-        <Button android:id="@+id/btnMuseum" style="@style/TrailButtonStyle" android:text="MUSEUM" app:layout_flexBasisPercent="28%"/>
-        <Button android:id="@+id/btnValley" style="@style/TrailButtonStyle" android:text="VALLEY" app:layout_flexBasisPercent="28%"/>
+        <Button android:id="@+id/btnAgriculture" style="@style/TrailButtonStyle" android:text="AGRICULTURE" app:layout_flexBasisPercent="28%"/>
+        <Button android:id="@+id/btnField" style="@style/TrailButtonStyle" android:text="FIELD" app:layout_flexBasisPercent="28%"/>
     </com.google.android.flexbox.FlexboxLayout>
 
     <!-- כפתור Continue -->

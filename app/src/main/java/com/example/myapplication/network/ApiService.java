@@ -9,6 +9,8 @@ import com.example.myapplication.models.SignUpRequest;
 import com.example.myapplication.models.SignUpResponse;
 import com.example.myapplication.models.UserInfoResponse;
 import com.example.myapplication.models.UserLocationResponse;
+import com.example.myapplication.models.RouteModel;
+
 
 import java.util.List;
 import java.util.Map;
@@ -51,6 +53,10 @@ public interface ApiService {
 
     @GET("api/users/nearby-users/{id}")
     Call<List<UserLocationResponse>> getNearbyUsers(@Path("id") String userId);
+
+    @GET("/api/routes")
+    Call<List<RouteModel>> getAllRoutes();
+
 
 
 
