@@ -4,13 +4,20 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -34,6 +41,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -130,6 +138,17 @@ public class HomeFragment extends Fragment {
         locationHandler.post(locationRunnable);
     }
 
+    private BitmapDescriptor getBitmapDescriptorFromVector(@DrawableRes int vectorResId, int width, int height) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(requireContext(), vectorResId);
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+
+
     private void fetchNearbyUsers(Location currentLocation) {
         SharedPreferences prefs = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         String userId = prefs.getString("userId", null);
@@ -150,11 +169,11 @@ public class HomeFragment extends Fragment {
 
                     for (UserLocationResponse user : response.body()) {
                         LatLng userLatLng = new LatLng(user.getLat(), user.getLng());
-                        Marker marker = map.addMarker(new MarkerOptions()
+                        map.addMarker(new MarkerOptions()
                                 .position(userLatLng)
                                 .title("Nearby user")
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                        nearbyUserMarkers.add(marker);
+                                .icon(getBitmapDescriptorFromVector(R.drawable.baseline_boy_24, 128,128)));
+
                     }
                 }
             }
@@ -174,7 +193,8 @@ public class HomeFragment extends Fragment {
                         LatLng position = new LatLng(route.latitude, route.longitude);
                         map.addMarker(new MarkerOptions()
                                 .position(position)
-                                .title(route.name));
+                                .title(route.name)
+                                .icon(getBitmapDescriptorFromVector(R.drawable.baseline_assistant_navigation_24,48,48)));
                     }
                 }
             }
