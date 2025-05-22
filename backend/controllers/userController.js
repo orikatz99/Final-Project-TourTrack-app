@@ -16,15 +16,15 @@ exports.signUpUser = async (req, res) => {
         const existingPhone = await User.findOne({ phone });
 
         if (existingEmail && existingPhone) {
-            return res.status(200).json({ success: false, message: 'This email and phone number are already in use.' });
+            return res.status(409).json({ success: false, message: 'This email and phone number are already in use.' });
         }
 
         if (existingEmail) {
-            return res.status(200).json({ success: false, message: 'This email is already registered.' });
+            return res.status(409).json({ success: false, message: 'This email is already registered.' });
         }
 
         if (existingPhone) {
-            return res.status(200).json({ success: false, message: 'This phone number is already registered.' });
+            return res.status(409).json({ success: false, message: 'This phone number is already registered.' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);

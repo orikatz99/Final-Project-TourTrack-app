@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -15,6 +16,8 @@ import com.example.myapplication.ui.preferences.PreferencesActivity;
 import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.json.JSONObject;
 
 import java.util.Calendar;
 
@@ -33,19 +36,15 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        // Initialize views
         findViews();
 
-        // Navigate to login screen
         btnLogin.setOnClickListener(v -> {
             Intent intent = new Intent(SignUp.this, Login.class);
             startActivity(intent);
         });
 
-        // Set date picker dialog on birth date field
         editDate.setOnClickListener(v -> openTripDatePicker());
 
-        // Sign-up logic
         btnSignup.setOnClickListener(v -> {
             String firstName = editFirstN.getText().toString().trim();
             String lastName = editLastN.getText().toString().trim();
@@ -53,7 +52,6 @@ public class SignUp extends AppCompatActivity {
             String password = editPassword.getText().toString().trim();
             String phone = editPhone.getText().toString().trim();
 
-            // Validate input fields
             if (firstName.isEmpty()) {
                 editFirstN.setError("Please enter your first name");
                 return;
@@ -87,33 +85,46 @@ public class SignUp extends AppCompatActivity {
                 return;
             }
 
-            // Format birth date as string
             String birthDateStr = birthDate.get(Calendar.DAY_OF_MONTH) + "/" +
                     (birthDate.get(Calendar.MONTH) + 1) + "/" +
                     birthDate.get(Calendar.YEAR);
 
-            // Create request object
             SignUpRequest request = new SignUpRequest(firstName, lastName, email, password, phone, birthDateStr);
             ApiService apiService = RetrofitClient.getApiService();
 
-            // Call API
             apiService.signUp(request).enqueue(new Callback<SignUpResponse>() {
                 @Override
                 public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         String token = response.body().getToken();
 
-                        // Save token in SharedPreferences
                         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                         prefs.edit().putString("token", token).apply();
                         String userId = response.body().getUser().getId();
                         prefs.edit().putString("userId", userId).apply();
 
-
-                        // Go to preferences screen
                         Intent intent = new Intent(SignUp.this, PreferencesActivity.class);
                         startActivity(intent);
                         finish();
+                    } else if (response.code() == 409) {
+                        vibratePhone();
+
+                        try {
+                            String errorJson = response.errorBody().string();
+                            JSONObject jsonObject = new JSONObject(errorJson);
+                            String message = jsonObject.optString("message", "Email or phone already exists");
+
+                            if (message.contains("email") || message.contains("Email")) {
+                                editEmail.setError("Email already exists");
+                            }
+                            if (message.contains("phone") || message.contains("Phone")) {
+                                editPhone.setError("Phone already exists");
+                            }
+
+                            Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
+                            Toast.makeText(SignUp.this, "Conflict error occurred", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(SignUp.this, "Signup failed: " + response.code(), Toast.LENGTH_SHORT).show();
                     }
@@ -127,7 +138,13 @@ public class SignUp extends AppCompatActivity {
         });
     }
 
-    // Initialize UI components
+    private void vibratePhone() {
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        if (vibrator != null && vibrator.hasVibrator()) {
+            vibrator.vibrate(300);
+        }
+    }
+
     private void findViews() {
         editFirstN = findViewById(R.id.firstN_signup);
         editLastN = findViewById(R.id.lastN_signup);
@@ -139,7 +156,6 @@ public class SignUp extends AppCompatActivity {
         btnSignup = findViewById(R.id.btn_Sign_up);
     }
 
-    // Show a date picker dialog for selecting birth date
     private void openTripDatePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -158,7 +174,6 @@ public class SignUp extends AppCompatActivity {
                 year, month, day
         );
 
-        // Disallow future dates
         datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
         datePickerDialog.show();
     }
