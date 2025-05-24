@@ -171,7 +171,7 @@ public class HomeFragment extends Fragment {
                         LatLng userLatLng = new LatLng(user.getLat(), user.getLng());
                         map.addMarker(new MarkerOptions()
                                 .position(userLatLng)
-                                .title("Nearby user")
+                                .title(user.getFullName())
                                 .icon(getBitmapDescriptorFromVector(R.drawable.baseline_boy_24, 128,128)));
 
                     }

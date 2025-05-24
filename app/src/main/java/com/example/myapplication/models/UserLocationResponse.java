@@ -1,14 +1,14 @@
-
 package com.example.myapplication.models;
 
 import java.util.List;
 
 public class UserLocationResponse {
-    private String userId;
+    private User userId; // ← השתנה: מ-String לאובייקט
     private Location location;
 
-    public String getUserId() {
-        return userId;
+    public String getFullName() {
+        if (userId == null) return "Unknown";
+        return userId.firstName + " " + userId.lastName;
     }
 
     public double getLat() {
@@ -22,5 +22,13 @@ public class UserLocationResponse {
     public static class Location {
         public String type;
         public List<Double> coordinates;
+    }
+
+    public static class User {
+        public String firstName;
+        public String lastName;
+
+        public String getFirstName() { return firstName; }
+        public String getLastName() { return lastName; }
     }
 }

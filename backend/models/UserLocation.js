@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const userLocationSchema = new mongoose.Schema({
-    userId: { type: String, required: true, unique: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
     location: {
         type: {
             type: String,
