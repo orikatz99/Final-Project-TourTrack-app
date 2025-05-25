@@ -79,5 +79,23 @@ router.get('/nearby-users/:id', async(req, res) => {
     }
 });
 
+// Get connected users
+router.get('/connected-users', authMiddleware, async (req, res) => {
+    try {
+        const currentUserId = req.user._id;
+        const timeLimit = new Date(Date.now() - 10 * 60 * 1000); // 10 minutes ago
+
+        const connectedUsers = await UserLocation.find({
+            userId: { $ne: currentUserId },
+            updatedAt: { $gte: timeLimit }
+        }).populate({ path: 'userId', select: 'firstName lastName' });
+
+        res.json(connectedUsers);
+    } catch (err) {
+        console.error('❌ Error fetching connected users:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 
 module.exports = router;

@@ -11,7 +11,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.io.IOException;
 
 public class RetrofitClient {
-    private static final String BASE_URL = "https://67f2-109-186-101-112.ngrok-free.app";
+
+    private static final String BASE_URL = "http://192.168.1.214:5000/";
 
     private static Retrofit retrofit = null;
 
