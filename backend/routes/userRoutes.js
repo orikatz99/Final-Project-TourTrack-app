@@ -61,15 +61,16 @@ router.get('/nearby-users/:id', async(req, res) => {
         const timeLimit = new Date(Date.now() - 10 * 60 * 1000); // 10 minutes ago
 
         const nearbyUsers = await UserLocation.find({
-            userId: { $ne: id },
-            updatedAt: { $gte: timeLimit },
-            location: {
-                $near: {
-                    $geometry: { type: "Point", coordinates: [lng, lat] },
-                    $maxDistance: 1000 // 1 km radius
+                userId: { $ne: id },
+                updatedAt: { $gte: timeLimit },
+                location: {
+                    $near: {
+                        $geometry: { type: "Point", coordinates: [lng, lat] },
+                        $maxDistance: 1000 // 1 km radius
+                    }
                 }
-            }
-        });
+            })
+            .populate({ path: 'userId', select: 'firstName lastName' }); // ← פה זה קורה
 
         res.json(nearbyUsers);
     } catch (err) {
@@ -77,5 +78,6 @@ router.get('/nearby-users/:id', async(req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
 
 module.exports = router;
