@@ -1,92 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
     tools:context=".ui.search.NotificationsFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".YourActivity">
+    <!-- Search Row -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/list_BTN_whatsapp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        app:icon="@drawable/search"
+        app:iconSize="36dp"
+        android:backgroundTint="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="30dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
+    <EditText
+        android:id="@+id/search_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Search travelers"
+        android:background="@color/white"
+        android:padding="12dp"
+        android:maxLines="1"
+        android:inputType="text"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/list_BTN_whatsapp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/list_BTN_whatsapp"
+        app:layout_constraintBottom_toBottomOf="@id/list_BTN_whatsapp"
+        android:layout_marginStart="8dp" />
 
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/list_BTN_whatsapp"
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:backgroundTint="@color/white"
-                android:scaleType="centerCrop"
-                app:icon="@drawable/search"
-                app:iconSize="40dp" />
+    <!-- Connected Friends Title -->
+    <TextView
+        android:id="@+id/connected_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connected Friends"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/list_BTN_whatsapp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="24dp" />
 
-            <EditText
-                android:id="@+id/search_bar"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:background="@color/white"
-                android:drawablePadding="1dp"
-                android:hint="Search travelers"
-                android:maxLines="1"
-                android:padding="12dp" />
-        </LinearLayout>
+    <!-- Connected Friends Horizontal RecyclerView -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_connected"
+        android:layout_width="0dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        android:backgroundTint="@color/button_cream"
+        app:layout_constraintTop_toBottomOf="@id/connected_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-
-        <!-- Connected Friends section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Connected Friends"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_marginHorizontal="1dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="@color/button_cream"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/connected_friends_recycler"
-                android:layout_width="wrap_content"
-                android:layout_height="150dp"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
-                android:overScrollMode="never"
-                android:paddingStart="1dp"
-                android:paddingEnd="8dp"
-                tools:listitem="@layout/horizontal_friend" />
-        </androidx.cardview.widget.CardView>
-
-
-
-
-        <!-- Notifications / Messages-->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/messages_recycler"
+            android:id="@+id/connected_friends_recycler"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingTop="15dp"
-            android:paddingBottom="60dp"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:overScrollMode="never"
+            android:paddingStart="10dp"
+            tools:listitem="@layout/horizontal_friend" />
+    </androidx.cardview.widget.CardView>
 
-            tools:listitem="@layout/vertical_people" />
-    </LinearLayout>
-
+    <!-- Messages / Notifications RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messages_recycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="60dp"
+        app:layout_constraintTop_toBottomOf="@id/card_connected"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/vertical_people" />
 </androidx.constraintlayout.widget.ConstraintLayout>
