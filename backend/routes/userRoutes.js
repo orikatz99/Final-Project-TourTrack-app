@@ -97,5 +97,11 @@ router.get('/connected-users', authMiddleware, async (req, res) => {
     }
 });
 
+//get all users
+const { getAllUsers } = require('../controllers/userController');
+
+router.get('/', authMiddleware, getAllUsers);
+
+
 
 module.exports = router;

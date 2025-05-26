@@ -74,28 +74,7 @@
         </androidx.cardview.widget.CardView>
 
 
-        <!-- Tabs -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btn_trails"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:text="Trails" />
-
-            <Button
-                android:id="@+id/btn_nearby"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/green_background"
-                android:text="Nearby Users" />
-        </LinearLayout>
 
         <!-- Notifications / Messages-->
         <androidx.recyclerview.widget.RecyclerView

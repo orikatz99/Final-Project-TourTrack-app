@@ -187,3 +187,23 @@ exports.getPrivacySettings = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: err.message });
     }
 };
+
+//Get all users
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        const currentUserId = req.user._id;
+
+        const users = await User.find({ _id: { $ne: currentUserId } })
+            .select('firstName lastName phone');
+
+        res.status(200).json(users);
+    } catch (err) {
+        console.error('❌ Error fetching users:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
+
+

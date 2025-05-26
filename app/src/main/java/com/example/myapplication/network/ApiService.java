@@ -11,6 +11,7 @@ import com.example.myapplication.models.UserConnectedResponse;
 import com.example.myapplication.models.UserInfoResponse;
 import com.example.myapplication.models.UserLocationResponse;
 import com.example.myapplication.models.RouteModel;
+import com.example.myapplication.models.UsersResponse;
 
 
 import java.util.List;
@@ -61,7 +62,9 @@ public interface ApiService {
     @GET("api/users/connected-users")
     Call<List<UserConnectedResponse>> getConnectedUsers(@Header("Authorization") String token);
 
-
+    //get all users
+    @GET("api/users")
+    Call<List<UsersResponse>> getAllUsers(@Header("Authorization") String token);
 
 
 

@@ -1,7 +1,6 @@
 package com.example.myapplication.ui.chats;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,16 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentDashboardBinding;
 import com.example.myapplication.models.UserConnectedResponse;
+import com.example.myapplication.models.UsersResponse;
 import com.example.myapplication.network.ApiService;
 import com.example.myapplication.network.RetrofitClient;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import Adapter.connectedAdapter;
 import Adapter.verticalPeopleAdapter;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,13 +49,12 @@ public class DashboardFragment extends Fragment {
             return root;
         }
 
+        ApiService apiService = RetrofitClient.getApiService();
+
         // Setup horizontal RecyclerView for connected users
         binding.connectedFriendsRecycler.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        binding.connectedFriendsRecycler.setVisibility(View.VISIBLE); // Ensure visibility
 
-        // Call API to get connected users
-        ApiService apiService = RetrofitClient.getApiService();
         apiService.getConnectedUsers("Bearer " + token).enqueue(new Callback<List<UserConnectedResponse>>() {
             @Override
             public void onResponse(Call<List<UserConnectedResponse>> call, Response<List<UserConnectedResponse>> response) {
@@ -70,7 +67,6 @@ public class DashboardFragment extends Fragment {
                     List<connectedAdapter.Person> peopleList = new ArrayList<>();
                     for (UserConnectedResponse user : users) {
                         String fullName = user.getFullName() != null ? user.getFullName() : "Unknown";
-                        Log.d("ConnectedUsers", "User: " + fullName);
                         peopleList.add(new connectedAdapter.Person(fullName, R.drawable.user));
                     }
 
@@ -78,29 +74,49 @@ public class DashboardFragment extends Fragment {
                     binding.connectedFriendsRecycler.setAdapter(adapter);
                 } else {
                     Log.e("DashboardFragment", "Failed to load connected users: " + response.code());
-                    Log.e("DashboardFragment", "Response message: " + response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<List<UserConnectedResponse>> call, Throwable t) {
-                Log.e("DashboardFragment", "Error fetching users: " + t.getMessage());
+                Log.e("DashboardFragment", "Error fetching connected users: " + t.getMessage());
             }
         });
 
-        // Static vertical RecyclerView for messages (not dynamic)
-        List<verticalPeopleAdapter.Person> people = Arrays.asList(
-                new verticalPeopleAdapter.Person("Shani", R.drawable.user),
-                new verticalPeopleAdapter.Person("Ori", R.drawable.user),
-                new verticalPeopleAdapter.Person("Lior", R.drawable.user),
-                new verticalPeopleAdapter.Person("Ran", R.drawable.user),
-                new verticalPeopleAdapter.Person("Eden", R.drawable.user),
-                new verticalPeopleAdapter.Person("Romy", R.drawable.user)
-        );
-
-        verticalPeopleAdapter adapter = new verticalPeopleAdapter(people);
+        // Setup vertical RecyclerView for all users
         binding.messagesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.messagesRecycler.setAdapter(adapter);
+
+        apiService.getAllUsers("Bearer " + token).enqueue(new Callback<List<UsersResponse>>() {
+            @Override
+            public void onResponse(Call<List<UsersResponse>> call, Response<List<UsersResponse>> response) {
+                Log.d("users", "Response code: " + response.code());
+
+                if (response.isSuccessful() && response.body() != null) {
+                    List<UsersResponse> users = response.body();
+                    Log.d("users", "Users count: " + users.size());
+
+                    List<verticalPeopleAdapter.Person> people = new ArrayList<>();
+                    for (UsersResponse user : users) {
+                        String firstName = user.getFirstName() != null ? user.getFirstName() : "Unknown";
+                        String lastName = user.getLastName() != null ? user.getLastName() : "";
+                        String fullName = firstName + " " + lastName;
+                        String phone = user.getPhone() != null ? user.getPhone() : "No phone";
+                        people.add(new verticalPeopleAdapter.Person(fullName, R.drawable.user, phone));
+                        people.sort((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()));
+                    }
+
+                    verticalPeopleAdapter adapter = new verticalPeopleAdapter(people);
+                    binding.messagesRecycler.setAdapter(adapter);
+                } else {
+                    Log.e("DashboardFragment", "Failed to load users: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UsersResponse>> call, Throwable t) {
+                Log.e("DashboardFragment", "Error fetching all users: " + t.getMessage());
+            }
+        });
 
         return root;
     }

@@ -18,10 +18,12 @@ public class verticalPeopleAdapter extends RecyclerView.Adapter<verticalPeopleAd
     public static class Person {
         private final String name;
         private final int imageResId;
+        private final String phoneNumber;
 
-        public Person(String name, int imageResId) {
+        public Person(String name, int imageResId, String phoneNumber) {
             this.name = name;
             this.imageResId = imageResId;
+            this.phoneNumber = phoneNumber;
         }
 
         public String getName() {
@@ -47,34 +49,16 @@ public class verticalPeopleAdapter extends RecyclerView.Adapter<verticalPeopleAd
         return new VerticalViewHolder(binding);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull VerticalViewHolder holder, int position) {
         Person person = people.get(position);
         holder.binding.playerLBLName.setText(person.getName());
         holder.binding.profileImage.setImageResource(person.getImageResId());
 
-       /*
-        holder.binding.IBWhatsapp.setOnClickListener(v -> {
-            String phoneNumber = "0548800173"; // מספר מקומי
-            String formattedNumber = phoneNumber.replaceFirst("^0", "972"); // מספר בינלאומי ללא "+"
-
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_TEXT, "היי! 👋 ראיתי שאנחנו מחוברים באפליקציית TourTrack – אולי נצא לטייל ביחד? 😊");
-            // intent.putExtra(Intent.EXTRA_TEXT, "Hey! 👋 I saw we're connected on TourTrack – want to go hiking together sometime? 😊");
-            intent.putExtra("jid", formattedNumber + "@s.whatsapp.net"); // מזהה WhatsApp של הנמען
-            intent.setPackage("com.whatsapp");
-
-            try {
-                v.getContext().startActivity(intent);
-            } catch (Exception e) {
-                Toast.makeText(v.getContext(), "WhatsApp is not installed", Toast.LENGTH_SHORT).show();
-            }
-        });*/
 
         holder.binding.IBWhatsapp.setOnClickListener(v -> {
-            String phoneNumber = "0556618801"; // static number
-            String formattedNumber = phoneNumber.replaceFirst("^0", "972"); // המרה לפורמט בינלאומי בלי +
+            String formattedNumber = person.phoneNumber.replaceFirst("^0", "972"); // המרה לפורמט בינלאומי בלי +
 
             String message = "היי! 👋 ראיתי שאנחנו מחוברים באפליקציית TourTrack – אולי נצא לטייל ביחד? 😊";
 
@@ -94,9 +78,8 @@ public class verticalPeopleAdapter extends RecyclerView.Adapter<verticalPeopleAd
 
 
         holder.binding.listBTNCalls.setOnClickListener(v -> {
-            String phoneNumber = "0556618801"; // TODO: Make phone call by - specific phone number!
             Intent intent = new Intent(Intent.ACTION_DIAL);
-            intent.setData(Uri.parse("tel:" + phoneNumber));
+            intent.setData(Uri.parse("tel:" + person.phoneNumber));
             v.getContext().startActivity(intent);
         });
 
