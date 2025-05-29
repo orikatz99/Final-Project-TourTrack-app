@@ -278,7 +278,7 @@
                     android:id="@+id/tv_no_more_routes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="No more routes available"
+                    android:text="No routes available"
                     android:textColor="#000000"
                     android:gravity="center"
                     android:textStyle="italic"
