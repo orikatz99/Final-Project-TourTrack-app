@@ -71,15 +71,16 @@
                     android:textColor="#000000"
                     android:layout_marginBottom="4dp" />
 
-                <LinearLayout
-                    xmlns:android="http://schemas.android.com/apk/res/android"
+                <RadioGroup
+                    android:id="@+id/difficulty_radio_group"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="1dp">
 
 
-                        <RadioButton
+
+                <RadioButton
                             android:id="@+id/radio_option1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -98,9 +99,7 @@
                             android:text="Hard" />
 
 
-
-
-                </LinearLayout>
+                </RadioGroup>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -225,407 +224,69 @@
                     android:backgroundTint="#FFF5CC"
                     android:textColor="#000000"
                     android:textStyle="bold" />
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone"
+                    android:indeterminate="true"
+                    style="?android:attr/progressBarStyleSmall"/>
+
             </LinearLayout>
 
             <!-- Top 3 Recommendation -->
             <!-- recomend 1 -->
             <LinearLayout
+                android:id="@+id/recommendations_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="#DFEDF3"
                 android:padding="16dp"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="24dp"
+                android:visibility="gone">
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Top 3 Recomended Routes"
+                    android:text="Top Recommended Routes"
                     android:textSize="25sp"
                     android:textStyle="bold"
                     android:textColor="#000000"
                     android:layout_marginBottom="12dp"
                     android:fontFamily="@font/play_fair_display_regular" />
 
-                <!-- First Card -->
-                <androidx.cardview.widget.CardView
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_routes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:backgroundTint="#E1BEE7">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/route1_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Kfar Tavor Scenic Trail"
-                                android:textSize="20sp"
-                                android:textColor="@color/black"
-                                android:fontFamily="@font/play_fair_display_extra_bold"
-                                android:textStyle="bold"/>
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical">
-
-                                <TextView
-                                    android:id="@+id/tv_route1_rating"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="4.9"
-                                    android:textSize="16sp" />
-
-                                <ImageView
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:src="@drawable/star" />
-                            </LinearLayout>
-                        </RelativeLayout>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="8dp">
-
-                            <TextView
-                                android:id="@+id/tv_route1_km"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="15sp"
-                                android:text="Distance: 4.6 km " />}
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="15sp"
-                                android:text="     | " />
-
-
-                            <TextView
-                                android:id="@+id/tv_route1_duration"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:textSize="15sp"
-                                android:text="Duration: 45 min" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="4dp">
-
-                            <TextView
-                                android:id="@+id/tv_route1_defficulty"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="15sp"
-                                android:text="Difficulty: Easy " />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="15sp"
-                                android:text="         | " />
-                            <TextView
-                                android:id="@+id/tv_route1_weather"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:textSize="15sp"
-                                android:text="Weather: Sunny" />
-                        </LinearLayout>
-
-
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Accessibility: Open" />
-
-                        <ImageView
-                            android:id="@+id/route1_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:scaleType="centerCrop"
-                            android:layout_marginTop="8dp"
-                            android:src="@drawable/treesback" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Secound Card -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:backgroundTint="#FFAB91">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/route2_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Kfar Tavor Scenic Trail"
-                                android:textSize="20sp"
-                                android:textColor="@color/black"
-                                android:fontFamily="@font/play_fair_display_extra_bold"
-                                android:textStyle="bold"/>
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical">
-
-                                <TextView
-                                    android:id="@+id/tv_route2_rating"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="4.9"
-                                    android:textSize="16sp" />
-
-                                <ImageView
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:src="@drawable/star" />
-                            </LinearLayout>
-                        </RelativeLayout>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="8dp">
-
-                            <TextView
-                                android:id="@+id/tv_route2_km"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="15sp"
-                                android:text="Distance: 4.6 km " />}
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="15sp"
-                                android:text="     | " />
-
-
-                            <TextView
-                                android:id="@+id/tv_route2_duration"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:textSize="15sp"
-                                android:text="Duration: 45 min" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="4dp">
-
-                            <TextView
-                                android:id="@+id/tv_route2_defficulty"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="15sp"
-                                android:text="Difficulty: Easy " />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="15sp"
-                                android:text="         | " />
-                            <TextView
-                                android:id="@+id/tv_route2_weather"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:textSize="15sp"
-                                android:text="Weather: Sunny" />
-                        </LinearLayout>
-
-
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Accessibility: Open" />
-
-                        <ImageView
-                            android:id="@+id/route2_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:scaleType="centerCrop"
-                            android:layout_marginTop="8dp"
-                            android:src="@drawable/treesback" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Third Card -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:backgroundTint="#FFF59D">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/route3_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Kfar Tavor Scenic Trail"
-                                android:textSize="20sp"
-                                android:textColor="@color/black"
-                                android:fontFamily="@font/play_fair_display_extra_bold"
-                                android:textStyle="bold"/>
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical">
-
-                                <TextView
-                                    android:id="@+id/tv_route3_rating"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="4.9"
-                                    android:textSize="16sp" />
-
-                                <ImageView
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:src="@drawable/star" />
-                            </LinearLayout>
-                        </RelativeLayout>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="8dp">
-
-                            <TextView
-                                android:id="@+id/tv_route3_km"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="15sp"
-                                android:text="Distance: 4.6 km " />}
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="15sp"
-                                android:text="     | " />
-
-
-                            <TextView
-                                android:id="@+id/tv_route3_duration"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:textSize="15sp"
-                                android:text="Duration: 45 min" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="4dp">
-
-                            <TextView
-                                android:id="@+id/tv_route3_defficulty"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="15sp"
-                                android:text="Difficulty: Easy " />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="15sp"
-                                android:text="         | " />
-                            <TextView
-                                android:id="@+id/tv_route3_weather"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:textSize="15sp"
-                                android:text="Weather: Sunny" />
-                        </LinearLayout>
-
-
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Accessibility: Open" />
-
-                        <ImageView
-                            android:id="@+id/route3_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:scaleType="centerCrop"
-                            android:layout_marginTop="8dp"
-                            android:src="@drawable/treesback" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginBottom="12dp" />
 
                 <Button
-                    android:id="@+id/btnShareTip"
+                    android:id="@+id/btn_load_more"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Show More Options"
+                    android:text="Load More"
                     android:backgroundTint="#FFF5CC"
                     android:textColor="#000000"
-                    android:textStyle="bold" />
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_no_more_routes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No more routes available"
+                    android:textColor="#000000"
+                    android:gravity="center"
+                    android:textStyle="italic"
+                    android:layout_marginTop="8dp"
+                    android:visibility="gone" />
+
+
             </LinearLayout>
-
-
-
-
-        </LinearLayout>
+            </LinearLayout>
     </ScrollView>
 </FrameLayout>

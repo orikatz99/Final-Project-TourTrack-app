@@ -200,10 +200,10 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<List<RouteModel>> call, Response<List<RouteModel>> response) {
                 if (response.isSuccessful() && response.body() != null && map != null) {
                     for (RouteModel route : response.body()) {
-                        LatLng position = new LatLng(route.latitude, route.longitude);
+                        LatLng position = new LatLng(route.getLatitude(), route.getLongitude());
                         map.addMarker(new MarkerOptions()
                                 .position(position)
-                                .title(route.name)
+                                .title(route.getName())
                                 .icon(getBitmapDescriptorFromVector(R.drawable.baseline_assistant_navigation_24,48,48)));
                     }
                 }

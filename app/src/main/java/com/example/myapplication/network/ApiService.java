@@ -66,6 +66,8 @@ public interface ApiService {
     @GET("api/users")
     Call<List<UsersResponse>> getAllUsers(@Header("Authorization") String token);
 
+    @POST("api/routes/recommendations")
+    Call<List<RouteModel>> getRecommendations(@Body Map<String, Object> body);
 
 
 }

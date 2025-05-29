@@ -25,7 +25,6 @@
         <item>Shefa-Amr</item>
         <item>Beit Rimon</item>
         <item>Mitzpe Netofa</item>
-        <item>Mount Tavor</item>
         <item>Ramat Yishai</item>
         <item>Kaduri</item>
     </string-array>
@@ -44,22 +43,10 @@
     </string-array>
 
     <string-array name="attraction_preferences">
-        <item>Natural Springs and Pools</item>
-        <item>Waterfalls</item>
-        <item>Beaches</item>
-        <item>Historical Sites</item>
-        <item>Zoos and Wildlife Reserves</item>
-        <item>Museums</item>
-        <item>Farms and Pick-Your-Own Experiences</item>
-        <item>Local Markets</item>
-        <item>Wineries and Breweries</item>
-        <item>Unique Restaurants</item>
-        <item>Extreme Activities (Ziplining, Rappelling)</item>
-        <item>Adventure Parks and Kids Attractions</item>
-        <item>Archaeological Sites</item>
-        <item>Horseback Riding and Camel Tours</item>
-        <item>Art Sites and Special Exhibitions</item>
-        <item>Local Workshops (Ceramics, Cooking, Cheese Making)</item>
+        <item>Restaurants</item>
+        <item>Museum</item>
+        <item>Trips</item>
+        <item>Accommodation</item>
     </string-array>
 
 
