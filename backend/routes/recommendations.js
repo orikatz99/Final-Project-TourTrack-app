@@ -22,8 +22,15 @@ exports.getRecommendations = async(req, res) => {
             isToday = selected.toDateString() === today.toDateString();
         }
 
-        // Step 1: Fetch all routes from the database
-        const allRoutes = await Route.find();
+        // Step 1: Fetch only routes matching selected attraction
+        const filter = {};
+
+        if (attraction) {
+            filter.attraction = attraction; // Match exact string (e.g., "מסעדה", "טיולים", וכו')
+        }
+
+        const allRoutes = await Route.find(filter);
+
 
         // Step 2: Score each route
         const scoredRoutes = allRoutes.map(route => {
@@ -34,10 +41,6 @@ exports.getRecommendations = async(req, res) => {
                 score += 8;
             }
 
-            // ✅ Attraction match (string)
-            if (attraction && route.attraction === attraction) {
-                score += 5;
-            }
 
             // ✅ User preferences match route.tags
             if (preferences && Array.isArray(preferences)) {
@@ -73,7 +76,6 @@ exports.getRecommendations = async(req, res) => {
             return { route, score };
         });
 
-        // Step 3: Sort and return top 3
         const sortedRoutes = scoredRoutes
             .sort((a, b) => b.score - a.score)
             .map(r => r.route);
