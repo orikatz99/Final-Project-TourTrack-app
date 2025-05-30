@@ -2,6 +2,7 @@ package com.example.myapplication.models;
 
 public class ReportRequest {
     private String userId;
+
     private String photo;
     private String description;
     private String location;

@@ -6,8 +6,9 @@ const {
     loginUser,
     getUserProfile,
     getPrivacySettings,
-    savePrivacySettings
+    savePrivacySettings,
 } = require('../controllers/userController');
+
 const authMiddleware = require('../middlewares/authMiddleware');
 const UserLocation = require('../models/UserLocation');
 
@@ -104,10 +105,17 @@ router.get('/', authMiddleware, getAllUsers);
 
 // Get user reports
 const { getUserReports } = require('../controllers/userController');
-router.get('/reports', authMiddleware, getUserReports);
+router.get('/report', authMiddleware, getUserReports);
 // Post user report
 const { postUserReport } = require('../controllers/userController');
-router.post('/reports', authMiddleware, postUserReport);
+router.post('/report', authMiddleware, postUserReport);
+//Put user report
+const { updateReport } = require('../controllers/userController');
+router.put('/report/:id', updateReport);
+// Delete user report
+const { deleteUserReport } = require('../controllers/userController');
+router.delete('/report/:id', authMiddleware, deleteUserReport);
+
 
 
 // Get user recommendations
@@ -116,6 +124,7 @@ router.get('/recommendations', authMiddleware, getUserRecommendations);
 // Post user recommendation
 const { postUserRecommendation } = require('../controllers/userController');    
 router.post('/recommendations', authMiddleware, postUserRecommendation);
+
 
 
 module.exports = router;

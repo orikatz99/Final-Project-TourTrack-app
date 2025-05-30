@@ -2,6 +2,8 @@ const User = require('../models/User');
 const UserPrivacy = require('../models/userPrivacyModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Report = require('../models/Report');
+const Recommendation = require('../models/Recommendation');
 
 // Register a new user
 exports.signUpUser = async(req, res) => {
@@ -207,31 +209,34 @@ exports.getAllUsers = async(req, res) => {
     }
 };
 
-//get user reports
+// Get user reports
+
 exports.getUserReports = async(req, res) => {
     try {
         const userId = req.user._id;
+        console.log('Fetching reports for userId:', userId);
 
         const reports = await Report.find({ userId })
-            .populate('routeId', 'name difficulty lengthKm tags imageUrl description latitude longitude attraction category currentWeather')
             .select('description status location photo type createdAt updatedAt');
 
-        if (!reports || reports.length === 0) {
+        if (!reports) {
             return res.status(404).json({ message: 'No reports found for this user' });
         }
 
         res.status(200).json(reports);
     } catch (err) {
-        console.error('❌ Error fetching user reports:', err);
+        console.error('❌ Error fetching user reports:', err.message);
+        console.error(err.stack);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
+
 // post user report
 exports.postUserReport = async(req, res) => {
-    const { routeId, description, status, location, photo, type } = req.body;
+    const {  description, status, location, photo, type } = req.body;
 
-    if (!routeId || !description || !location || !type) {
+    if ( !description || !location || !type) {
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
@@ -240,7 +245,6 @@ exports.postUserReport = async(req, res) => {
 
         const newReport = new Report({
             userId,
-            routeId,
             description,
             status: status || 'open',
             location,
@@ -252,7 +256,8 @@ exports.postUserReport = async(req, res) => {
 
         res.status(201).json({ message: 'Report created successfully', report: newReport });
     } catch (error) {
-        console.error('❌ Error creating report:', error);
+        console.error('❌ Error fetching user reports:', err.message);
+        console.error(err.stack);
         res.status(500).json({ message: 'Server error' });
     }
 };
@@ -302,3 +307,48 @@ exports.postUserRecommendation = async(req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+// DELETE /api/users/report/:id
+exports.deleteUserReport = async (req, res) => {
+    try {
+        const reportId = req.params.id;
+
+        const deletedReport = await Report.findByIdAndDelete(reportId);
+
+        if (!deletedReport) {
+            return res.status(404).json({ message: 'Report not found' });
+        }
+
+        res.status(200).json({ message: 'Report deleted successfully' });
+    } catch (err) {
+        console.error('❌ Error deleting report:', err.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// PUT /api/users/report/:id
+exports.updateReport = async (req, res) => {
+  try {
+    const reportId = req.params.id;
+    const { description, location, type, photo } = req.body;
+
+    const updatedReport = await Report.findByIdAndUpdate(
+      reportId,
+      { description, location, type, photo },
+      { new: true }
+    );
+
+    if (!updatedReport) {
+      return res.status(404).json({ message: 'Report not found' });
+    }
+
+    res.status(200).json({
+      message: 'Report updated successfully',
+      report: updatedReport 
+    });
+  } catch (err) {
+    console.error('❌ Error updating report:', err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
