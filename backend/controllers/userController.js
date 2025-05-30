@@ -256,3 +256,49 @@ exports.postUserReport = async(req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+// Get user recommendations
+exports.getUserRecommendations = async(req, res) => {
+    try {
+        const userId = req.user._id;
+
+        const recommendations = await Recommendation.find({ userId })
+            .select('location description photo createdAt updatedAt');
+
+        if (!recommendations || recommendations.length === 0) {
+            return res.status(404).json({ message: 'No recommendations found for this user' });
+        }
+
+        res.status(200).json(recommendations);
+    } catch (err) {
+        console.error('❌ Error fetching user recommendations:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Post user recommendation
+exports.postUserRecommendation = async(req, res) => {
+    const { location, description, photo } = req.body;
+
+    if (!location || !description) {
+        return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    try {
+        const userId = req.user._id;
+
+        const newRecommendation = new Recommendation({
+            userId,
+            location,
+            description,
+            photo
+        });
+
+        await newRecommendation.save();
+
+        res.status(201).json({ message: 'Recommendation created successfully', recommendation: newRecommendation });
+    } catch (error) {
+        console.error('❌ Error creating recommendation:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};

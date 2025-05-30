@@ -110,6 +110,12 @@ const { postUserReport } = require('../controllers/userController');
 router.post('/reports', authMiddleware, postUserReport);
 
 
+// Get user recommendations
+const { getUserRecommendations } = require('../controllers/userController');
+router.get('/recommendations', authMiddleware, getUserRecommendations);
+// Post user recommendation
+const { postUserRecommendation } = require('../controllers/userController');    
+router.post('/recommendations', authMiddleware, postUserRecommendation);
 
 
 module.exports = router;

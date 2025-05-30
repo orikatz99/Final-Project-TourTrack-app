@@ -58,7 +58,7 @@
                     android:layout_marginBottom="4dp" />
 
                 <TextView
-                    android:id="@+id/tvSelectLocation"
+                    android:id="@+id/tvReportLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Add location"
@@ -119,66 +119,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- ✳️ Share a Recommendation -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#DFEDF3"
-                android:padding="16dp"
-                android:layout_marginBottom="24dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Share a Recommendation"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:textColor="#000000"
-                    android:layout_marginBottom="12dp"
-                    android:fontFamily="@font/play_fair_display_regular" />
-
-                <EditText
-                    android:id="@+id/etRecommendation"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:hint="What do you recommend to fellow travelers?"
-                    android:background="@android:drawable/edit_text"
-                    android:gravity="top"
-                    android:inputType="textMultiLine"
-                    android:layout_marginBottom="14dp" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="14dp">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_camera"
-                        android:layout_marginEnd="8dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Add photo (optional)"
-                        android:textColor="#000000"
-                        android:textSize="16sp"/>
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/btnShareTip"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Share My Tip"
-                    android:backgroundTint="#FFF5CC"
-                    android:textColor="#000000"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
             <!-- ✳ My Reports -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -186,7 +126,7 @@
                 android:orientation="vertical"
                 android:background="#DFEDF3"
                 android:padding="16dp"
-                android:layout_marginBottom="40dp">
+                android:layout_marginBottom="24dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -206,29 +146,41 @@
                     android:padding="12dp">
 
                     <TextView
+                        android:id="@+id/tvReportType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Type: Hazard"
                         android:textColor="#000000" />
 
                     <TextView
+                        android:id="@+id/tvReportDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Date: 2024-10-05"
                         android:textColor="#000000" />
 
                     <TextView
+                        android:id="@+id/ReportLocation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Location: Pine Ridge Trail"
                         android:textColor="#000000" />
 
                     <TextView
+                        android:id="@+id/tvReportDescription"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Description: A fallen tree is blocking the path near the summit."
                         android:textColor="#000000"
                         android:layout_marginBottom="8dp" />
+
+                    <ImageView
+                        android:id="@+id/img_report_photo"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_marginTop="8dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/treesback" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -252,6 +204,163 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
+            <!-- ✳️ Share a Recommendation -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#DFEDF3"
+                android:padding="16dp"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Share a Recommendation"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:layout_marginBottom="12dp"
+                    android:fontFamily="@font/play_fair_display_regular" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location:"
+                    android:textColor="#000000"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/tvRecommendLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Add location"
+                    android:background="@android:drawable/edit_text"
+                    android:textColor="#000000"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+                <EditText
+                    android:id="@+id/etRecommendation"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:hint="What do you recommend to fellow travelers?"
+                    android:background="@android:drawable/edit_text"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:layout_marginBottom="14dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="14dp">
+
+                    <ImageView
+                        android:id="@+id/ivAddPhotoTip"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_camera"
+                        android:layout_marginEnd="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvAddPhotoTip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add photo (optional)"
+                        android:textColor="#000000"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnShareTip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Share My Tip"
+                    android:backgroundTint="#FFF5CC"
+                    android:textColor="#000000"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- ✳ My recommendation -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#DFEDF3"
+                android:padding="16dp"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="My Recommendation"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/play_fair_display_regular" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#FFF8DC"
+                    android:padding="12dp">
+
+
+
+                    <TextView
+                        android:id="@+id/tvRecommenDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Date: 2024-10-05"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:id="@+id/RecommendLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Location: Pine Ridge Trail"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:id="@+id/tvRecommendationDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Description: A fallen tree is blocking the path near the summit."
+                        android:textColor="#000000"
+                        android:layout_marginBottom="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnEditRecommendation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Edit"
+                            android:textColor="#000000"
+                            android:backgroundTint="#FFDDDD"
+                            android:layout_marginEnd="8dp" />
+
+                        <Button
+                            android:id="@+id/btnDeleteRecommendation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Delete"
+                            android:textColor="#000000"
+                            android:backgroundTint="#FFCCCC" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

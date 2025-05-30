@@ -24,13 +24,6 @@ app.use('/api/users', userRoutes); // All routes under /api/users will be handle
 const routeRoutes = require('./routes/routeRoutes');
 app.use('/api/routes', routeRoutes);
 
-//User Reports
-const reportRoutes = require('./routes/userRoutes');
-app.use('/api/reports', reportRoutes);
-
-
-
-
 
 // Start the server
 const PORT = process.env.PORT || 5000;
