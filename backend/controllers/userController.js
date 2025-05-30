@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 // Register a new user
-exports.signUpUser = async (req, res) => {
+exports.signUpUser = async(req, res) => {
     const { firstName, lastName, email, password, phone, birthDate } = req.body;
 
     if (!firstName || !lastName || !email || !password || !phone) {
@@ -69,7 +69,7 @@ exports.signUpUser = async (req, res) => {
 };
 
 // Update user's preferences
-exports.updatePreferences = async (req, res) => {
+exports.updatePreferences = async(req, res) => {
     try {
         const user = await User.findById(req.user._id);
         if (!user) {
@@ -86,7 +86,7 @@ exports.updatePreferences = async (req, res) => {
 };
 
 // Login user
-exports.loginUser = async (req, res) => {
+exports.loginUser = async(req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -120,7 +120,7 @@ exports.loginUser = async (req, res) => {
 };
 
 // Get user profile
-exports.getUserProfile = async (req, res) => {
+exports.getUserProfile = async(req, res) => {
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -136,17 +136,20 @@ exports.getUserProfile = async (req, res) => {
         }
 
         res.json({
+            firstName: user.firstName,
+            lastName: user.lastName,
             email: user.email,
             phone: user.phone,
-            name: user.firstName + ' ' + user.lastName,
+            preferences: user.preferences
         });
     } catch (error) {
         res.status(401).json({ message: 'Invalid token' });
     }
 };
 
+
 // Save or update user privacy & notification settings
-exports.savePrivacySettings = async (req, res) => {
+exports.savePrivacySettings = async(req, res) => {
     try {
         const userId = req.user._id;
 
@@ -172,7 +175,7 @@ exports.savePrivacySettings = async (req, res) => {
 };
 
 // Get user privacy & notification settings
-exports.getPrivacySettings = async (req, res) => {
+exports.getPrivacySettings = async(req, res) => {
     try {
         const userId = req.user._id;
 
@@ -190,7 +193,7 @@ exports.getPrivacySettings = async (req, res) => {
 
 //Get all users
 
-exports.getAllUsers = async (req, res) => {
+exports.getAllUsers = async(req, res) => {
     try {
         const currentUserId = req.user._id;
 
@@ -203,7 +206,3 @@ exports.getAllUsers = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
-
-
-
-

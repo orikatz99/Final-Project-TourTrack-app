@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Route = require('../models/Route');
+const { getRecommendations } = require('./recommendations');
 
 // GET all routes
 router.get('/', async(req, res) => {
@@ -11,5 +12,8 @@ router.get('/', async(req, res) => {
         res.status(500).json({ error: 'Failed to fetch routes' });
     }
 });
+
+// POST recommendations
+router.post('/recommendations', getRecommendations);
 
 module.exports = router;

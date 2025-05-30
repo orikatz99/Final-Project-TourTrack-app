@@ -73,6 +73,13 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+        View touchLayer = binding.getRoot().findViewById(R.id.map_touch_layer);
+        touchLayer.setOnTouchListener((v, event) -> {
+            // מבטל את ההתנגשות עם ScrollView כשנוגעים במפה
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
+        });
+
         requireActivity().setTitle("TourTrack");
 
         tv_weather_discription_and_temp = binding.tvWeatherDiscriptionAndTemp;
@@ -89,6 +96,9 @@ public class HomeFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(googleMap -> {
                 map = googleMap;
+                map.getUiSettings().setScrollGesturesEnabled(true);
+                map.getUiSettings().setZoomGesturesEnabled(true);
+
 
                 if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                         ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -190,10 +200,10 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<List<RouteModel>> call, Response<List<RouteModel>> response) {
                 if (response.isSuccessful() && response.body() != null && map != null) {
                     for (RouteModel route : response.body()) {
-                        LatLng position = new LatLng(route.latitude, route.longitude);
+                        LatLng position = new LatLng(route.getLatitude(), route.getLongitude());
                         map.addMarker(new MarkerOptions()
                                 .position(position)
-                                .title(route.name)
+                                .title(route.getName())
                                 .icon(getBitmapDescriptorFromVector(R.drawable.baseline_assistant_navigation_24,48,48)));
                     }
                 }
