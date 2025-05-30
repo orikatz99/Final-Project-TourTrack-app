@@ -206,3 +206,53 @@ exports.getAllUsers = async(req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+//get user reports
+exports.getUserReports = async(req, res) => {
+    try {
+        const userId = req.user._id;
+
+        const reports = await Report.find({ userId })
+            .populate('routeId', 'name difficulty lengthKm tags imageUrl description latitude longitude attraction category currentWeather')
+            .select('description status location photo type createdAt updatedAt');
+
+        if (!reports || reports.length === 0) {
+            return res.status(404).json({ message: 'No reports found for this user' });
+        }
+
+        res.status(200).json(reports);
+    } catch (err) {
+        console.error('❌ Error fetching user reports:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// post user report
+exports.postUserReport = async(req, res) => {
+    const { routeId, description, status, location, photo, type } = req.body;
+
+    if (!routeId || !description || !location || !type) {
+        return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    try {
+        const userId = req.user._id;
+
+        const newReport = new Report({
+            userId,
+            routeId,
+            description,
+            status: status || 'open',
+            location,
+            photo,
+            type
+        });
+
+        await newReport.save();
+
+        res.status(201).json({ message: 'Report created successfully', report: newReport });
+    } catch (error) {
+        console.error('❌ Error creating report:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};

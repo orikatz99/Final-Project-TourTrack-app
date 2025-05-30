@@ -77,12 +77,14 @@
                     android:layout_marginBottom="14dp">
 
                     <ImageView
+                        android:id="@+id/ivAddPhoto"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:src="@drawable/ic_camera"
                         android:layout_marginEnd="8dp" />
 
                     <TextView
+                        android:id="@+id/tvAddPhoto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Add photo"
@@ -177,14 +179,14 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- ✳️ My Reports -->
+            <!-- ✳ My Reports -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="#DFEDF3"
                 android:padding="16dp"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="40dp">
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -12,7 +12,8 @@ import java.io.IOException;
 
 public class RetrofitClient {
 
-    private static final String BASE_URL = "https://a763-109-186-101-112.ngrok-free.app";
+    private static final String BASE_URL = "http://192.168.173.223:5000/";
+
     private static Retrofit retrofit = null;
 
     public static ApiService getApiService() {

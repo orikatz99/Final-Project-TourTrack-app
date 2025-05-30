@@ -102,6 +102,14 @@ const { getAllUsers } = require('../controllers/userController');
 
 router.get('/', authMiddleware, getAllUsers);
 
+// Get user reports
+const { getUserReports } = require('../controllers/userController');
+router.get('/reports', authMiddleware, getUserReports);
+// Post user report
+const { postUserReport } = require('../controllers/userController');
+router.post('/reports', authMiddleware, postUserReport);
+
+
 
 
 module.exports = router;
