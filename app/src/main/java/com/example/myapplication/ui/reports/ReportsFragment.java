@@ -1,7 +1,12 @@
 package com.example.myapplication.ui.reports;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -39,6 +45,12 @@ public class ReportsFragment extends Fragment {
     private String token;
     private List<UserReportResponse> reportList = new ArrayList<>();
     private ReportAdapter reportAdapter;
+    private static final int IMAGE_PICK_CODE = 1001;
+    private static final int CAMERA_CAPTURE_CODE = 1002;
+    private static final int CAMERA_PERMISSION_CODE = 2001;
+
+    private Uri selectedImageUri;
+
 
     @Nullable
     @Override
@@ -70,8 +82,38 @@ public class ReportsFragment extends Fragment {
 
         // Handle send report button click
         binding.btnSendReport.setOnClickListener(v -> sendReport());
+        // Handle image selection from camera or gallery
+        cameraButtonClickListener();
 
         return root;
+    }
+
+    private void cameraButtonClickListener() {
+        binding.IBCamera.setOnClickListener(v -> {
+            String[] options = {"Choose from Gallery", "Take Photo"};
+            new AlertDialog.Builder(requireContext())
+                    .setTitle("Select Image")
+                    .setItems(options, (dialog, which) -> {
+                        if (which == 0) {
+                            Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(galleryIntent, IMAGE_PICK_CODE);
+                            binding.tvAddPhoto.setText("Image Selected");
+                        } else {
+                            if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA)
+                                    != PackageManager.PERMISSION_GRANTED) {
+                                requestPermissions(new String[]{android.Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+                            } else {
+                                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(cameraIntent, CAMERA_CAPTURE_CODE);
+                                binding.tvAddPhoto.setText("Image Selected");
+
+                            }
+                        }
+
+                    })
+                    .show();
+        });
+
     }
 
     private void setupSpinner() {
@@ -114,10 +156,18 @@ public class ReportsFragment extends Fragment {
         String location = binding.etReportLocation.getText().toString().trim();
         String description = binding.etProblemDescription.getText().toString().trim();
 
+
+
         if (selectedType.isEmpty() || location.isEmpty() || description.isEmpty()) {
             Toast.makeText(getContext(), "Please fill all required fields", Toast.LENGTH_SHORT).show();
             return;
         }
+
+
+
+
+
+
 
         ReportRequest newReport = new ReportRequest(
                 null,
@@ -129,7 +179,6 @@ public class ReportsFragment extends Fragment {
 
         ApiService apiService = RetrofitClient.getApiServiceWithAuth(token);
 
-        // **גם כאן ללא פרמטר token**
         apiService.sendReport(newReport).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -148,6 +197,20 @@ public class ReportsFragment extends Fragment {
                 Log.e("ReportsFragment", "Send report failure", t);
             }
         });
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted – open camera
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_CAPTURE_CODE);
+            } else {
+                Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
