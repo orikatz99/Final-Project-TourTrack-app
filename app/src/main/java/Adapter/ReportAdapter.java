@@ -2,6 +2,7 @@ package Adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import com.example.myapplication.models.UserReportResponse;
 import com.example.myapplication.network.ApiService;
 import com.example.myapplication.network.RetrofitClient;
 import com.example.myapplication.models.UpdateReportResponse;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 
 import java.util.List;
@@ -107,6 +110,10 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         ApiService apiService = RetrofitClient.getApiServiceWithAuth(token);
 
         Call<Void> call = apiService.deleteReport(reportId);
+        String photoUrl = reportList.get(position).getPhoto();
+        if (photoUrl != null && !photoUrl.isEmpty()) {
+            deleteImageFromFirebase(photoUrl);
+        }
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -126,6 +133,14 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         });
 
     }
+
+    private void deleteImageFromFirebase(String photoUrl) {
+        StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(photoUrl);
+        photoRef.delete()
+                .addOnSuccessListener(aVoid -> Log.d("ReportAdapter", "Image deleted from Firebase"))
+                .addOnFailureListener(e -> Log.e("ReportAdapter", "Failed to delete image: " + e.getMessage()));
+    }
+
 
     @Override
     public int getItemCount() {
