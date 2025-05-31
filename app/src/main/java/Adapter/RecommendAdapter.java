@@ -19,15 +19,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
-import com.example.myapplication.models.ReportRequest;
-import com.example.myapplication.models.UserReportResponse;
+import com.example.myapplication.models.RecommendRequest;
+import com.example.myapplication.models.UpdateRecommendResponse;
+import com.example.myapplication.models.UserRecommendationResponse;
 import com.example.myapplication.network.ApiService;
 import com.example.myapplication.network.RetrofitClient;
-import com.example.myapplication.models.UpdateReportResponse;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,36 +38,35 @@ import java.text.ParseException;
 import java.util.TimeZone;
 
 
-public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportViewHolder> {
+public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.RecommendViewHolder> {
 
     private Context context;
-    private List<UserReportResponse> reportList;
+    private List<UserRecommendationResponse> recommendationList;
     private String token;
 
-    public ReportAdapter(Context context, List<UserReportResponse> reportList, String token) {
+    public RecommendAdapter(Context context, List<UserRecommendationResponse> recommendationList, String token) {
         this.context = context;
-        this.reportList = reportList;
+        this.recommendationList = recommendationList;
         this.token = token;
     }
 
     @NonNull
     @Override
-    public ReportViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.vertical_reports, parent, false);
-        return new ReportViewHolder(view);
+    public RecommendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.vertical_recommend, parent, false);
+        return new RecommendViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReportViewHolder holder, int position) {
-        UserReportResponse report = reportList.get(position);
+    public void onBindViewHolder(@NonNull RecommendViewHolder holder, int position) {
+        UserRecommendationResponse recommend = recommendationList.get(position);
+        holder.RecommendLocation.setText("Location: " + recommend.getLocation());
+        holder.tvRecommendationDescription.setText("Description: " + recommend.getDescription());
 
-        holder.tvType.setText("Type: " + report.getType());
-        holder.tvLocation.setText("Location: " + report.getLocation());
-        holder.tvDescription.setText("Description: " + report.getDescription());
-        String mongoDateStr = report.getDate();
+        String mongoDateStr = recommend.getDate();
 
         showDateInFormat(holder, mongoDateStr);
-        String photoUrl = report.getPhoto();
+        String photoUrl = recommend.getPhoto();
 
         if (photoUrl != null && !photoUrl.isEmpty()) {
             holder.image.setVisibility(View.VISIBLE);
@@ -80,36 +77,33 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             holder.image.setVisibility(View.GONE);
         }
 
-        holder.btnEdit.setOnClickListener(v -> showEditDialog(report, position));
-        holder.btnDelete.setOnClickListener(v ->deleteReport(report.getReportId(), position));
-
+        holder.btnEdit.setOnClickListener(v -> showEditDialog(recommend, position));
+        holder.btnDelete.setOnClickListener(v -> deleteRecommend(recommend.getRecommend_id(), position));
     }
 
-    private void showDateInFormat(ReportViewHolder holder, String mongoDateStr) {
-        // Cut milliseconds and timezone to parse easily:
+    private void showDateInFormat(RecommendViewHolder holder, String mongoDateStr) {
         String cleanedDate = mongoDateStr.split("\\.")[0]; // "2025-05-30T17:50:50"
 
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Optional if Mongo dates are UTC
+        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         SimpleDateFormat outputFormat = new SimpleDateFormat("yy/MM/dd HH:mm");
 
         try {
             Date date = inputFormat.parse(cleanedDate);
             String formattedDate = outputFormat.format(date);
-            holder.tvReportDate.setText("Date: " + formattedDate);
+            holder.tvRecommendDate.setText("Date: " + formattedDate);
         } catch (ParseException e) {
             e.printStackTrace();
-            holder.tvReportDate.setText("Date: N/A");
+            holder.tvRecommendDate.setText("Date: N/A");
         }
-
     }
 
-    private void deleteReport(String reportId, int position) {
+    private void deleteRecommend(String reportId, int position) {
         ApiService apiService = RetrofitClient.getApiServiceWithAuth(token);
 
         Call<Void> call = apiService.deleteReport(reportId);
-        String photoUrl = reportList.get(position).getPhoto();
+        String photoUrl = recommendationList.get(position).getPhoto();
         if (photoUrl != null && !photoUrl.isEmpty()) {
             deleteImageFromFirebase(photoUrl);
         }
@@ -117,11 +111,11 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    reportList.remove(position);
+                    recommendationList.remove(position);
                     notifyItemRemoved(position);
-                    Toast.makeText(context, "Report deleted successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Recommendation deleted successfully", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, "Failed to delete report", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Failed to delete Recommendation", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -130,50 +124,47 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                 Toast.makeText(context, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     private void deleteImageFromFirebase(String photoUrl) {
         StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(photoUrl);
         photoRef.delete()
-                .addOnSuccessListener(aVoid -> Log.d("ReportAdapter", "Image deleted from Firebase"))
-                .addOnFailureListener(e -> Log.e("ReportAdapter", "Failed to delete image: " + e.getMessage()));
+                .addOnSuccessListener(aVoid -> Log.d("RecommendAdapter", "Image deleted from Firebase"))
+                .addOnFailureListener(e -> Log.e("RecommendAdapter", "Failed to delete image: " + e.getMessage()));
     }
-
 
     @Override
     public int getItemCount() {
-        return reportList.size();
+        return recommendationList.size();
     }
 
-    public static class ReportViewHolder extends RecyclerView.ViewHolder {
-        TextView tvType, tvLocation, tvDescription, tvReportDate;
+    public static class RecommendViewHolder extends RecyclerView.ViewHolder {
+        TextView tvRecommendDate,RecommendLocation,tvRecommendationDescription;
         ImageView image;
         Button btnEdit, btnDelete;
 
-        public ReportViewHolder(@NonNull View itemView) {
+        public RecommendViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvType = itemView.findViewById(R.id.tvReportType);
-            tvLocation = itemView.findViewById(R.id.tvReportLocation);
-            tvDescription = itemView.findViewById(R.id.tvReportDescription);
+            tvRecommendDate = itemView.findViewById(R.id.tvRecommenDate);
+            RecommendLocation = itemView.findViewById(R.id.RecommendLocation);
+            tvRecommendationDescription = itemView.findViewById(R.id.tvRecommendationDescription);
             image = itemView.findViewById(R.id.img_report_photo);
-            btnEdit = itemView.findViewById(R.id.btnEdit);
-            btnDelete = itemView.findViewById(R.id.btnDelete);
-            tvReportDate = itemView.findViewById(R.id.tvReportDate);
+            btnEdit = itemView.findViewById(R.id.btnEditRecommendation);
+            btnDelete = itemView.findViewById(R.id.btnDeleteRecommendation);
         }
     }
 
-    private void showEditDialog(UserReportResponse report, int position) {
+    private void showEditDialog(UserRecommendationResponse recommend, int position) {
         View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_report, null);
 
         Spinner spinnerReportType = dialogView.findViewById(R.id.spinnerReportType);
         EditText editLocation = dialogView.findViewById(R.id.editLocation);
         EditText editDescription = dialogView.findViewById(R.id.editDescription);
 
-        editLocation.setText(report.getLocation());
-        editDescription.setText(report.getDescription());
+        editLocation.setText(recommend.getLocation());
+        editDescription.setText(recommend.getDescription());
 
-        invillizeSpinner(spinnerReportType);
+        initializeSpinner(spinnerReportType);
 
         new AlertDialog.Builder(context)
                 .setView(dialogView)
@@ -182,42 +173,44 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                     String newLocation = editLocation.getText().toString().trim();
                     String newDescription = editDescription.getText().toString().trim();
 
-                    ReportRequest updatedReport = new ReportRequest(
-                            report.getUserId(),
-                            report.getPhoto(),
+                    RecommendRequest updatedRecommendRequest = new RecommendRequest(
+                            recommend.getUserId(),
+                            recommend.getPhoto(),
                             newDescription,
                             newLocation,
-                            newType
+                            recommend.getDate()
                     );
+
 
                     ApiService apiService = RetrofitClient.getApiServiceWithAuth(token);
 
-                    Call<UpdateReportResponse> call = apiService.updateRecommend(
+                    Call<UpdateRecommendResponse> call = apiService.updateRecommendation(
                             token,
-                            report.getReportId(),
-                            updatedReport
+                            recommend.getRecommendId(),
+                            updatedRecommendRequest
                     );
 
-                    call.enqueue(new Callback<UpdateReportResponse>() {
-                        @Override
-                        public void onResponse(Call<UpdateReportResponse> call, Response<UpdateReportResponse> response) {
-                            if (response.isSuccessful() && response.body() != null) {
-                                UserReportResponse updated = response.body().getReport();
 
-                                reportList.get(position).setDescription(updated.getDescription());
-                                reportList.get(position).setLocation(updated.getLocation());
-                                reportList.get(position).setType(updated.getType());
-                                reportList.get(position).setDate(updated.getDate());
+
+                    call.enqueue(new Callback<UpdateRecommendResponse>() {
+                        @Override
+                        public void onResponse(Call<UpdateRecommendResponse> call, Response<UpdateRecommendResponse> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                UserRecommendationResponse updated = response.body().getRecommend();
+
+                                recommendationList.get(position).setDescription(updated.getDescription());
+                                recommendationList.get(position).setLocation(updated.getLocation());
+                                recommendationList.get(position).setDate(updated.getDate());
 
                                 notifyItemChanged(position);
-                                Toast.makeText(context, "Report updated successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Recommendation updated successfully", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<UpdateReportResponse> call, Throwable t) {
+                        public void onFailure(Call<UpdateRecommendResponse> call, Throwable t) {
                             Toast.makeText(context, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -226,8 +219,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                 .show();
     }
 
-
-    private void invillizeSpinner(Spinner spinnerReportType) {
+    private void initializeSpinner(Spinner spinnerReportType) {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 context,
                 R.array.danger_types,
@@ -235,9 +227,5 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerReportType.setAdapter(adapter);
-
-
     }
-
-
 }

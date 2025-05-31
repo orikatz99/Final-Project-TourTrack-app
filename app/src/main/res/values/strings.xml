@@ -19,6 +19,16 @@
         <item>Injured Animal</item>
         <item>Other</item>
     </string-array>
+
+    <string-array name="recommendation_types">
+        <item>Attraction</item>
+        <item>Trail</item>
+        <item>Hotel</item>
+        <item>Restaurant</item>
+        <item>Activity</item>
+        <item>Other</item>
+    </string-array>
+
     <string-array name="galil_tahton_regions">
         <item>Kfar Tavor</item>
         <item>Eilabun</item>

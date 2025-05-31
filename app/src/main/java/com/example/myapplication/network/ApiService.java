@@ -5,17 +5,19 @@ import com.example.myapplication.models.LoginRequest;
 import com.example.myapplication.models.LoginResponse;
 import com.example.myapplication.models.PreferencesRequest;
 import com.example.myapplication.models.PrivacyResponseWrapper;
+import com.example.myapplication.models.RecommendRequest;
 import com.example.myapplication.models.ReportRecommendation;
 import com.example.myapplication.models.ReportRequest;
 import com.example.myapplication.models.SignUpRequest;
 import com.example.myapplication.models.SignUpResponse;
+import com.example.myapplication.models.UpdateRecommendResponse;
 import com.example.myapplication.models.UpdateReportResponse;
 import com.example.myapplication.models.UserConnectedResponse;
 import com.example.myapplication.models.UserInfoResponse;
 import com.example.myapplication.models.UserLocationResponse;
 import com.example.myapplication.models.RouteModel;
 import com.example.myapplication.models.UserReportResponse;
-import com.example.myapplication.models.UserRecommendation;
+import com.example.myapplication.models.UserRecommendationResponse;
 import com.example.myapplication.models.UsersResponse;
 
 
@@ -89,7 +91,7 @@ public interface ApiService {
 
 
     @PUT("api/users/report/{id}")
-    Call<UpdateReportResponse> updateReport(
+    Call<UpdateReportResponse> updateRecommend(
             @Header("Authorization") String token,
             @Path("id") String reportId,
             @Body ReportRequest updatedReport
@@ -105,10 +107,14 @@ public interface ApiService {
     Call<Void> sendRecommendation(@Header("Authorization") String token, @Body ReportRecommendation reportRecommendation);
 
     @GET("api/users/recommendation")
-    Call<List<UserRecommendation>> getRecommendation(@Header("Authorization") String token);
+    Call<List<UserRecommendationResponse>> getRecommendation(@Header("Authorization") String token);
 
     @PUT("api/users/recommendation/{id}")
-    Call<Void> updateRecommendation(@Header("Authorization") String token, @Path("id") String recommendationId, @Body ReportRecommendation updatedRecommendation);
+    Call<UpdateRecommendResponse> updateRecommendation(
+            @Header("Authorization") String token,
+            @Path("id") String recommendationId,
+            @Body RecommendRequest updatedRecommendation
+    );
 
     @DELETE("api/users/recommendation/{id}")
     Call<Void> deleteRecommendation(@Header("Authorization") String token, @Path("id") String recommendationId);

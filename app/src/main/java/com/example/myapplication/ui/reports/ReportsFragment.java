@@ -14,10 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentReportsBinding;
 import com.example.myapplication.models.ReportRequest;
+import com.example.myapplication.models.UserRecommendationResponse;
 import com.example.myapplication.models.UserReportResponse;
 import com.example.myapplication.network.ApiService;
 import com.example.myapplication.network.RetrofitClient;
@@ -39,6 +36,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import Adapter.RecommendAdapter;
 import Adapter.ReportAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,7 +47,10 @@ public class ReportsFragment extends Fragment {
     private FragmentReportsBinding binding;
     private String token;
     private List<UserReportResponse> reportList = new ArrayList<>();
+    private List<UserRecommendationResponse> recommendList = new ArrayList<>();
+
     private ReportAdapter reportAdapter;
+    private RecommendAdapter recommendAdapter;
     private static final int IMAGE_PICK_CODE = 1001;
     private static final int CAMERA_CAPTURE_CODE = 1002;
     private static final int CAMERA_PERMISSION_CODE = 2001;
@@ -65,8 +66,9 @@ public class ReportsFragment extends Fragment {
         binding = FragmentReportsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        // Initialize spinner
-        setupSpinner();
+        // Initialize spinners
+        setupReportSpinner();
+        setupRecommendSpinner();
 
         // Load token from SharedPreferences FIRST
         token = requireActivity().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
@@ -80,7 +82,9 @@ public class ReportsFragment extends Fragment {
 
         binding.recyclerViewReports.setLayoutManager(new LinearLayoutManager(getContext()));
         reportAdapter = new ReportAdapter(requireContext(), reportList, token);
+        recommendAdapter = new RecommendAdapter(requireContext(), recommendList, token);
         binding.recyclerViewReports.setAdapter(reportAdapter);
+        binding.recyclerViewRecommendations.setAdapter(recommendAdapter);
 
 
         // Load reports from server
@@ -122,7 +126,7 @@ public class ReportsFragment extends Fragment {
 
     }
 
-    private void setupSpinner() {
+    private void setupReportSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.danger_types,
@@ -130,6 +134,15 @@ public class ReportsFragment extends Fragment {
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinnerReportType.setAdapter(adapter);
+    }
+    private void setupRecommendSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                requireContext(),
+                R.array.recommendation_types,
+                android.R.layout.simple_spinner_item
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerRecommendType.setAdapter(adapter);
     }
 
     private void loadReports() {
