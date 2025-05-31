@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "564552263007",
+    "project_id": "tourtrack-f7c78",
+    "storage_bucket": "tourtrack-f7c78.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564552263007:android:7aaa4ac00e9688d73582ea",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDy3UFEOnbQel7PCbIMejWO2tsD0LW1LA0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
