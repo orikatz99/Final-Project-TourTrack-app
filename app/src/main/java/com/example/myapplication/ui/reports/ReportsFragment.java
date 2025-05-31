@@ -1,9 +1,11 @@
 package com.example.myapplication.ui.reports;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,7 +32,10 @@ import com.example.myapplication.models.ReportRequest;
 import com.example.myapplication.models.UserReportResponse;
 import com.example.myapplication.network.ApiService;
 import com.example.myapplication.network.RetrofitClient;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +55,7 @@ public class ReportsFragment extends Fragment {
     private static final int CAMERA_PERMISSION_CODE = 2001;
 
     private Uri selectedImageUri;
+
 
 
     @Nullable
@@ -151,30 +157,44 @@ public class ReportsFragment extends Fragment {
         });
     }
 
+
     private void sendReport() {
         String selectedType = binding.spinnerReportType.getSelectedItem().toString();
         String location = binding.etReportLocation.getText().toString().trim();
         String description = binding.etProblemDescription.getText().toString().trim();
-
-
 
         if (selectedType.isEmpty() || location.isEmpty() || description.isEmpty()) {
             Toast.makeText(getContext(), "Please fill all required fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        if (selectedImageUri != null) {
+            // Upload image first
+            Log.d("ReportsFragment", "Selected image URI: " + selectedImageUri);
 
+            uploadImageToFirebaseStorage(selectedImageUri, new OnImageUploadListener() {
+                @Override
+                public void onSuccess(String imageUrl) {
+                    sendReportToServer(imageUrl, description, location, selectedType);
+                }
 
-
-
-
-
+                @Override
+                public void onFailure(String errorMessage) {
+                    Toast.makeText(getContext(), "Image upload failed: " + errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            // No image selected, continue without photo
+            sendReportToServer(null, description, location, selectedType);
+        }
+    }
+    private void sendReportToServer(String imageUrl, String description, String location, String type) {
         ReportRequest newReport = new ReportRequest(
-                null,
-                null,
+                null,           // userId
+                imageUrl,       // photo URL from Firebase
                 description,
                 location,
-                selectedType
+                type
         );
 
         ApiService apiService = RetrofitClient.getApiServiceWithAuth(token);
@@ -198,6 +218,7 @@ public class ReportsFragment extends Fragment {
             }
         });
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -212,6 +233,55 @@ public class ReportsFragment extends Fragment {
             }
         }
     }
+    private void uploadImageToFirebaseStorage(Uri imageUri, OnImageUploadListener listener) {
+        if (imageUri == null) {
+            listener.onFailure("Image Uri is null");
+            Toast.makeText(getContext(), "Image Uri is null", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String fileName = "reports/" + System.currentTimeMillis() + ".jpg";
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(fileName);
+
+        storageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
+                        .addOnSuccessListener(downloadUri -> {
+                            String imageUrl = downloadUri.toString();
+                            listener.onSuccess(imageUrl);
+                        })
+                        .addOnFailureListener(e -> listener.onFailure("Failed to get download URL: " + e.getMessage()))
+                )
+                .addOnFailureListener(e -> listener.onFailure("Upload failed: " + e.getMessage()));
+    }
+    public interface OnImageUploadListener {
+        void onSuccess(String imageUrl);
+        void onFailure(String errorMessage);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            if (requestCode == IMAGE_PICK_CODE) {
+                // Gallery selected image
+                selectedImageUri = data.getData();
+                binding.tvAddPhoto.setText("Image selected from gallery ✅");
+
+            } else if (requestCode == CAMERA_CAPTURE_CODE) {
+                // Captured image from camera returns Bitmap
+                Bitmap photoBitmap = (Bitmap) data.getExtras().get("data");
+                selectedImageUri = getImageUriFromBitmap(requireContext(), photoBitmap);
+                binding.tvAddPhoto.setText("Image captured from camera ✅");
+            }
+        }
+    }
+
+    private Uri getImageUriFromBitmap(Context context, Bitmap bitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "CapturedImage", null);
+        return Uri.parse(path);
+    }
 
     @Override
     public void onDestroyView() {
@@ -219,3 +289,4 @@ public class ReportsFragment extends Fragment {
         binding = null;
     }
 }
+
