@@ -6,7 +6,6 @@ import com.example.myapplication.models.LoginResponse;
 import com.example.myapplication.models.PreferencesRequest;
 import com.example.myapplication.models.PrivacyResponseWrapper;
 import com.example.myapplication.models.RecommendRequest;
-import com.example.myapplication.models.ReportRecommendation;
 import com.example.myapplication.models.ReportRequest;
 import com.example.myapplication.models.SignUpRequest;
 import com.example.myapplication.models.SignUpResponse;
@@ -104,10 +103,10 @@ public interface ApiService {
 
     //user recommendation
     @POST("api/users/recommendation")
-    Call<Void> sendRecommendation(@Header("Authorization") String token, @Body ReportRecommendation reportRecommendation);
+    Call<Void> sendRecommendation(@Body RecommendRequest recommendRequest);
 
     @GET("api/users/recommendation")
-    Call<List<UserRecommendationResponse>> getRecommendation(@Header("Authorization") String token);
+    Call<List<UserRecommendationResponse>> getRecommendations();
 
     @PUT("api/users/recommendation/{id}")
     Call<UpdateRecommendResponse> updateRecommendation(

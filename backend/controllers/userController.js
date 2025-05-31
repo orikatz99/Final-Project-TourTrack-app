@@ -267,14 +267,14 @@ exports.getUserRecommendations = async(req, res) => {
     try {
         const userId = req.user._id;
 
-        const recommendations = await Recommendation.find({ userId })
+        const recommendation = await Recommendation.find({ userId })
             .select('location description photo createdAt updatedAt');
 
-        if (!recommendations || recommendations.length === 0) {
+        if (!recommendation) {
             return res.status(404).json({ message: 'No recommendations found for this user' });
         }
 
-        res.status(200).json(recommendations);
+        res.status(200).json(recommendation);
     } catch (err) {
         console.error('❌ Error fetching user recommendations:', err);
         res.status(500).json({ message: 'Server error' });
@@ -350,5 +350,48 @@ exports.updateReport = async (req, res) => {
     console.error('❌ Error updating report:', err.message);
     res.status(500).json({ message: 'Server error' });
   }
+};
+
+// PUT /api/users/recommendation/:id
+exports.updateUserRecommendation = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { description, location, photo } = req.body;
+
+        const updatedRecommendation = await Recommendation.findByIdAndUpdate(
+            id,
+            { description, location, photo, updatedAt: new Date() },
+            { new: true }
+        );
+
+        if (!updatedRecommendation) {
+            return res.status(404).json({ message: 'Recommendation not found' });
+        }
+
+        res.status(200).json({
+            message: 'Recommendation updated successfully',
+            recommend: updatedRecommendation
+        });
+    } catch (err) {
+        console.error('❌ Error updating recommendation:', err.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+// DELETE /api/users/recommendation/:id
+exports.deleteUserRecommendation = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const deleted = await Recommendation.findByIdAndDelete(id);
+
+        if (!deleted) {
+            return res.status(404).json({ message: 'Recommendation not found' });
+        }
+
+        res.status(200).json({ message: 'Recommendation deleted successfully' });
+    } catch (err) {
+        console.error('❌ Error deleting recommendation:', err.message);
+        res.status(500).json({ message: 'Server error' });
+    }
 };
 

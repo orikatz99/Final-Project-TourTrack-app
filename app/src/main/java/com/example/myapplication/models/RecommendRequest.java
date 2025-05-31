@@ -6,18 +6,25 @@ public class RecommendRequest {
     private String photo;
     private String description;
     private String location;
-    private String date;
+
+    private String type;
+
 
     public RecommendRequest() {
 
     }
 
-    public RecommendRequest(String userId, String photo, String description, String location, String date) {
+    public RecommendRequest(String userId, String photo, String description, String location, String type) {
         this.userId = userId;
         this.photo = photo;
         this.description = description;
         this.location = location;
-        this.date = date;
+        this.type = type;
+    }
+
+    public RecommendRequest setType(String type) {
+        this.type = type;
+        return this;
     }
 
     public RecommendRequest setPhoto(String photo) {
@@ -35,9 +42,6 @@ public class RecommendRequest {
         return this;
     }
 
-    public RecommendRequest setDate(String date) {
-        this.date = date;
-        return this;
-    }
+
 }
 

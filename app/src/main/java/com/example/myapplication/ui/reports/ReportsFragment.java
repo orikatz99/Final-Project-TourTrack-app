@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentReportsBinding;
+import com.example.myapplication.models.RecommendRequest;
 import com.example.myapplication.models.ReportRequest;
 import com.example.myapplication.models.UserRecommendationResponse;
 import com.example.myapplication.models.UserReportResponse;
@@ -51,11 +54,19 @@ public class ReportsFragment extends Fragment {
 
     private ReportAdapter reportAdapter;
     private RecommendAdapter recommendAdapter;
-    private static final int IMAGE_PICK_CODE = 1001;
-    private static final int CAMERA_CAPTURE_CODE = 1002;
-    private static final int CAMERA_PERMISSION_CODE = 2001;
+    private static final int IMAGE_PICK_REPORT = 1001;
+    private static final int IMAGE_PICK_RECOMMEND = 1002;
+    private static final int CAMERA_CAPTURE_REPORT = 1003;
+    private static final int CAMERA_CAPTURE_RECOMMEND = 1004;
 
-    private Uri selectedImageUri;
+
+    private static final int CAMERA_PERMISSION_CODE = 2001;
+    private static final int CAMERA_PERMISSION_REPORT = 2001;
+    private static final int CAMERA_PERMISSION_RECOMMEND = 2002;
+
+    private Uri selectedReportImageUri;
+    private Uri selectedRecommendImageUri;
+
 
 
 
@@ -89,33 +100,117 @@ public class ReportsFragment extends Fragment {
 
         // Load reports from server
         loadReports();
+        // Load demo recommendations
+         loadRecommendations();
+
+
 
         // Handle send report button click
         binding.btnSendReport.setOnClickListener(v -> sendReport());
+        // Handle send recommend button click
+        binding.btnShareTip.setOnClickListener(v -> sendRecommend());
         // Handle image selection from camera or gallery
-        cameraButtonClickListener();
-
+        cameraReportButtonClickListener(binding.tvAddPhotoReport, CAMERA_CAPTURE_REPORT, IMAGE_PICK_REPORT);
+        cameraRecommendButtonClickListener(binding.tvAddPhotoRecommend, CAMERA_CAPTURE_RECOMMEND, IMAGE_PICK_RECOMMEND);
         return root;
     }
 
-    private void cameraButtonClickListener() {
-        binding.IBCamera.setOnClickListener(v -> {
+    private void loadRecommendations() {
+        ApiService apiService = RetrofitClient.getApiServiceWithAuth(token);
+
+        apiService.getRecommendations().enqueue(new Callback<List<UserRecommendationResponse>>() {
+            @Override
+            public void onResponse(Call<List<UserRecommendationResponse>> call, Response<List<UserRecommendationResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    recommendList.clear();
+                    recommendList.addAll(response.body());
+                    recommendAdapter.notifyDataSetChanged();
+                    Log.d("ReportsFragment", "Loaded " + recommendList.size() + " recommends");
+                } else {
+                    Toast.makeText(getContext(), "Failed to load recommends", Toast.LENGTH_SHORT).show();
+                    Log.e("ReportsFragment", "Load recommends failed: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UserRecommendationResponse>> call, Throwable t) {
+                Toast.makeText(getContext(), "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("ReportsFragment", "Load recommends failure", t);
+            }
+        });
+    }
+
+    private void loadReports() {
+        ApiService apiService = RetrofitClient.getApiServiceWithAuth(token);
+
+        apiService.getReports().enqueue(new Callback<List<UserReportResponse>>() {
+            @Override
+            public void onResponse(Call<List<UserReportResponse>> call, Response<List<UserReportResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    reportList.clear();
+                    reportList.addAll(response.body());
+                    reportAdapter.notifyDataSetChanged();
+                    Log.d("ReportsFragment", "Loaded " + reportList.size() + " reports");
+                } else {
+                    Toast.makeText(getContext(), "Failed to load reports", Toast.LENGTH_SHORT).show();
+                    Log.e("ReportsFragment", "Load reports failed: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UserReportResponse>> call, Throwable t) {
+                Toast.makeText(getContext(), "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("ReportsFragment", "Load reports failure", t);
+            }
+        });
+    }
+
+
+    private void cameraReportButtonClickListener(TextView tvAddPhoto,int cameraCode,int imagePickCode) {
+        binding.IBCameraReport.setOnClickListener(v -> {
             String[] options = {"Choose from Gallery", "Take Photo"};
             new AlertDialog.Builder(requireContext())
                     .setTitle("Select Image")
                     .setItems(options, (dialog, which) -> {
                         if (which == 0) {
                             Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            startActivityForResult(galleryIntent, IMAGE_PICK_CODE);
-                            binding.tvAddPhoto.setText("Image Selected");
+                            startActivityForResult(galleryIntent, imagePickCode);
+                            tvAddPhoto.setText("Image Selected");
                         } else {
                             if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA)
                                     != PackageManager.PERMISSION_GRANTED) {
                                 requestPermissions(new String[]{android.Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
                             } else {
                                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivityForResult(cameraIntent, CAMERA_CAPTURE_CODE);
-                                binding.tvAddPhoto.setText("Image Selected");
+                                startActivityForResult(cameraIntent, cameraCode);
+                                tvAddPhoto.setText("Image Selected");
+
+                            }
+                        }
+
+                    })
+                    .show();
+        });
+
+    }
+    private void cameraRecommendButtonClickListener(TextView tvAddPhoto,int cameraCode,int imagePickCode) {
+        binding.IBCameraRecommend.setOnClickListener(v -> {
+            String[] options = {"Choose from Gallery", "Take Photo"};
+            new AlertDialog.Builder(requireContext())
+                    .setTitle("Select Image")
+                    .setItems(options, (dialog, which) -> {
+                        if (which == 0) {
+                            Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(galleryIntent, imagePickCode);
+                            tvAddPhoto.setText("Image Selected");
+                        } else {
+                            if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA)
+                                    != PackageManager.PERMISSION_GRANTED) {
+                                requestPermissions(new String[]{android.Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+                            } else {
+                                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(cameraIntent, cameraCode);
+                                tvAddPhoto.setText("Image Selected");
 
                             }
                         }
@@ -145,30 +240,7 @@ public class ReportsFragment extends Fragment {
         binding.spinnerRecommendType.setAdapter(adapter);
     }
 
-    private void loadReports() {
-        ApiService apiService = RetrofitClient.getApiServiceWithAuth(token);
 
-        apiService.getReports().enqueue(new Callback<List<UserReportResponse>>() {
-            @Override
-            public void onResponse(Call<List<UserReportResponse>> call, Response<List<UserReportResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    reportList.clear();
-                    reportList.addAll(response.body());
-                    reportAdapter.notifyDataSetChanged();
-                    Log.d("ReportsFragment", "Loaded " + reportList.size() + " reports");
-                } else {
-                    Toast.makeText(getContext(), "Failed to load reports", Toast.LENGTH_SHORT).show();
-                    Log.e("ReportsFragment", "Load reports failed: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<UserReportResponse>> call, Throwable t) {
-                Toast.makeText(getContext(), "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e("ReportsFragment", "Load reports failure", t);
-            }
-        });
-    }
 
 
     private void sendReport() {
@@ -181,13 +253,13 @@ public class ReportsFragment extends Fragment {
             return;
         }
 
-        if (selectedImageUri != null) {
+        if (selectedReportImageUri != null) {
             // Upload image first
-            Log.d("ReportsFragment", "Selected image URI: " + selectedImageUri);
+            Log.d("ReportsFragment", "Selected image URI: " + selectedReportImageUri);
 
-            uploadImageToFirebaseStorage(selectedImageUri, new OnImageUploadListener() {
+            uploadImageToFirebaseStorage(selectedReportImageUri, "reports/",new OnImageUploadListener() {
                 @Override
-                public void onSuccess(String imageUrl) {
+                public void onSuccess(String imageUrl, String folderName) {
                     sendReportToServer(imageUrl, description, location, selectedType);
                 }
 
@@ -201,6 +273,69 @@ public class ReportsFragment extends Fragment {
             sendReportToServer(null, description, location, selectedType);
         }
     }
+
+    private void sendRecommend(){
+        String selectedType = binding.spinnerRecommendType.getSelectedItem().toString();
+        String location = binding.etRecommendLocation.getText().toString().trim();
+        String description = binding.etRecommendation.getText().toString().trim();
+
+        if (selectedType.isEmpty() || location.isEmpty() || description.isEmpty()) {
+            Toast.makeText(getContext(), "Please fill all required fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (selectedRecommendImageUri != null) {
+            // Upload image first
+            Log.d("ReportsFragment -", "Selected image URI - RECOMMENDATION: " + selectedRecommendImageUri);
+
+            uploadImageToFirebaseStorage(selectedRecommendImageUri, "recommendations/", new OnImageUploadListener() {
+                @Override
+                public void onSuccess(String imageUrl, String folderName) {
+                    sendRecommendToServer(imageUrl, description, location, selectedType);
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+                    Toast.makeText(getContext(), "Image upload for recommend failed: " + errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            // No image selected, continue without photo
+            sendRecommendToServer(null, description, location, selectedType);
+        }
+    }
+
+    private void sendRecommendToServer(String imageUrl, String description, String location, String type) {
+        RecommendRequest newRecommend = new RecommendRequest(
+                null,           // userId
+                imageUrl,       // photo URL from Firebase
+                description,
+                location,
+                type
+        );
+
+        ApiService apiService = RetrofitClient.getApiServiceWithAuth(token);
+
+        apiService.sendRecommendation(newRecommend).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Recommend sent successfully", Toast.LENGTH_SHORT).show();
+                    loadRecommendations();
+                } else {
+                    Toast.makeText(getContext(), "Failed to send recommend", Toast.LENGTH_SHORT).show();
+                    Log.e("ReportsFragment", "Send recommend failed: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getContext(), "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("ReportsFragment", "Send recommend failure", t);
+            }
+        });
+    }
+
     private void sendReportToServer(String imageUrl, String description, String location, String type) {
         ReportRequest newReport = new ReportRequest(
                 null,           // userId
@@ -236,38 +371,43 @@ public class ReportsFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == CAMERA_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted – open camera
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_CAPTURE_CODE);
-            } else {
-                Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show();
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+            if (requestCode == CAMERA_PERMISSION_REPORT) {
+                startActivityForResult(cameraIntent, CAMERA_CAPTURE_REPORT);
+
+            } else if (requestCode == CAMERA_PERMISSION_RECOMMEND) {
+                startActivityForResult(cameraIntent, CAMERA_CAPTURE_RECOMMEND);
+
             }
+        } else {
+            Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show();
         }
     }
-    private void uploadImageToFirebaseStorage(Uri imageUri, OnImageUploadListener listener) {
+
+    private void uploadImageToFirebaseStorage(Uri imageUri,String folderName, OnImageUploadListener listener) {
         if (imageUri == null) {
             listener.onFailure("Image Uri is null");
             Toast.makeText(getContext(), "Image Uri is null", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String fileName = "reports/" + System.currentTimeMillis() + ".jpg";
+        String fileName = folderName + System.currentTimeMillis() + ".jpg";
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(fileName);
 
         storageRef.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
                         .addOnSuccessListener(downloadUri -> {
                             String imageUrl = downloadUri.toString();
-                            listener.onSuccess(imageUrl);
+                            listener.onSuccess(imageUrl, folderName);
                         })
                         .addOnFailureListener(e -> listener.onFailure("Failed to get download URL: " + e.getMessage()))
                 )
                 .addOnFailureListener(e -> listener.onFailure("Upload failed: " + e.getMessage()));
     }
     public interface OnImageUploadListener {
-        void onSuccess(String imageUrl);
+        void onSuccess(String imageUrl, String folderName);
         void onFailure(String errorMessage);
     }
     @Override
@@ -275,19 +415,27 @@ public class ReportsFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK && data != null) {
-            if (requestCode == IMAGE_PICK_CODE) {
-                // Gallery selected image
-                selectedImageUri = data.getData();
-                binding.tvAddPhoto.setText("Image selected from gallery ✅");
+            if (requestCode == IMAGE_PICK_REPORT) {
+                selectedReportImageUri = data.getData();
+                binding.tvAddPhotoReport.setText("Image selected from gallery ✅");
 
-            } else if (requestCode == CAMERA_CAPTURE_CODE) {
-                // Captured image from camera returns Bitmap
+            } else if (requestCode == IMAGE_PICK_RECOMMEND) {
+                selectedRecommendImageUri = data.getData();
+                binding.tvAddPhotoRecommend.setText("Image selected from gallery ✅");
+
+            } else if (requestCode == CAMERA_CAPTURE_REPORT) {
                 Bitmap photoBitmap = (Bitmap) data.getExtras().get("data");
-                selectedImageUri = getImageUriFromBitmap(requireContext(), photoBitmap);
-                binding.tvAddPhoto.setText("Image captured from camera ✅");
+                selectedReportImageUri = getImageUriFromBitmap(requireContext(), photoBitmap);
+                binding.tvAddPhotoReport.setText("Image captured from camera ✅");
+
+            } else if (requestCode == CAMERA_CAPTURE_RECOMMEND) {
+                Bitmap photoBitmap = (Bitmap) data.getExtras().get("data");
+                selectedRecommendImageUri = getImageUriFromBitmap(requireContext(), photoBitmap);
+                binding.tvAddPhotoRecommend.setText("Image captured from camera ✅");
             }
         }
     }
+
 
     private Uri getImageUriFromBitmap(Context context, Bitmap bitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();

@@ -77,7 +77,7 @@
                     android:orientation="horizontal">
 
                     <ImageButton
-                        android:id="@+id/IB_camera"
+                        android:id="@+id/IB_camera_report"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:src="@drawable/ic_camera"
@@ -86,7 +86,7 @@
                  />
 
                     <TextView
-                        android:id="@+id/tvAddPhoto"
+                        android:id="@+id/tvAddPhoto_report"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Add photo (optional)"
@@ -220,15 +220,16 @@
                     android:gravity="center_vertical"
                     android:layout_marginBottom="14dp">
 
-                    <ImageView
-                        android:id="@+id/ivAddPhotoTip"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                    <ImageButton
+                        android:id="@+id/IB_camera_recommend"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/ic_camera"
-                        android:layout_marginEnd="8dp" />
-
+                        android:background="@android:color/transparent"
+                        android:scaleType="centerInside"
+                        />
                     <TextView
-                        android:id="@+id/tvAddPhotoTip"
+                        android:id="@+id/tvAddPhoto_recommend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Add photo (optional)"

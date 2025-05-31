@@ -155,21 +155,21 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
     }
 
     private void showEditDialog(UserRecommendationResponse recommend, int position) {
-        View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_report, null);
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_recommend, null);
 
-        Spinner spinnerReportType = dialogView.findViewById(R.id.spinnerReportType);
+        Spinner spinnerRecommendType = dialogView.findViewById(R.id.spinnerRecommendType);
         EditText editLocation = dialogView.findViewById(R.id.editLocation);
         EditText editDescription = dialogView.findViewById(R.id.editDescription);
 
         editLocation.setText(recommend.getLocation());
         editDescription.setText(recommend.getDescription());
 
-        initializeSpinner(spinnerReportType);
+        initializeSpinner(spinnerRecommendType);
 
         new AlertDialog.Builder(context)
                 .setView(dialogView)
                 .setPositiveButton("Save", (dialog, which) -> {
-                    String newType = spinnerReportType.getSelectedItem().toString().trim();
+                    String newType = spinnerRecommendType.getSelectedItem().toString().trim();
                     String newLocation = editLocation.getText().toString().trim();
                     String newDescription = editDescription.getText().toString().trim();
 
@@ -178,7 +178,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
                             recommend.getPhoto(),
                             newDescription,
                             newLocation,
-                            recommend.getDate()
+                            newType
                     );
 
 

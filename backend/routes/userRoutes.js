@@ -7,6 +7,8 @@ const {
     getUserProfile,
     getPrivacySettings,
     savePrivacySettings,
+    updateUserRecommendation,
+    deleteUserRecommendation
 } = require('../controllers/userController');
 
 const authMiddleware = require('../middlewares/authMiddleware');
@@ -120,10 +122,15 @@ router.delete('/report/:id', authMiddleware, deleteUserReport);
 
 // Get user recommendations
 const { getUserRecommendations } = require('../controllers/userController');
-router.get('/recommendations', authMiddleware, getUserRecommendations);
+router.get('/recommendation', authMiddleware, getUserRecommendations);
 // Post user recommendation
 const { postUserRecommendation } = require('../controllers/userController');    
-router.post('/recommendations', authMiddleware, postUserRecommendation);
+router.post('/recommendation', authMiddleware, postUserRecommendation);
+// PUT update recommendation
+router.put('/recommendation/:id', authMiddleware, updateUserRecommendation);
+
+// DELETE recommendation
+router.delete('/recommendation/:id', authMiddleware, deleteUserRecommendation);
 
 
 
