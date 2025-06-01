@@ -106,7 +106,7 @@ public interface ApiService {
     Call<Void> sendRecommendation(@Body RecommendRequest recommendRequest);
 
     @GET("api/users/recommendation")
-    Call<List<UserRecommendationResponse>> getRecommendations();
+    Call<List<UserRecommendationResponse>> getRecommendations(@Header("Authorization") String token);
 
     @PUT("api/users/recommendation/{id}")
     Call<UpdateRecommendResponse> updateRecommendation(

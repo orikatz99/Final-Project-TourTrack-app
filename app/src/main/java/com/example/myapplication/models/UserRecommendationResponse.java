@@ -1,11 +1,15 @@
 package com.example.myapplication.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class UserRecommendationResponse {
     private String userId;
     private String  recommend_id;
     private String  description;
     private String photo;
     private String location;
+    @SerializedName("createdAt")
+
     private  String date;
 
     public UserRecommendationResponse() {

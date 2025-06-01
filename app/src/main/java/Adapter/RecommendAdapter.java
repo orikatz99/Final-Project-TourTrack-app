@@ -99,10 +99,10 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
         }
     }
 
-    private void deleteRecommend(String reportId, int position) {
+    private void deleteRecommend(String recommendId, int position) {
         ApiService apiService = RetrofitClient.getApiServiceWithAuth(token);
 
-        Call<Void> call = apiService.deleteReport(reportId);
+        Call<Void> call = apiService.deleteRecommendation(token, recommendId);
         String photoUrl = recommendationList.get(position).getPhoto();
         if (photoUrl != null && !photoUrl.isEmpty()) {
             deleteImageFromFirebase(photoUrl);

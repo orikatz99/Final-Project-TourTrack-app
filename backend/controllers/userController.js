@@ -270,9 +270,10 @@ exports.getUserRecommendations = async(req, res) => {
         const recommendation = await Recommendation.find({ userId })
             .select('location description photo createdAt updatedAt');
 
+            /*
         if (!recommendation) {
             return res.status(404).json({ message: 'No recommendations found for this user' });
-        }
+        }*/
 
         res.status(200).json(recommendation);
     } catch (err) {

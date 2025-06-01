@@ -94,6 +94,8 @@ public class ReportsFragment extends Fragment {
         binding.recyclerViewReports.setLayoutManager(new LinearLayoutManager(getContext()));
         reportAdapter = new ReportAdapter(requireContext(), reportList, token);
         recommendAdapter = new RecommendAdapter(requireContext(), recommendList, token);
+        binding.recyclerViewRecommendations.setLayoutManager(new LinearLayoutManager(getContext()));
+
         binding.recyclerViewReports.setAdapter(reportAdapter);
         binding.recyclerViewRecommendations.setAdapter(recommendAdapter);
 
@@ -118,7 +120,7 @@ public class ReportsFragment extends Fragment {
     private void loadRecommendations() {
         ApiService apiService = RetrofitClient.getApiServiceWithAuth(token);
 
-        apiService.getRecommendations().enqueue(new Callback<List<UserRecommendationResponse>>() {
+        apiService.getRecommendations(token).enqueue(new Callback<List<UserRecommendationResponse>>() {
             @Override
             public void onResponse(Call<List<UserRecommendationResponse>> call, Response<List<UserRecommendationResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -126,6 +128,9 @@ public class ReportsFragment extends Fragment {
                     recommendList.addAll(response.body());
                     recommendAdapter.notifyDataSetChanged();
                     Log.d("ReportsFragment", "Loaded " + recommendList.size() + " recommends");
+                    Toast.makeText(getContext(), "Recommendations loaded successfully", Toast.LENGTH_SHORT).show();
+
+
                 } else {
                     Toast.makeText(getContext(), "Failed to load recommends", Toast.LENGTH_SHORT).show();
                     Log.e("ReportsFragment", "Load recommends failed: " + response.code());
@@ -139,6 +144,7 @@ public class ReportsFragment extends Fragment {
             }
         });
     }
+
 
     private void loadReports() {
         ApiService apiService = RetrofitClient.getApiServiceWithAuth(token);
@@ -261,6 +267,8 @@ public class ReportsFragment extends Fragment {
                 @Override
                 public void onSuccess(String imageUrl, String folderName) {
                     sendReportToServer(imageUrl, description, location, selectedType);
+                    Toast.makeText(getContext(), "Report send successfully", Toast.LENGTH_SHORT).show();
+
                 }
 
                 @Override
@@ -292,6 +300,8 @@ public class ReportsFragment extends Fragment {
                 @Override
                 public void onSuccess(String imageUrl, String folderName) {
                     sendRecommendToServer(imageUrl, description, location, selectedType);
+                    Toast.makeText(getContext(), "Recommendation send successfully", Toast.LENGTH_SHORT).show();
+
                 }
 
                 @Override
