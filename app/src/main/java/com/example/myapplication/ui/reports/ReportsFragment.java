@@ -93,7 +93,7 @@ public class ReportsFragment extends Fragment {
 
         binding.recyclerViewReports.setLayoutManager(new LinearLayoutManager(getContext()));
         reportAdapter = new ReportAdapter(requireContext(), reportList, token);
-        recommendAdapter = new RecommendAdapter(requireContext(), recommendList, token);
+        recommendAdapter = new RecommendAdapter(requireContext(), recommendList, token,true);
         binding.recyclerViewRecommendations.setLayoutManager(new LinearLayoutManager(getContext()));
 
         binding.recyclerViewReports.setAdapter(reportAdapter);

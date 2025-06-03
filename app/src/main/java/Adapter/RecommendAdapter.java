@@ -43,11 +43,13 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
     private Context context;
     private List<UserRecommendationResponse> recommendationList;
     private String token;
+    private boolean showButtons;
 
-    public RecommendAdapter(Context context, List<UserRecommendationResponse> recommendationList, String token) {
+    public RecommendAdapter(Context context, List<UserRecommendationResponse> recommendationList, String token, boolean showButtons) {
         this.context = context;
         this.recommendationList = recommendationList;
         this.token = token;
+        this.showButtons = showButtons;
 
     }
 
@@ -78,6 +80,18 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
             holder.image.setVisibility(View.GONE);
         }
         holder.tvUserName.setText("Posted by: " + recommend.getFullName());
+
+        // Show or hide buttons:
+        if (showButtons) {
+            holder.btnEdit.setVisibility(View.VISIBLE);
+            holder.btnDelete.setVisibility(View.VISIBLE);
+
+            holder.btnEdit.setOnClickListener(v -> showEditDialog(recommend, position));
+            holder.btnDelete.setOnClickListener(v -> deleteRecommend(recommend.getRecommend_id(), position));
+        } else {
+            holder.btnEdit.setVisibility(View.GONE);
+            holder.btnDelete.setVisibility(View.GONE);
+        }
 
         holder.btnEdit.setOnClickListener(v -> showEditDialog(recommend, position));
         holder.btnDelete.setOnClickListener(v -> deleteRecommend(recommend.getRecommend_id(), position));

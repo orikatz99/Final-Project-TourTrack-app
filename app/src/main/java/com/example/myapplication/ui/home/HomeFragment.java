@@ -152,7 +152,7 @@ public class HomeFragment extends Fragment {
 
         binding.recyclerViewReports.setLayoutManager(new LinearLayoutManager(getContext()));
         reportAdapter = new ReportAdapter(requireContext(), reportList, token);
-        recommendAdapter = new RecommendAdapter(requireContext(), recommendList, token);
+        recommendAdapter = new RecommendAdapter(requireContext(), recommendList, token,false);
         binding.recyclerViewRecommendations.setLayoutManager(new LinearLayoutManager(getContext()));
 
         binding.recyclerViewReports.setAdapter(reportAdapter);
