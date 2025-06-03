@@ -9,7 +9,7 @@
     android:padding="24dp"
     tools:context=".ui.preferences.PreferencesActivity">
 
-    <!-- העלה למעלה -->
+    <!-- Move to top -->
     <ImageView
         android:id="@+id/ivLeaf"
         android:layout_width="40dp"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- כותרת -->
+    <!-- Title -->
     <TextView
         android:id="@+id/tvPreferenceTitle"
         android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- כפתורים עם FlexboxLayout -->
+    <!-- Buttons using FlexboxLayout -->
     <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/flexButtonLayout"
         android:layout_width="match_parent"
@@ -49,7 +49,7 @@
         app:justifyContent="center"
         app:flexWrap="wrap">
 
-        <!-- כל כפתורי העדפות -->
+        <!-- All preference buttons -->
         <Button android:id="@+id/btnForest" style="@style/TrailButtonStyle" android:text="FOREST" app:layout_flexBasisPercent="28%"/>
         <Button android:id="@+id/btnBeach" style="@style/TrailButtonStyle" android:text="BEACH" app:layout_flexBasisPercent="28%"/>
         <Button android:id="@+id/btnRiver" style="@style/TrailButtonStyle" android:text="RIVER" app:layout_flexBasisPercent="28%"/>
@@ -67,7 +67,7 @@
         <Button android:id="@+id/btnField" style="@style/TrailButtonStyle" android:text="FIELD" app:layout_flexBasisPercent="28%"/>
     </com.google.android.flexbox.FlexboxLayout>
 
-    <!-- כפתור Continue -->
+    <!-- Continue button -->
     <Button
         android:id="@+id/btnContinue"
         android:layout_width="0dp"
