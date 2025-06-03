@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const allPublicPosts = require('./routes/allPublicPosts');
 
 // Load environment variables before using them
 dotenv.config();
@@ -23,6 +24,9 @@ app.use('/api/users', userRoutes); // All routes under /api/users will be handle
 
 const routeRoutes = require('./routes/routeRoutes');
 app.use('/api/routes', routeRoutes);
+
+app.use('/api', allPublicPosts);
+
 
 
 // Start the server

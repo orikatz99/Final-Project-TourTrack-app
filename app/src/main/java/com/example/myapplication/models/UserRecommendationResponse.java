@@ -11,7 +11,7 @@ public class UserRecommendationResponse {
     @SerializedName("createdAt")
 
     private  String date;
-
+    private User user;
     public UserRecommendationResponse() {
     }
 
@@ -75,4 +75,25 @@ public class UserRecommendationResponse {
     public String getPhoto() {
         return photo;
     }
+
+    public String getFullName(){
+        if (user != null) {
+            return user.getFirstName() + " " + user.getLastName();
+        } else {
+            return "Unknown User";
+        }    }
+
+    public static class User {
+        private String firstName;
+        private String lastName;
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+    }
 }
+

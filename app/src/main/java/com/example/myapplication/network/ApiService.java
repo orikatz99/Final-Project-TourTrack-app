@@ -84,9 +84,10 @@ public interface ApiService {
     @GET("api/users/report")
     Call<List<UserReportResponse>> getReports();
 
-
-   // @PUT("api/users/report/{id}")
-   // Call<Void> updateReport( @Body ReportRequest updatedReport);
+    @GET("api/report")
+    Call<List<UserReportResponse>> getAllReports();
+    @GET("api/recommendations")
+    Call<List<UserRecommendationResponse>> getAllRecommendations();
 
 
     @PUT("api/users/report/{id}")
@@ -95,8 +96,6 @@ public interface ApiService {
             @Path("id") String reportId,
             @Body ReportRequest updatedReport
     );
-
-
 
     @DELETE("api/users/report/{id}")
     Call<Void> deleteReport( @Path("id") String reportId);

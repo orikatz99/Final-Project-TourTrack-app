@@ -102,7 +102,7 @@ public class ReportsFragment extends Fragment {
 
         // Load reports from server
         loadReports();
-        // Load demo recommendations
+        // Load recommendations
          loadRecommendations();
 
 

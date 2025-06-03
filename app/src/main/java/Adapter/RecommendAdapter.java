@@ -48,6 +48,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
         this.context = context;
         this.recommendationList = recommendationList;
         this.token = token;
+
     }
 
     @NonNull
@@ -76,14 +77,19 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
         } else {
             holder.image.setVisibility(View.GONE);
         }
+        holder.tvUserName.setText("Posted by: " + recommend.getFullName());
 
         holder.btnEdit.setOnClickListener(v -> showEditDialog(recommend, position));
         holder.btnDelete.setOnClickListener(v -> deleteRecommend(recommend.getRecommend_id(), position));
     }
 
     private void showDateInFormat(RecommendViewHolder holder, String mongoDateStr) {
-        String cleanedDate = mongoDateStr.split("\\.")[0]; // "2025-05-30T17:50:50"
+        if (mongoDateStr == null || mongoDateStr.isEmpty()) {
+            holder.tvRecommendDate.setText("Date: N/A");
+            return;
+        }
 
+        String cleanedDate = mongoDateStr.split("\\.")[0]; // "2025-05-30T17:50:50"
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
@@ -98,6 +104,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
             holder.tvRecommendDate.setText("Date: N/A");
         }
     }
+
 
     private void deleteRecommend(String recommendId, int position) {
         ApiService apiService = RetrofitClient.getApiServiceWithAuth(token);
@@ -139,7 +146,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
     }
 
     public static class RecommendViewHolder extends RecyclerView.ViewHolder {
-        TextView tvRecommendDate,RecommendLocation,tvRecommendationDescription;
+        TextView tvRecommendDate,RecommendLocation,tvRecommendationDescription, tvUserName;
         ImageView image;
         Button btnEdit, btnDelete;
 
@@ -151,6 +158,8 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
             image = itemView.findViewById(R.id.img_report_photo);
             btnEdit = itemView.findViewById(R.id.btnEditRecommendation);
             btnDelete = itemView.findViewById(R.id.btnDeleteRecommendation);
+            tvUserName = itemView.findViewById(R.id.tvusername_recommend);
+
         }
     }
 

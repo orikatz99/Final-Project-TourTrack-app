@@ -262,6 +262,49 @@ exports.postUserReport = async(req, res) => {
     }
 };
 
+// Get all reports (admin or global view)
+exports.getAllReports = async (req, res) => {
+    try {
+        const reports = await Report.find()
+            .select('description status location photo type createdAt updatedAt userId');
+
+        res.status(200).json(reports);
+    } catch (err) {
+        console.error('❌ Error fetching all reports:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// GET /api/recommendations
+exports.getAllRecommendations = async (req, res) => {
+    try {
+        const recommendations = await Recommendation.find()
+            .populate({ path: 'userId', select: 'firstName lastName' });
+
+        const formatted = recommendations.map(rec => ({
+            recommend_id: rec._id,
+            location: rec.location,
+            description: rec.description,
+            photo: rec.photo,
+            date: rec.createdAt,
+            user: {
+                firstName: rec.userId.firstName,
+                lastName: rec.userId.lastName
+            }
+        }));
+
+        res.status(200).json(formatted);
+    } catch (err) {
+        console.error('❌ Error fetching recommendations:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
+
+
+
+
 // Get user recommendations
 exports.getUserRecommendations = async(req, res) => {
     try {
@@ -281,6 +324,8 @@ exports.getUserRecommendations = async(req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+
 
 // Post user recommendation
 exports.postUserRecommendation = async(req, res) => {

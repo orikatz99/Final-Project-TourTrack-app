@@ -19,18 +19,23 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentHomeBinding;
 import com.example.myapplication.models.LocationUpdateRequest;
 import com.example.myapplication.models.RouteModel;
 import com.example.myapplication.models.UserLocationResponse;
+import com.example.myapplication.models.UserRecommendationResponse;
+import com.example.myapplication.models.UserReportResponse;
 import com.example.myapplication.models.WeatherResponse;
 import com.example.myapplication.network.ApiService;
 import com.example.myapplication.network.RetrofitClient;
@@ -50,6 +55,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import Adapter.RecommendAdapter;
+import Adapter.ReportAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,6 +76,13 @@ public class HomeFragment extends Fragment {
 
     ImageView iv_weather_icon;
     TextView tv_weather_discription_and_temp, tv_humidity, tv_wind_speed, tv_weather_precipitation;
+    private List<UserReportResponse> reportList = new ArrayList<>();
+    private List<UserRecommendationResponse> recommendList = new ArrayList<>();
+
+    private ReportAdapter reportAdapter;
+    private RecommendAdapter recommendAdapter;
+    private String token;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,6 +95,14 @@ public class HomeFragment extends Fragment {
         });
 
         requireActivity().setTitle("TourTrack");
+        // Load token from SharedPreferences FIRST
+        token = requireActivity().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+                .getString("token", null);
+
+        if (token == null) {
+            Toast.makeText(getContext(), "Authentication token not found", Toast.LENGTH_SHORT).show();
+            return binding.getRoot();
+        }
 
         tv_weather_discription_and_temp = binding.tvWeatherDiscriptionAndTemp;
         tv_humidity = binding.tvWeatherHumidity;
@@ -127,7 +149,55 @@ public class HomeFragment extends Fragment {
         }
 
         startLocationUpdates();
+
+        binding.recyclerViewReports.setLayoutManager(new LinearLayoutManager(getContext()));
+        reportAdapter = new ReportAdapter(requireContext(), reportList, token);
+        recommendAdapter = new RecommendAdapter(requireContext(), recommendList, token);
+        binding.recyclerViewRecommendations.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        binding.recyclerViewReports.setAdapter(reportAdapter);
+        binding.recyclerViewRecommendations.setAdapter(recommendAdapter);
+
+
+        // Load reports from server
+        loadAllReports();
+        // Load recommendations
+        loadAllRecommendations();
+        
+        
+        
         return binding.getRoot();
+    }
+
+    private void loadAllRecommendations() {
+        ApiService apiService = RetrofitClient.getApiService();
+
+        Call<List<UserRecommendationResponse>> call = apiService.getAllRecommendations();
+        call.enqueue(new Callback<List<UserRecommendationResponse>>() {
+            @Override
+            public void onResponse(Call<List<UserRecommendationResponse>> call, Response<List<UserRecommendationResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    recommendList.clear();
+                    recommendList.addAll(response.body());
+                    recommendAdapter.notifyDataSetChanged();
+                } else {
+                    Log.e("loadRecommendations", "❌ Error: " + response.message());
+                    Toast.makeText(getContext(), "Failed to load recommendations", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UserRecommendationResponse>> call, Throwable t) {
+                Log.e("loadRecommendations", "❌ Network error: " + t.getMessage());
+                Toast.makeText(getContext(), "Failed to load recommendations", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+    }
+
+
+
+    private void loadAllReports() {
     }
 
     private void startLocationUpdates() {
