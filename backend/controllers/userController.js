@@ -195,14 +195,29 @@ exports.getPrivacySettings = async(req, res) => {
 
 //Get all users
 
-exports.getAllUsers = async(req, res) => {
+exports.getAllUsers = async (req, res) => {
     try {
         const currentUserId = req.user._id;
 
+        // 1. Get all users except current
         const users = await User.find({ _id: { $ne: currentUserId } })
             .select('firstName lastName phone');
 
-        res.status(200).json(users);
+        // 2. For each user, get privacy info
+        const result = await Promise.all(users.map(async (user) => {
+            const privacy = await UserPrivacy.findOne({ userId: user._id }).select('privacySettings.AllowPhoneCalls privacySettings.EnableWhatsapp');
+
+            return {
+                _id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                phone: user.phone,
+                allowPhoneCalls: privacy?.privacySettings?.AllowPhoneCalls ?? true,
+                enableWhatsapp: privacy?.privacySettings?.EnableWhatsapp ?? true,
+            };
+        }));
+
+        res.status(200).json(result);
     } catch (err) {
         console.error('❌ Error fetching users:', err);
         res.status(500).json({ message: 'Server error' });

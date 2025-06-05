@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class RetrofitClient {
 
-    private static final String BASE_URL = "http://172.20.10.10:5000/";
+    private static final String BASE_URL = "http://192.168.1.107:5000/";
 
     private static Retrofit retrofit = null;
 

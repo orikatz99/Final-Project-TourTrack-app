@@ -54,7 +54,68 @@ public class DashboardFragment extends Fragment {
         // Setup horizontal RecyclerView for connected users
         binding.connectedFriendsRecycler.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        //load connected users
+        loadConnectedUsers(apiService);
 
+        // Setup vertical RecyclerView for all users
+        binding.messagesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Load all users
+        loadAllUsers(apiService);
+
+
+
+        return root;
+    }
+
+    private void loadAllUsers(ApiService apiService) {
+        apiService.getAllUsers("Bearer " + token).enqueue(new Callback<List<UsersResponse>>() {
+            @Override
+            public void onResponse(Call<List<UsersResponse>> call, Response<List<UsersResponse>> response) {
+                Log.d("users", "Response code: " + response.code());
+
+                if (response.isSuccessful() && response.body() != null) {
+                    List<UsersResponse> users = response.body();
+                    Log.d("users", "Users count: " + users.size());
+
+                    List<verticalPeopleAdapter.Person> people = new ArrayList<>();
+                    for (UsersResponse user : users) {
+                        String firstName = user.getFirstName() != null ? user.getFirstName() : "Unknown";
+                        String lastName = user.getLastName() != null ? user.getLastName() : "";
+                        String fullName = firstName + " " + lastName;
+                        String phone = user.getPhone() != null ? user.getPhone() : "No phone";
+
+                        boolean allowPhone = user.isAllowPhoneCalls();
+                        boolean allowWhatsapp = user.isEnableWhatsapp();
+
+                        Log.d("privacy", "User: " + fullName + ", phone=" + allowPhone + ", whatsapp=" + allowWhatsapp);
+
+                        people.add(new verticalPeopleAdapter.Person(
+                                fullName,
+                                R.drawable.user,
+                                phone,
+                                allowPhone,
+                                allowWhatsapp
+                        ));
+                    }
+
+                    people.sort((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()));
+                    verticalPeopleAdapter adapter = new verticalPeopleAdapter(people);
+                    binding.messagesRecycler.setAdapter(adapter);
+                } else {
+                    Log.e("DashboardFragment", "Failed to load users: " + response.code());
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<List<UsersResponse>> call, Throwable t) {
+                Log.e("DashboardFragment", "Error fetching all users: " + t.getMessage());
+            }
+        });
+    }
+
+    private void loadConnectedUsers(ApiService apiService) {
         apiService.getConnectedUsers("Bearer " + token).enqueue(new Callback<List<UserConnectedResponse>>() {
             @Override
             public void onResponse(Call<List<UserConnectedResponse>> call, Response<List<UserConnectedResponse>> response) {
@@ -82,43 +143,6 @@ public class DashboardFragment extends Fragment {
                 Log.e("DashboardFragment", "Error fetching connected users: " + t.getMessage());
             }
         });
-
-        // Setup vertical RecyclerView for all users
-        binding.messagesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        apiService.getAllUsers("Bearer " + token).enqueue(new Callback<List<UsersResponse>>() {
-            @Override
-            public void onResponse(Call<List<UsersResponse>> call, Response<List<UsersResponse>> response) {
-                Log.d("users", "Response code: " + response.code());
-
-                if (response.isSuccessful() && response.body() != null) {
-                    List<UsersResponse> users = response.body();
-                    Log.d("users", "Users count: " + users.size());
-
-                    List<verticalPeopleAdapter.Person> people = new ArrayList<>();
-                    for (UsersResponse user : users) {
-                        String firstName = user.getFirstName() != null ? user.getFirstName() : "Unknown";
-                        String lastName = user.getLastName() != null ? user.getLastName() : "";
-                        String fullName = firstName + " " + lastName;
-                        String phone = user.getPhone() != null ? user.getPhone() : "No phone";
-                        people.add(new verticalPeopleAdapter.Person(fullName, R.drawable.user, phone));
-                        people.sort((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()));
-                    }
-
-                    verticalPeopleAdapter adapter = new verticalPeopleAdapter(people);
-                    binding.messagesRecycler.setAdapter(adapter);
-                } else {
-                    Log.e("DashboardFragment", "Failed to load users: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<UsersResponse>> call, Throwable t) {
-                Log.e("DashboardFragment", "Error fetching all users: " + t.getMessage());
-            }
-        });
-
-        return root;
     }
 
     @Override

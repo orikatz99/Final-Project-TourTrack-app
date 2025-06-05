@@ -5,15 +5,21 @@ public class UsersResponse {
     private String firstName;
     private String lastName;
     private String phone;
+    private boolean allowPhoneCalls;
+    private boolean enableWhatsapp;
+
 
     public UsersResponse() {
     }
 
-    public UsersResponse(String _id, String firstName, String lastName, String phone) {
+    public UsersResponse(String _id, String firstName, String lastName, String phone,
+                         boolean allowPhoneCalls, boolean enableWhatsapp) {
         this._id = _id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
+        this.allowPhoneCalls = allowPhoneCalls;
+        this.enableWhatsapp = enableWhatsapp;
     }
 
     public String getId() {
@@ -34,5 +40,11 @@ public class UsersResponse {
 
     public String getFullName() {
         return firstName + " " + lastName;
+    }
+    public boolean isAllowPhoneCalls() {
+        return allowPhoneCalls;
+    }
+    public boolean isEnableWhatsapp() {
+        return enableWhatsapp;
     }
 }
