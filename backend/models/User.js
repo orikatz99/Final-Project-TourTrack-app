@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     phone: { type: String, required: true, unique: true },
-    birthDate: { type: String }, // שמור כתאריך בפורמט מחרוזת כמו "01/01/2000"
+    birthDate: { type: String },
     preferences: { type: [String], default: [] },
     type: {
         type: String,

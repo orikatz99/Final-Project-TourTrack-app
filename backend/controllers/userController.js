@@ -456,3 +456,19 @@ exports.deleteUserRecommendation = async (req, res) => {
     }
 };
 
+// ✅ Check if user exists by email (for Google sign-in flow)
+exports.checkUserExistsByEmail = async (req, res) => {
+  const { email } = req.params;
+
+  if (!email) {
+    return res.status(400).json({ message: 'Email is required' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    res.status(200).json(!!user); // true או false
+  } catch (err) {
+    console.error('Error checking user existence:', err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

@@ -71,5 +71,12 @@ dependencies {
 // Google Services
     implementation("com.google.gms:google-services:4.4.1")
 
+    // Firebase Authentication
+    implementation ("com.google.firebase:firebase-auth:22.3.1")
+
+// Google Sign-In
+    implementation ("com.google.android.gms:play-services-auth:21.1.1")
+
+
 
 }

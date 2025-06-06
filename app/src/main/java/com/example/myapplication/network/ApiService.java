@@ -1,5 +1,6 @@
 package com.example.myapplication.network;
 
+import com.example.myapplication.models.GoogleExtraInfoRequest;
 import com.example.myapplication.models.LocationUpdateRequest;
 import com.example.myapplication.models.LoginRequest;
 import com.example.myapplication.models.LoginResponse;
@@ -116,6 +117,14 @@ public interface ApiService {
 
     @DELETE("api/users/recommendation/{id}")
     Call<Void> deleteRecommendation(@Header("Authorization") String token, @Path("id") String recommendationId);
+
+    @PUT("auth/google/complete-by-email/{email}")
+    Call<Void> completeGoogleSignupByEmail(@Path("email") String email, @Body GoogleExtraInfoRequest request);
+
+    @GET("api/users/exists/{email}")
+    Call<Boolean> checkUserExists(@Path("email") String email);
+
+
 
 
 
