@@ -1,15 +1,27 @@
 package com.example.myapplication.models;
 
 public class GoogleExtraInfoRequest {
+    private String firstName;
+    private String lastName;
     private String phone;
     private String birthDate;
 
-    public GoogleExtraInfoRequest(String phone, String birthDate) {
+    public GoogleExtraInfoRequest(String firstName, String lastName, String phone, String birthDate) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phone = phone;
         this.birthDate = birthDate;
     }
 
-    // Optional: getters (if needed by Retrofit or for testing)
+    // Getters
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
     public String getPhone() {
         return phone;
     }

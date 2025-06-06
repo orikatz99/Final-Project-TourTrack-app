@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -25,7 +26,7 @@ import retrofit2.Response;
 public class GoogleExtraInfoActivity extends AppCompatActivity {
 
     private Calendar birthDate;
-    private TextInputEditText editPhone, editDate;
+    private TextInputEditText editFirstName, editLastName, editPhone, editDate;
     private Button continueBtn;
 
     @Override
@@ -33,6 +34,8 @@ public class GoogleExtraInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_extra_info);
 
+        editFirstName = findViewById(R.id.first_name_input);
+        editLastName = findViewById(R.id.last_name_input);
         editPhone = findViewById(R.id.phone_input);
         editDate = findViewById(R.id.birth_input);
         continueBtn = findViewById(R.id.continue_btn);
@@ -40,16 +43,30 @@ public class GoogleExtraInfoActivity extends AppCompatActivity {
         editDate.setOnClickListener(v -> openDatePicker());
 
         continueBtn.setOnClickListener(v -> {
+            String firstName = editFirstName.getText().toString().trim();
+            String lastName = editLastName.getText().toString().trim();
             String phone = editPhone.getText().toString().trim();
+
+            if (firstName.isEmpty()) {
+                editFirstName.setError("Please enter your first name");
+                return;
+            }
+
+            if (lastName.isEmpty()) {
+                editLastName.setError("Please enter your last name");
+                return;
+            }
 
             if (phone.isEmpty()) {
                 editPhone.setError("Please enter your phone number");
                 return;
             }
+
             if (!phone.matches("\\d{10}")) {
                 editPhone.setError("Phone number must be 10 digits");
                 return;
             }
+
             if (birthDate == null) {
                 editDate.setError("Please select your birth date");
                 return;
@@ -66,7 +83,7 @@ public class GoogleExtraInfoActivity extends AppCompatActivity {
                 return;
             }
 
-            GoogleExtraInfoRequest request = new GoogleExtraInfoRequest(phone, birthDateStr);
+            GoogleExtraInfoRequest request = new GoogleExtraInfoRequest(firstName, lastName, phone, birthDateStr);
             ApiService apiService = RetrofitClient.getApiService();
 
             apiService.completeGoogleSignupByEmail(email, request).enqueue(new Callback<Void>() {

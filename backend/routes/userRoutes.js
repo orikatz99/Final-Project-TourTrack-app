@@ -141,7 +141,10 @@ const { getAllRecommendations } = require('../controllers/userController');
 router.get('/recommendations', getAllRecommendations);
 
 const { checkUserExistsByEmail } = require('../controllers/userController');
-router.get('/exists/:email', checkUserExistsByEmail);
+router.get('/exists/:email', checkUserExistsByEmail);   
+
+const { completeGoogleSignupByEmail } = require('../controllers/userController');
+router.put('/auth/google/complete-by-email/:email', completeGoogleSignupByEmail);
 
 
 

@@ -472,3 +472,48 @@ exports.checkUserExistsByEmail = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+// Complete Google sign-up by email
+exports.completeGoogleSignupByEmail = async (req, res) => {
+    const { firstName, lastName, phone, birthDate } = req.body;
+    const { email } = req.params;
+
+    if (!email || !firstName || !lastName || !phone || !birthDate) {
+        return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    try {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({ message: 'User already exists' });
+        }
+
+        // Hash a default password for the new user
+        const bcrypt = require('bcryptjs');
+        const defaultPassword = 'defaultGooglePassword123';
+        const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+
+        const newUser = new User({
+            firstName,
+            lastName,
+            email,
+            password: hashedPassword,
+            phone,
+            birthDate,
+            preferences: []
+        });
+
+        await newUser.save();
+
+        await UserPrivacy.create({
+            userId: newUser._id,
+            privacySettings: {},
+            notificationsSettings: {}
+        });
+
+        res.status(201).json({ message: 'Google sign-up completed successfully' });
+    } catch (err) {
+        console.error('❌ Error in completeGoogleSignupByEmail:', err.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
