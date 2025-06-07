@@ -456,3 +456,81 @@ exports.deleteUserRecommendation = async (req, res) => {
     }
 };
 
+// ✅ Check if user exists by email (for Google sign-in flow)
+exports.checkUserExistsByEmail = async (req, res) => {
+  const { email } = req.params;
+
+  if (!email) {
+    return res.status(400).json({ message: 'Email is required' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    res.status(200).json(!!user); // true או false
+  } catch (err) {
+    console.error('Error checking user existence:', err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Complete Google sign-up by email
+exports.completeGoogleSignupByEmail = async (req, res) => {
+    const { firstName, lastName, phone, birthDate } = req.body;
+    const { email } = req.params;
+
+    if (!email || !firstName || !lastName || !phone || !birthDate) {
+        return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    try {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({ message: 'User already exists' });
+        }
+
+        // Hash a default password for the new Google user
+        const bcrypt = require('bcryptjs');
+        const defaultPassword = 'defaultGooglePassword123';
+        const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+
+        const newUser = new User({
+            firstName,
+            lastName,
+            email,
+            password: hashedPassword,
+            phone,
+            birthDate,
+            preferences: []
+        });
+
+        await newUser.save();
+
+        // Create default privacy & notification settings for this user
+        await UserPrivacy.create({
+            userId: newUser._id,
+            privacySettings: {},
+            notificationsSettings: {}
+        });
+
+        // Generate JWT token
+        const jwt = require('jsonwebtoken');
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+            expiresIn: '7d'
+        });
+
+        // Return token and user info
+        res.status(201).json({
+            message: 'Google sign-up completed successfully',
+            token,
+            user: {
+                id: newUser._id,
+                email: newUser.email,
+                firstName: newUser.firstName,
+                preferences: newUser.preferences
+            }
+        });
+    } catch (err) {
+        console.error('❌ Error in completeGoogleSignupByEmail:', err.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};

@@ -52,7 +52,6 @@ public class PreferencesActivity extends AppCompatActivity {
             if (selected.isEmpty()) {
                 Toast.makeText(this, "Please select at least one category", Toast.LENGTH_SHORT).show();
             } else {
-                // שליפת הטוקן מה־SharedPreferences
                 SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                 String token = prefs.getString("token", null);
 

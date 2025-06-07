@@ -84,7 +84,7 @@ router.get('/nearby-users/:id', async(req, res) => {
 });
 
 // Get connected users
-router.get('/connected-users', authMiddleware, async (req, res) => {
+router.get('/connected-users', authMiddleware, async(req, res) => {
     try {
         const currentUserId = req.user._id;
         const timeLimit = new Date(Date.now() - 10 * 60 * 1000); // 10 minutes ago
@@ -125,7 +125,7 @@ router.delete('/report/:id', authMiddleware, deleteUserReport);
 const { getUserRecommendations } = require('../controllers/userController');
 router.get('/recommendation', authMiddleware, getUserRecommendations);
 // Post user recommendation
-const { postUserRecommendation } = require('../controllers/userController');    
+const { postUserRecommendation } = require('../controllers/userController');
 router.post('/recommendation', authMiddleware, postUserRecommendation);
 // PUT update recommendation
 router.put('/recommendation/:id', authMiddleware, updateUserRecommendation);
@@ -139,6 +139,14 @@ router.get('/reports', getAllReports);
 //Get all recommendations
 const { getAllRecommendations } = require('../controllers/userController');
 router.get('/recommendations', getAllRecommendations);
+
+const { checkUserExistsByEmail } = require('../controllers/userController');
+router.get('/exists/:email', checkUserExistsByEmail);   
+
+const { completeGoogleSignupByEmail } = require('../controllers/userController');
+router.put('/auth/google/complete-by-email/:email', completeGoogleSignupByEmail);
+
+
 
 
 module.exports = router;
