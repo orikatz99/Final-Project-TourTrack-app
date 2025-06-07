@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.models.GoogleExtraInfoRequest;
+import com.example.myapplication.models.LoginResponse;
 import com.example.myapplication.network.ApiService;
 import com.example.myapplication.network.RetrofitClient;
 import com.example.myapplication.ui.preferences.PreferencesActivity;
@@ -86,10 +87,22 @@ public class GoogleExtraInfoActivity extends AppCompatActivity {
             GoogleExtraInfoRequest request = new GoogleExtraInfoRequest(firstName, lastName, phone, birthDateStr);
             ApiService apiService = RetrofitClient.getApiService();
 
-            apiService.completeGoogleSignupByEmail(email, request).enqueue(new Callback<Void>() {
+            apiService.completeGoogleSignupByEmail(email, request).enqueue(new Callback<LoginResponse>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    Log.e("RESPONSE_CODE", "Code: " + response.code());
+                    Log.e("RESPONSE_BODY", "Body: " + response.errorBody());
+                    if (response.isSuccessful() && response.body() != null) {
+                        String token = response.body().getToken();
+                        String userId = response.body().getUser().getId();
+
+                        // ✅ Save token and userId
+                        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                        prefs.edit()
+                                .putString("token", token)
+                                .putString("userId", userId)
+                                .apply();
+
                         Intent intent = new Intent(GoogleExtraInfoActivity.this, PreferencesActivity.class);
                         startActivity(intent);
                         finish();
@@ -99,10 +112,11 @@ public class GoogleExtraInfoActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<Void> call, Throwable t) {
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
                     Toast.makeText(GoogleExtraInfoActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
+
         });
     }
 

@@ -119,7 +119,7 @@ public interface ApiService {
     Call<Void> deleteRecommendation(@Header("Authorization") String token, @Path("id") String recommendationId);
 
     @PUT("api/users/auth/google/complete-by-email/{email}")
-    Call<Void> completeGoogleSignupByEmail(@Path("email") String email, @Body GoogleExtraInfoRequest request);
+    Call<LoginResponse> completeGoogleSignupByEmail(@Path("email") String email, @Body GoogleExtraInfoRequest request);
 
 
     @GET("api/users/exists/{email}")

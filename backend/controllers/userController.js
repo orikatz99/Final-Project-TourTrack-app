@@ -488,7 +488,7 @@ exports.completeGoogleSignupByEmail = async (req, res) => {
             return res.status(409).json({ message: 'User already exists' });
         }
 
-        // Hash a default password for the new user
+        // Hash a default password for the new Google user
         const bcrypt = require('bcryptjs');
         const defaultPassword = 'defaultGooglePassword123';
         const hashedPassword = await bcrypt.hash(defaultPassword, 10);
@@ -505,13 +505,30 @@ exports.completeGoogleSignupByEmail = async (req, res) => {
 
         await newUser.save();
 
+        // Create default privacy & notification settings for this user
         await UserPrivacy.create({
             userId: newUser._id,
             privacySettings: {},
             notificationsSettings: {}
         });
 
-        res.status(201).json({ message: 'Google sign-up completed successfully' });
+        // Generate JWT token
+        const jwt = require('jsonwebtoken');
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+            expiresIn: '7d'
+        });
+
+        // Return token and user info
+        res.status(201).json({
+            message: 'Google sign-up completed successfully',
+            token,
+            user: {
+                id: newUser._id,
+                email: newUser.email,
+                firstName: newUser.firstName,
+                preferences: newUser.preferences
+            }
+        });
     } catch (err) {
         console.error('❌ Error in completeGoogleSignupByEmail:', err.message);
         res.status(500).json({ message: 'Server error' });
