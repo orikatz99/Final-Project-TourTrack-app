@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.databinding.HorizontalFriendBinding;
+import com.example.tourtrack.databinding.HorizontalFriendBinding;
 
 import java.util.List;
 

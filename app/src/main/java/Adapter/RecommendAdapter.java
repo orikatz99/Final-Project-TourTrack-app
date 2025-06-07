@@ -18,12 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.myapplication.R;
-import com.example.myapplication.models.RecommendRequest;
-import com.example.myapplication.models.UpdateRecommendResponse;
-import com.example.myapplication.models.UserRecommendationResponse;
-import com.example.myapplication.network.ApiService;
-import com.example.myapplication.network.RetrofitClient;
+import com.example.tourtrack.R;
+import com.example.tourtrack.models.RecommendRequest;
+import com.example.tourtrack.models.UpdateRecommendResponse;
+import com.example.tourtrack.models.UserRecommendationResponse;
+import com.example.tourtrack.network.ApiService;
+import com.example.tourtrack.network.RetrofitClient;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.util.List;

@@ -41,6 +41,43 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564552263007:android:e24f08e9ea2ef5333582ea",
+        "android_client_info": {
+          "package_name": "com.example.tourtrack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "564552263007-l4c4egaoo84a9l5iqedeo6hef06bje8t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tourtrack",
+            "certificate_hash": "61d1665104de61c3d86d301d96f084e270efcc5d"
+          }
+        },
+        {
+          "client_id": "564552263007-2tt6sk9fql4s7dq2h9soncg7mbi84bkc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDy3UFEOnbQel7PCbIMejWO2tsD0LW1LA0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "564552263007-2tt6sk9fql4s7dq2h9soncg7mbi84bkc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

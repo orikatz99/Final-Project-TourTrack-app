@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#E7F1E8"
     android:padding="24dp"
-    tools:context=".ui.preferences.PreferencesActivity">
+    tools:context="com.example.tourtrack.ui.preferences.PreferencesActivity">
 
     <!-- Move to top -->
     <ImageView

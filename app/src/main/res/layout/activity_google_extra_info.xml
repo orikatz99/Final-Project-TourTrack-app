@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="@drawable/roud_back"
     android:padding="24dp"
-    tools:context=".GoogleExtraInfoActivity">
+    tools:context="com.example.tourtrack.GoogleExtraInfoActivity">
 
     <TextView
         android:layout_width="match_parent"

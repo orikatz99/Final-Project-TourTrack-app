@@ -8,8 +8,8 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.myapplication" />
-                  <option name="mobileSdkAppId" value="1:564552263007:android:7aaa4ac00e9688d73582ea" />
+                  <option name="appId" value="com.example.tourtrack" />
+                  <option name="mobileSdkAppId" value="1:564552263007:android:e24f08e9ea2ef5333582ea" />
                   <option name="projectId" value="tourtrack-f7c78" />
                   <option name="projectNumber" value="564552263007" />
                 </ConnectionSetting>

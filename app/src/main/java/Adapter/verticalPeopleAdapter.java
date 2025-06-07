@@ -13,7 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.databinding.VerticalPeopleBinding;
+//import com.example.myapplication.databinding.VerticalPeopleBinding;
+import com.example.tourtrack.databinding.VerticalPeopleBinding;
 
 import java.util.List;
 

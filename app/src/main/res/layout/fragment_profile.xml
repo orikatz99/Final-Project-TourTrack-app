@@ -187,8 +187,7 @@
                     android:textColor="@color/black" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
-        <!-- Card 3: Notification Preferences -->
+        <!-- notification settings
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -196,7 +195,6 @@
             android:layout_marginTop="1dp"
             app:cardElevation="4dp"
             app:cardCornerRadius="12dp">
-
             <LinearLayout
                 android:orientation="vertical"
                 android:padding="10dp"
@@ -245,6 +243,7 @@
                     android:textColor="@color/black" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+        !-->
         <View
             android:layout_width="match_parent"
             android:layout_height="100dp" />

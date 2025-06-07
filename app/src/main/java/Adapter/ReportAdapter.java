@@ -18,12 +18,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.myapplication.R;
-import com.example.myapplication.models.ReportRequest;
-import com.example.myapplication.models.UserReportResponse;
-import com.example.myapplication.network.ApiService;
-import com.example.myapplication.network.RetrofitClient;
-import com.example.myapplication.models.UpdateReportResponse;
+//import com.example.myapplication.R;
+import com.example.tourtrack.R;
+
+import com.example.tourtrack.models.ReportRequest;
+import com.example.tourtrack.models.UserReportResponse;
+import com.example.tourtrack.network.ApiService;
+import com.example.tourtrack.network.RetrofitClient;
+import com.example.tourtrack.models.UpdateReportResponse;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
