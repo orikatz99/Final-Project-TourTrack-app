@@ -83,7 +83,6 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
         } else {
             holder.image.setVisibility(View.GONE);
         }
-        holder.tvUserName.setText("Posted by: " + recommend.getFullName());
 
         // Show or hide buttons:
         if (showButtons) {
@@ -99,6 +98,8 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
         // Show or hide the username:
         if (showPostedBy) {
             holder.tvUserName.setVisibility(View.VISIBLE);
+            holder.tvUserName.setText("Posted by: " + recommend.getFullName());
+
         } else {
             holder.tvUserName.setVisibility(View.GONE);
         }

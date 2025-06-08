@@ -281,9 +281,23 @@ exports.postUserReport = async(req, res) => {
 exports.getAllReports = async (req, res) => {
     try {
         const reports = await Report.find()
-            .select('description status location photo type createdAt updatedAt userId');
+            .select('description location photo type updatedAt userId')
+            .populate({ path: 'userId', select: 'firstName lastName' }); 
 
-        res.status(200).json(reports);
+        const formatted = reports.map(rec => ({
+            recport_id: rec._id,
+            location: rec.location,
+            description: rec.description,
+            type: rec.type,
+            updatedAt: rec.updatedAt, 
+            photo: rec.photo,
+            user: {
+                firstName: rec.userId?.firstName || '',
+                lastName: rec.userId?.lastName || ''
+            }
+        }));
+
+        res.status(200).json(formatted);
     } catch (err) {
         console.error('❌ Error fetching all reports:', err);
         res.status(500).json({ message: 'Server error' });

@@ -12,7 +12,8 @@ public class UserReportResponse {
     private String location;
     private String type;
     @SerializedName("updatedAt")
-    private String date;
+    private String updatedAt;
+    private User user;
 
     public UserReportResponse() {
     }
@@ -24,9 +25,16 @@ public class UserReportResponse {
         this.location = location;
         this.type = type;
         this.reportId = reportId;
-        this.date = date;
+        this.updatedAt = date;
+    }
+    public String getUpdatedAt() {
+        return updatedAt;
     }
 
+    public UserReportResponse setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+        return this;
+    }
     public String getUserId() {
         return userId;
     }
@@ -80,12 +88,24 @@ public class UserReportResponse {
         return this;
     }
 
-    public String getDate() {
-        return date;
+    public String getFullName(){
+        if (user != null) {
+            return user.getFirstName() + " " + user.getLastName();
+        } else {
+            return "Unknown User";
+        }    }
+
+    public static class User {
+        private String firstName;
+        private String lastName;
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
     }
 
-    public UserReportResponse setDate(String date) {
-        this.date = date;
-        return this;
-    }
 }

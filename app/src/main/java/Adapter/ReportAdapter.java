@@ -47,11 +47,14 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
     private Context context;
     private List<UserReportResponse> reportList;
     private String token;
-
-    public ReportAdapter(Context context, List<UserReportResponse> reportList, String token) {
+    private boolean showButtons;
+    private boolean showPostedBy;
+    public ReportAdapter(Context context, List<UserReportResponse> reportList, String token, boolean showButtons, boolean showPostedBy) {
         this.context = context;
         this.reportList = reportList;
         this.token = token;
+        this.showButtons = showButtons;
+        this.showPostedBy = showPostedBy;
     }
 
     @NonNull
@@ -68,7 +71,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         holder.tvType.setText("Type: " + report.getType());
         holder.tvLocation.setText("Location: " + report.getLocation());
         holder.tvDescription.setText("Description: " + report.getDescription());
-        String mongoDateStr = report.getDate();
+        String mongoDateStr = report.getUpdatedAt();
 
         showDateInFormat(holder, mongoDateStr);
         String photoUrl = report.getPhoto();
@@ -80,6 +83,25 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                     .into(holder.image);
         } else {
             holder.image.setVisibility(View.GONE);
+        }
+        // Show or hide buttons:
+        if (showButtons) {
+            holder.btnEdit.setVisibility(View.VISIBLE);
+            holder.btnDelete.setVisibility(View.VISIBLE);
+
+            holder.btnEdit.setOnClickListener(v -> showEditDialog(report, position));
+            holder.btnDelete.setOnClickListener(v -> deleteReport(report.getReportId(), position));
+        } else {
+            holder.btnEdit.setVisibility(View.GONE);
+            holder.btnDelete.setVisibility(View.GONE);
+        }
+        // Show or hide the username:
+        if (showPostedBy) {
+            holder.tvUserName.setVisibility(View.VISIBLE);
+            holder.tvUserName.setText("Posted by: " + report.getFullName());
+
+        } else {
+            holder.tvUserName.setVisibility(View.GONE);
         }
 
         holder.btnEdit.setOnClickListener(v -> showEditDialog(report, position));
@@ -149,7 +171,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
     }
 
     public static class ReportViewHolder extends RecyclerView.ViewHolder {
-        TextView tvType, tvLocation, tvDescription, tvReportDate;
+        TextView tvType, tvLocation, tvDescription, tvReportDate, tvUserName;
         ImageView image;
         Button btnEdit, btnDelete;
 
@@ -162,6 +184,8 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             btnEdit = itemView.findViewById(R.id.btnEdit);
             btnDelete = itemView.findViewById(R.id.btnDelete);
             tvReportDate = itemView.findViewById(R.id.tvReportDate);
+            tvUserName = itemView.findViewById(R.id.tvusername_report);
+
         }
     }
 
@@ -175,7 +199,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         editLocation.setText(report.getLocation());
         editDescription.setText(report.getDescription());
 
-        invillizeSpinner(spinnerReportType);
+        initalizeSpinner(spinnerReportType);
 
         new AlertDialog.Builder(context)
                 .setView(dialogView)
@@ -209,7 +233,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                                 reportList.get(position).setDescription(updated.getDescription());
                                 reportList.get(position).setLocation(updated.getLocation());
                                 reportList.get(position).setType(updated.getType());
-                                reportList.get(position).setDate(updated.getDate());
+                                reportList.get(position).setUpdatedAt(updated.getUpdatedAt());
 
                                 notifyItemChanged(position);
                                 Toast.makeText(context, "Report updated successfully", Toast.LENGTH_SHORT).show();
@@ -229,7 +253,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
     }
 
 
-    private void invillizeSpinner(Spinner spinnerReportType) {
+    private void initalizeSpinner(Spinner spinnerReportType) {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 context,
                 R.array.danger_types,

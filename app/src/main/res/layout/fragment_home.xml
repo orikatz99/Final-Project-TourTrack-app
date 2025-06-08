@@ -17,7 +17,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- 🔲 לוגו וכותרת -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,7 +60,7 @@
         </FrameLayout>
 
 
-        <!-- 🌤️ כרטיס מזג האוויר עם אייקון ושורות מיושרות -->
+        <!-- Weather -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -146,8 +145,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewReports"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
             android:orientation="vertical"
             tools:listitem="@layout/vertical_reports"
             android:layout_marginTop="8dp"

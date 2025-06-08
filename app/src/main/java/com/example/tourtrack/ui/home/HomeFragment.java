@@ -87,7 +87,6 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View touchLayer = binding.getRoot().findViewById(R.id.map_touch_layer);
         touchLayer.setOnTouchListener((v, event) -> {
-            // מבטל את ההתנגשות עם ScrollView כשנוגעים במפה
             v.getParent().requestDisallowInterceptTouchEvent(true);
             return false;
         });
@@ -102,11 +101,8 @@ public class HomeFragment extends Fragment {
             return binding.getRoot();
         }
 
-        tv_weather_discription_and_temp = binding.tvWeatherDiscriptionAndTemp;
-        tv_humidity = binding.tvWeatherHumidity;
-        tv_wind_speed = binding.tvWeatherWind;
-        tv_weather_precipitation = binding.tvWeatherPrecipitation;
-        iv_weather_icon = binding.ivWeatherIcon;
+        // Initialize views
+        initlaizeView();
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
@@ -149,7 +145,7 @@ public class HomeFragment extends Fragment {
         startLocationUpdates();
 
         binding.recyclerViewReports.setLayoutManager(new LinearLayoutManager(getContext()));
-        reportAdapter = new ReportAdapter(requireContext(), reportList, token);
+        reportAdapter = new ReportAdapter(requireContext(), reportList, token, false, true);
         recommendAdapter = new RecommendAdapter(requireContext(), recommendList, token,false,true);
         binding.recyclerViewRecommendations.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -165,6 +161,15 @@ public class HomeFragment extends Fragment {
         
         
         return binding.getRoot();
+    }
+
+    private void initlaizeView() {
+        tv_weather_discription_and_temp = binding.tvWeatherDiscriptionAndTemp;
+        tv_humidity = binding.tvWeatherHumidity;
+        tv_wind_speed = binding.tvWeatherWind;
+        tv_weather_precipitation = binding.tvWeatherPrecipitation;
+        iv_weather_icon = binding.ivWeatherIcon;
+
     }
 
     private void loadAllRecommendations() {
@@ -196,6 +201,29 @@ public class HomeFragment extends Fragment {
 
 
     private void loadAllReports() {
+        ApiService apiService = RetrofitClient.getApiService();
+
+        Call<List<UserReportResponse>> call = apiService.getAllReports();
+        call.enqueue(new Callback<List<UserReportResponse>>() {
+            @Override
+            public void onResponse(Call<List<UserReportResponse>> call, Response<List<UserReportResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    reportList.clear();
+                    reportList.addAll(response.body());
+                    reportAdapter.notifyDataSetChanged();
+                } else {
+                    Log.e("loadReports", "❌ Error: " + response.message());
+                    Toast.makeText(getContext(), "Failed to load Reports", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UserReportResponse>> call, Throwable t) {
+                Log.e("loadReports", "❌ Network error: " + t.getMessage());
+                Toast.makeText(getContext(), "Failed to load reports", Toast.LENGTH_SHORT).show();
+            }
+
+        });
     }
 
     private void startLocationUpdates() {

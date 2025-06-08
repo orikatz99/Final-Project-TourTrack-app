@@ -85,7 +85,7 @@ public interface ApiService {
     @GET("api/users/report")
     Call<List<UserReportResponse>> getReports();
 
-    @GET("api/report")
+    @GET("api/reports")
     Call<List<UserReportResponse>> getAllReports();
     @GET("api/recommendations")
     Call<List<UserRecommendationResponse>> getAllRecommendations();
@@ -118,6 +118,7 @@ public interface ApiService {
     @DELETE("api/users/recommendation/{id}")
     Call<Void> deleteRecommendation(@Header("Authorization") String token, @Path("id") String recommendationId);
 
+    // Google Sign Up
     @PUT("api/users/auth/google/complete-by-email/{email}")
     Call<LoginResponse> completeGoogleSignupByEmail(@Path("email") String email, @Body GoogleExtraInfoRequest request);
 
