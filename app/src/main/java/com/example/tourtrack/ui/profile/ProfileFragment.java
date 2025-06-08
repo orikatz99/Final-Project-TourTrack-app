@@ -25,7 +25,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProfileFragment extends Fragment {
-    private TextView tv_email, tv_phone, tv_name;
+    private TextView tv_email, tv_phone, tv_name,user_role;
     private CheckBox cb_location_sharing, cb_show_online_status, cb_allow_phone_calls,
             cb_enable_whatsapp, cb_show_email_to_others, cb_email_notifications, cb_push_notifications;
     private ImageButton ib_edit_notifications, ib_edit_privacy;
@@ -53,6 +53,7 @@ public class ProfileFragment extends Fragment {
        // cb_push_notifications = view.findViewById(R.id.cb_push_notifications);
         //ib_edit_notifications = view.findViewById(R.id.IB_edit_notifications);
         ib_edit_privacy = view.findViewById(R.id.IB_edit_privacy);
+        user_role = view.findViewById(R.id.user_role);
 
         token = requireActivity().getSharedPreferences("MyAppPrefs", getContext().MODE_PRIVATE)
                 .getString("token", null);
@@ -80,6 +81,7 @@ public class ProfileFragment extends Fragment {
                     tv_email.setText("Email: " + user.getEmail());
                     tv_phone.setText("Phone: " + user.getPhone());
                     tv_name.setText(user.getName());
+                    user_role.setText(user.getRole());
                 }
             }
 

@@ -8,6 +8,7 @@ public class UserInfoResponse {
     private String email;
     private String phone;
     private List<String> preferences;
+    private String type;
 
     public UserInfoResponse(String firstName, String lastName, String email, String phone, List<String> preferences) {
         this.firstName = firstName;
@@ -39,5 +40,9 @@ public class UserInfoResponse {
 
     public List<String> getPreferences() {
         return preferences;
+    }
+
+    public String getRole() {
+        return type;
     }
 }

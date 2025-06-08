@@ -142,7 +142,8 @@ exports.getUserProfile = async(req, res) => {
             lastName: user.lastName,
             email: user.email,
             phone: user.phone,
-            preferences: user.preferences
+            preferences: user.preferences,
+            type: user.type,
         });
     } catch (error) {
         res.status(401).json({ message: 'Invalid token' });
@@ -282,34 +283,40 @@ exports.getAllReports = async (req, res) => {
     try {
         const reports = await Report.find()
             .select('description location photo type updatedAt userId')
-            .populate({ path: 'userId', select: 'firstName lastName' }); 
+            .populate({ path: 'userId', select: 'firstName lastName type' }); 
 
-        const formatted = reports.map(rec => ({
-            recport_id: rec._id,
-            location: rec.location,
-            description: rec.description,
-            type: rec.type,
-            updatedAt: rec.updatedAt, 
-            photo: rec.photo,
-            user: {
-                firstName: rec.userId?.firstName || '',
-                lastName: rec.userId?.lastName || ''
-            }
-        }));
+        const formatted = reports.map((rec) => {
+            console.log("🔍 userId type:", rec.userId?.type); // הדפסה לפני בניית האובייקט
+            return {
+                recport_id: rec._id,
+                location: rec.location,
+                description: rec.description,
+                type: rec.type,
+                updatedAt: rec.updatedAt, 
+                photo: rec.photo,
+                user: {
+                    firstName: rec.userId?.firstName || '',
+                    lastName: rec.userId?.lastName || '',
+                    type: rec.userId?.type || ''
+                }
+            };
+        });
 
         res.status(200).json(formatted);
+
     } catch (err) {
         console.error('❌ Error fetching all reports:', err);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
+
 // GET /api/recommendations
 exports.getAllRecommendations = async (req, res) => {
     try {
         const recommendations = await Recommendation.find()
             .select('location description photo updatedAt userId')     
-            .populate({ path: 'userId', select: 'firstName lastName' });   
+            .populate({ path: 'userId', select: 'firstName lastName type' });   
 
         const formatted = recommendations.map(rec => ({
             recommend_id: rec._id,
@@ -319,7 +326,8 @@ exports.getAllRecommendations = async (req, res) => {
             photo: rec.photo,
             user: {
                 firstName: rec.userId?.firstName || '',
-                lastName: rec.userId?.lastName || ''
+                lastName: rec.userId?.lastName || '',
+                type: rec.userId?.type || '' 
             }
         }));
 

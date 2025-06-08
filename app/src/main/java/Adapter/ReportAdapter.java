@@ -49,6 +49,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
     private String token;
     private boolean showButtons;
     private boolean showPostedBy;
+
     public ReportAdapter(Context context, List<UserReportResponse> reportList, String token, boolean showButtons, boolean showPostedBy) {
         this.context = context;
         this.reportList = reportList;
@@ -84,8 +85,10 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         } else {
             holder.image.setVisibility(View.GONE);
         }
+        Log.d("userType", "User Type: " + report.isUserAdmin());
+        Log.d("typeOfUser","type:" + report.getUserType());
         // Show or hide buttons:
-        if (showButtons) {
+        if (showButtons || report.isUserAdmin() ) {
             holder.btnEdit.setVisibility(View.VISIBLE);
             holder.btnDelete.setVisibility(View.VISIBLE);
 
