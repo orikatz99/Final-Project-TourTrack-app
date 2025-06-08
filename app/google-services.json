@@ -59,6 +59,14 @@
           }
         },
         {
+          "client_id": "564552263007-u2nmuhp1s3djus9j48oo9rse1bou0ehs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tourtrack",
+            "certificate_hash": "a281bdef7683b236f5d9042a19373ff3baf507c3"
+          }
+        },
+        {
           "client_id": "564552263007-2tt6sk9fql4s7dq2h9soncg7mbi84bkc.apps.googleusercontent.com",
           "client_type": 3
         }
