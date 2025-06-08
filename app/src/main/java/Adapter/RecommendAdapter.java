@@ -44,12 +44,14 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
     private List<UserRecommendationResponse> recommendationList;
     private String token;
     private boolean showButtons;
+    private boolean showPostedBy;
 
-    public RecommendAdapter(Context context, List<UserRecommendationResponse> recommendationList, String token, boolean showButtons) {
+    public RecommendAdapter(Context context, List<UserRecommendationResponse> recommendationList, String token, boolean showButtons, boolean showPostedBy) {
         this.context = context;
         this.recommendationList = recommendationList;
         this.token = token;
         this.showButtons = showButtons;
+        this.showPostedBy = showPostedBy;
 
     }
 
@@ -91,6 +93,12 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
         } else {
             holder.btnEdit.setVisibility(View.GONE);
             holder.btnDelete.setVisibility(View.GONE);
+        }
+        // Show or hide the username:
+        if (showPostedBy) {
+            holder.tvUserName.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvUserName.setVisibility(View.GONE);
         }
 
         holder.btnEdit.setOnClickListener(v -> showEditDialog(recommend, position));
