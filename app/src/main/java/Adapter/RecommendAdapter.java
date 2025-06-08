@@ -68,9 +68,11 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
         holder.RecommendLocation.setText("Location: " + recommend.getLocation());
         holder.tvRecommendationDescription.setText("Description: " + recommend.getDescription());
 
-        String mongoDateStr = recommend.getDate();
+        String mongoDateStr = recommend.getUpdatedAt();
 
         showDateInFormat(holder, mongoDateStr);
+        Log.d("RECOMMEND_DEBUG", "Raw date: " + recommend.getUpdatedAt());
+
         String photoUrl = recommend.getPhoto();
 
         if (photoUrl != null && !photoUrl.isEmpty()) {
@@ -112,13 +114,22 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
         }
 
         String cleanedDate = mongoDateStr.split("\\.")[0]; // "2025-05-30T17:50:50"
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat inputFormatWithSeconds = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat inputFormatNoSeconds = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        inputFormatWithSeconds.setTimeZone(TimeZone.getTimeZone("UTC"));
+        inputFormatNoSeconds.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         SimpleDateFormat outputFormat = new SimpleDateFormat("yy/MM/dd HH:mm");
 
         try {
-            Date date = inputFormat.parse(cleanedDate);
+            Date date;
+            try {
+                date = inputFormatWithSeconds.parse(cleanedDate);
+            } catch (ParseException e) {
+                // Try without seconds
+                date = inputFormatNoSeconds.parse(cleanedDate);
+            }
+
             String formattedDate = outputFormat.format(date);
             holder.tvRecommendDate.setText("Date: " + formattedDate);
         } catch (ParseException e) {
@@ -126,6 +137,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
             holder.tvRecommendDate.setText("Date: N/A");
         }
     }
+
 
 
     private void deleteRecommend(String recommendId, int position) {
@@ -231,7 +243,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
 
                                 recommendationList.get(position).setDescription(updated.getDescription());
                                 recommendationList.get(position).setLocation(updated.getLocation());
-                                recommendationList.get(position).setDate(updated.getDate());
+                                recommendationList.get(position).setUpdatedAt(updated.getUpdatedAt());
 
                                 notifyItemChanged(position);
                                 Toast.makeText(context, "Recommendation updated successfully", Toast.LENGTH_SHORT).show();

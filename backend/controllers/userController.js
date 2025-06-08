@@ -294,17 +294,18 @@ exports.getAllReports = async (req, res) => {
 exports.getAllRecommendations = async (req, res) => {
     try {
         const recommendations = await Recommendation.find()
-            .populate({ path: 'userId', select: 'firstName lastName' });
+            .select('location description photo updatedAt userId')     
+            .populate({ path: 'userId', select: 'firstName lastName' });   
 
         const formatted = recommendations.map(rec => ({
             recommend_id: rec._id,
             location: rec.location,
             description: rec.description,
+            updatedAt: rec.updatedAt, 
             photo: rec.photo,
-            date: rec.createdAt,
             user: {
-                firstName: rec.userId.firstName,
-                lastName: rec.userId.lastName
+                firstName: rec.userId?.firstName || '',
+                lastName: rec.userId?.lastName || ''
             }
         }));
 
@@ -314,6 +315,7 @@ exports.getAllRecommendations = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
 
 
 

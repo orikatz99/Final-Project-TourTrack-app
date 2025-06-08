@@ -4,32 +4,35 @@ import com.google.gson.annotations.SerializedName;
 
 public class UserRecommendationResponse {
     private String userId;
+    @SerializedName("_id")
+
     private String  recommend_id;
     private String  description;
     private String photo;
     private String location;
-    @SerializedName("createdAt")
+    @SerializedName("updatedAt")
 
-    private  String date;
+
+    private  String updatedAt;
     private User user;
     public UserRecommendationResponse() {
     }
 
-    public UserRecommendationResponse(String userId, String description, String photo, String recommend_id, String location, String date) {
+    public UserRecommendationResponse(String userId, String description, String photo, String recommend_id, String location, String updatedAt) {
         this.userId = userId;
         this.description = description;
         this.photo = photo;
         this.recommend_id = recommend_id;
         this.location = location;
-        this.date = date;
+        this.updatedAt = updatedAt;
     }
 
-    public String getDate() {
-        return date;
+    public String getUpdatedAt() {
+        return updatedAt;
     }
 
-    public UserRecommendationResponse setDate(String date) {
-        this.date = date;
+    public UserRecommendationResponse setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
         return this;
     }
 
