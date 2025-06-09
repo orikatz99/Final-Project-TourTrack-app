@@ -10,7 +10,7 @@
 
     <!-- Search Row -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/list_BTN_whatsapp"
+        android:id="@+id/btn_search"
         android:layout_width="55dp"
         android:layout_height="55dp"
         app:icon="@drawable/search"
@@ -31,10 +31,10 @@
         android:inputType="text"
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@id/list_BTN_whatsapp"
+        app:layout_constraintStart_toEndOf="@id/btn_search"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/list_BTN_whatsapp"
-        app:layout_constraintBottom_toBottomOf="@id/list_BTN_whatsapp"
+        app:layout_constraintTop_toTopOf="@id/btn_search"
+        app:layout_constraintBottom_toBottomOf="@id/btn_search"
         android:layout_marginStart="8dp" />
 
     <!-- Connected Friends Title -->
@@ -45,7 +45,7 @@
         android:text="Connected Friends"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/list_BTN_whatsapp"
+        app:layout_constraintTop_toBottomOf="@id/btn_search"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="24dp" />
 

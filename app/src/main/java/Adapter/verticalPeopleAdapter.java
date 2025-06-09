@@ -20,12 +20,15 @@ import java.util.List;
 
 public class verticalPeopleAdapter extends RecyclerView.Adapter<verticalPeopleAdapter.VerticalViewHolder> {
 
+
+
     public static class Person {
         private final String name;
         private final int imageResId;
         private final String phoneNumber;
         private final boolean allowPhoneCalls;
         private final boolean enableWhatsapp;
+
 
         public Person(String name, int imageResId, String phoneNumber, boolean allowPhoneCalls, boolean enableWhatsapp) {
             this.name = name;
@@ -53,7 +56,7 @@ public class verticalPeopleAdapter extends RecyclerView.Adapter<verticalPeopleAd
         }
     }
 
-    private final List<Person> people;
+    private List<Person> people;
 
     public verticalPeopleAdapter(List<Person> people) {
         this.people = people;
@@ -145,5 +148,10 @@ public class verticalPeopleAdapter extends RecyclerView.Adapter<verticalPeopleAd
             super(binding.getRoot());
             this.binding = binding;
         }
+    }
+
+    public void setPeople(List<Person> filteredList) {
+        this.people = filteredList;
+        notifyDataSetChanged();
     }
 }

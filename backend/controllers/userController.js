@@ -283,7 +283,8 @@ exports.getAllReports = async (req, res) => {
     try {
         const reports = await Report.find()
             .select('description location photo type updatedAt userId')
-            .populate({ path: 'userId', select: 'firstName lastName type' }); 
+            .populate({ path: 'userId', select: 'firstName lastName type' })
+            .lean();
 
         const formatted = reports.map((rec) => {
             console.log("🔍 userId type:", rec.userId?.type); // הדפסה לפני בניית האובייקט
@@ -316,7 +317,7 @@ exports.getAllRecommendations = async (req, res) => {
     try {
         const recommendations = await Recommendation.find()
             .select('location description photo updatedAt userId')     
-            .populate({ path: 'userId', select: 'firstName lastName type' });   
+            .populate({ path: 'userId', select: 'firstName lastName type' }).lean();;   
 
         const formatted = recommendations.map(rec => ({
             recommend_id: rec._id,

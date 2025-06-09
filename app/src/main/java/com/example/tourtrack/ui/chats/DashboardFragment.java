@@ -1,11 +1,16 @@
 package com.example.tourtrack.ui.chats;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,6 +22,7 @@ import com.example.tourtrack.models.UserConnectedResponse;
 import com.example.tourtrack.models.UsersResponse;
 import com.example.tourtrack.network.ApiService;
 import com.example.tourtrack.network.RetrofitClient;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +37,11 @@ public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
     private String token;
+    EditText search_bar;
+    ExtendedFloatingActionButton btn_search;
+    private verticalPeopleAdapter peopleAdapter;
+    private List<verticalPeopleAdapter.Person> originalPeopleList = new ArrayList<>();
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -38,6 +49,9 @@ public class DashboardFragment extends Fragment {
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        //initialize views
+        initializeViews();
 
         // Get the token from SharedPreferences
         token = requireActivity().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
@@ -65,7 +79,56 @@ public class DashboardFragment extends Fragment {
 
 
 
+
+
         return root;
+    }
+
+    private void searchButtonClickListener() {
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String searchedName = search_bar.getText().toString().trim();
+                if (!searchedName.isEmpty() ) {
+                    Log.d("Search", "Searching for: " + searchedName);
+                    //sort the list based on the search query
+                    List<verticalPeopleAdapter.Person> filteredList = new ArrayList<>();
+                    for (verticalPeopleAdapter.Person person : originalPeopleList) {
+                        if (person.getName().toLowerCase().contains(searchedName.toLowerCase())) {
+                            filteredList.add(person);
+
+
+                        }
+                    }
+                    filteredList.sort((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()));
+                    //update the adapter with the filtered list
+                    if( filteredList.isEmpty()) {
+                        Toast.makeText(getContext(), "No results found", Toast.LENGTH_SHORT).show();
+                        vibrate(getContext());
+                        return;
+                    }
+                    peopleAdapter.setPeople(filteredList);
+
+
+                }
+                else {
+                    Toast.makeText(getContext(), "Please enter a name", Toast.LENGTH_SHORT).show();
+                    vibrate(getContext());
+                }
+                if(searchedName.isEmpty()) {
+                    peopleAdapter.setPeople(originalPeopleList);
+
+                }
+
+
+            }
+        });
+    }
+
+    private void initializeViews() {
+        search_bar = binding.searchBar;
+        btn_search = binding.btnSearch;
+
     }
 
     private void loadAllUsers(ApiService apiService) {
@@ -100,11 +163,17 @@ public class DashboardFragment extends Fragment {
                     }
 
                     people.sort((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()));
-                    verticalPeopleAdapter adapter = new verticalPeopleAdapter(people);
-                    binding.messagesRecycler.setAdapter(adapter);
+                    originalPeopleList = people;
+                    peopleAdapter = new verticalPeopleAdapter(people);
+                    binding.messagesRecycler.setAdapter(peopleAdapter);
+
+                    // Set up search button click listener
+                    searchButtonClickListener();
                 } else {
                     Log.e("DashboardFragment", "Failed to load users: " + response.code());
                 }
+
+
             }
 
 
@@ -144,7 +213,16 @@ public class DashboardFragment extends Fragment {
             }
         });
     }
-
+    private void vibrate(Context context) {
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                vibrator.vibrate(100);
+            }
+        }
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
