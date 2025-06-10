@@ -25,29 +25,22 @@ import retrofit2.Response;
 public class PreferencesActivity extends AppCompatActivity {
 
     private List<String> selected = new ArrayList<>();
+    Button btnContinue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
 
-        setupSelectableButton(R.id.btnForest, "Forest");
-        setupSelectableButton(R.id.btnBeach, "Beach");
-        setupSelectableButton(R.id.btnRiver, "River");
-        setupSelectableButton(R.id.btnMountain, "Mountain");
-        setupSelectableButton(R.id.btnDesert, "Desert");
-        setupSelectableButton(R.id.btnLake, "Lake");
-        setupSelectableButton(R.id.btnCave, "Cave");
-        setupSelectableButton(R.id.btnAdventure, "Adventure");
-        setupSelectableButton(R.id.btnCulture, "Culture");
-        setupSelectableButton(R.id.btnWaterfall, "Waterfall");
-        setupSelectableButton(R.id.btnHistorical, "Historical");
-        setupSelectableButton(R.id.btnWildlife, "Wildlife");
-        setupSelectableButton(R.id.btnScenic, "Scenic");
-        setupSelectableButton(R.id.btnAgriculture, "Agriculture");
-        setupSelectableButton(R.id.btnField, "Field");
+        //findViews
+        findViews();
 
-        Button btnContinue = findViewById(R.id.btnContinue);
+        //continue button listener
+        continueButtonListener();
+
+    }
+
+    private void continueButtonListener() {
         btnContinue.setOnClickListener(v -> {
             if (selected.isEmpty()) {
                 Toast.makeText(this, "Please select at least one category", Toast.LENGTH_SHORT).show();
@@ -69,10 +62,9 @@ public class PreferencesActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             Toast.makeText(PreferencesActivity.this, "Preferences saved!", Toast.LENGTH_SHORT).show();
 
-                            // מעבר ל־MainActivity
                             Intent intent = new Intent(PreferencesActivity.this, MainActivity.class);
                             startActivity(intent);
-                            finish(); // סוגר את המסך הנוכחי כדי למנוע חזרה אליו
+                            finish();
                         } else {
                             Toast.makeText(PreferencesActivity.this, "Error: " + response.code(), Toast.LENGTH_SHORT).show();
                         }
@@ -85,6 +77,27 @@ public class PreferencesActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void findViews() {
+        setupSelectableButton(R.id.btnForest, "Forest");
+        setupSelectableButton(R.id.btnBeach, "Beach");
+        setupSelectableButton(R.id.btnRiver, "River");
+        setupSelectableButton(R.id.btnMountain, "Mountain");
+        setupSelectableButton(R.id.btnDesert, "Desert");
+        setupSelectableButton(R.id.btnLake, "Lake");
+        setupSelectableButton(R.id.btnCave, "Cave");
+        setupSelectableButton(R.id.btnAdventure, "Adventure");
+        setupSelectableButton(R.id.btnCulture, "Culture");
+        setupSelectableButton(R.id.btnWaterfall, "Waterfall");
+        setupSelectableButton(R.id.btnHistorical, "Historical");
+        setupSelectableButton(R.id.btnWildlife, "Wildlife");
+        setupSelectableButton(R.id.btnScenic, "Scenic");
+        setupSelectableButton(R.id.btnAgriculture, "Agriculture");
+        setupSelectableButton(R.id.btnField, "Field");
+        btnContinue = findViewById(R.id.btnContinue);
+
+
     }
 
     private void setupSelectableButton(int buttonId, String category) {

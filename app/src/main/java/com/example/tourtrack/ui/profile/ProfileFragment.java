@@ -52,11 +52,17 @@ public class ProfileFragment extends Fragment {
 
         // Get the token from SharedPreferences
         getToken();
-            //buttons
-        //ib_edit_notifications.setOnClickListener(v -> updateNotificationSettings());
+        //buttons
         ib_edit_privacy.setOnClickListener(v -> updatePrivacySettings());
-        //logout button
+        //notifications - in the future we can add this
+        //ib_edit_notifications.setOnClickListener(v -> updateNotificationSettings());
 
+        //logout button
+        logoutButtonListener();
+
+    }
+
+    private void logoutButtonListener() {
         ib_logout.setOnClickListener(v -> {
             requireActivity().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
                     .edit().clear().apply();
@@ -70,9 +76,8 @@ public class ProfileFragment extends Fragment {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); //do not move back
             startActivity(intent);
         });
-
-
     }
+
     private void vibrate(Context context) {
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrator != null) {

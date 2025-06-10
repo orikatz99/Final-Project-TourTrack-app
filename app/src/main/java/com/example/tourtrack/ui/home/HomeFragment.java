@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,19 +94,42 @@ public class HomeFragment extends Fragment {
 
         requireActivity().setTitle("TourTrack");
         // Load token from SharedPreferences FIRST
-        token = requireActivity().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-                .getString("token", null);
-
-        if (token == null) {
-            Toast.makeText(getContext(), "Authentication token not found", Toast.LENGTH_SHORT).show();
-            return binding.getRoot();
-        }
+        getToken();
 
         // Initialize views
         initlaizeView();
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        // Initialize the map
+        mapInit();
+        startLocationUpdates();
 
+        //initialize RecyclerViews
+        ryclerViewInit();
+
+
+        // Load reports from server
+        loadAllReports();
+        // Load recommendations
+        loadAllRecommendations();
+        
+        
+        
+        return binding.getRoot();
+    }
+
+    private void ryclerViewInit() {
+        binding.recyclerViewReports.setLayoutManager(new LinearLayoutManager(getContext()));
+        reportAdapter = new ReportAdapter(requireContext(), reportList, token, false, true);
+        recommendAdapter = new RecommendAdapter(requireContext(), recommendList, token,false,true);
+        binding.recyclerViewRecommendations.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        binding.recyclerViewReports.setAdapter(reportAdapter);
+        binding.recyclerViewRecommendations.setAdapter(recommendAdapter);
+
+    }
+
+    private void mapInit() {
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.map);
 
@@ -141,26 +165,6 @@ public class HomeFragment extends Fragment {
                 });
             });
         }
-
-        startLocationUpdates();
-
-        binding.recyclerViewReports.setLayoutManager(new LinearLayoutManager(getContext()));
-        reportAdapter = new ReportAdapter(requireContext(), reportList, token, false, true);
-        recommendAdapter = new RecommendAdapter(requireContext(), recommendList, token,false,true);
-        binding.recyclerViewRecommendations.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        binding.recyclerViewReports.setAdapter(reportAdapter);
-        binding.recyclerViewRecommendations.setAdapter(recommendAdapter);
-
-
-        // Load reports from server
-        loadAllReports();
-        // Load recommendations
-        loadAllRecommendations();
-        
-        
-        
-        return binding.getRoot();
     }
 
     private void initlaizeView() {
@@ -170,6 +174,17 @@ public class HomeFragment extends Fragment {
         tv_weather_precipitation = binding.tvWeatherPrecipitation;
         iv_weather_icon = binding.ivWeatherIcon;
 
+    }
+    private ScrollView getToken(){
+
+        token = requireActivity().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+                .getString("token", null);
+
+        if (token == null) {
+            Toast.makeText(getContext(), "Authentication token not found", Toast.LENGTH_SHORT).show();
+            return binding.getRoot();
+        }
+        return null;
     }
 
     private void loadAllRecommendations() {

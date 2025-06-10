@@ -36,15 +36,15 @@ public class GoogleExtraInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_extra_info);
+        // Initialize views
+        initializeViews();
 
-        editFirstName = findViewById(R.id.first_name_input);
-        editLastName = findViewById(R.id.last_name_input);
-        editPhone = findViewById(R.id.phone_input);
-        editDate = findViewById(R.id.birth_input);
-        continueBtn = findViewById(R.id.continue_btn);
+       // Set up continue button click listener
+        continueButtonListener();
 
-        editDate.setOnClickListener(v -> openDatePicker());
+    }
 
+    private void continueButtonListener() {
         continueBtn.setOnClickListener(v -> {
             String firstName = editFirstName.getText().toString().trim();
             String lastName = editLastName.getText().toString().trim();
@@ -120,6 +120,17 @@ public class GoogleExtraInfoActivity extends AppCompatActivity {
             });
 
         });
+    }
+
+    private void initializeViews() {
+        editFirstName = findViewById(R.id.first_name_input);
+        editLastName = findViewById(R.id.last_name_input);
+        editPhone = findViewById(R.id.phone_input);
+        editDate = findViewById(R.id.birth_input);
+        continueBtn = findViewById(R.id.continue_btn);
+
+        editDate.setOnClickListener(v -> openDatePicker());
+
     }
 
     private void openDatePicker() {

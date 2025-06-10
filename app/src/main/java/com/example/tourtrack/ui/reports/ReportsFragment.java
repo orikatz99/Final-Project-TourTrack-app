@@ -89,15 +89,8 @@ public class ReportsFragment extends Fragment {
             return root;
         }
 
-
-        binding.recyclerViewReports.setLayoutManager(new LinearLayoutManager(getContext()));
-        reportAdapter = new ReportAdapter(requireContext(), reportList, token,true,false);
-        recommendAdapter = new RecommendAdapter(requireContext(), recommendList, token,true, false);
-        binding.recyclerViewRecommendations.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        binding.recyclerViewReports.setAdapter(reportAdapter);
-        binding.recyclerViewRecommendations.setAdapter(recommendAdapter);
-
+        // Initialize RecyclerViews and adapters
+        initRycyclerViewsAndAdapters();
 
         // Load reports from server
         loadReports();
@@ -114,6 +107,16 @@ public class ReportsFragment extends Fragment {
         cameraReportButtonClickListener(binding.tvAddPhotoReport, CAMERA_CAPTURE_REPORT, IMAGE_PICK_REPORT);
         cameraRecommendButtonClickListener(binding.tvAddPhotoRecommend, CAMERA_CAPTURE_RECOMMEND, IMAGE_PICK_RECOMMEND);
         return root;
+    }
+
+    private void initRycyclerViewsAndAdapters() {
+        binding.recyclerViewReports.setLayoutManager(new LinearLayoutManager(getContext()));
+        reportAdapter = new ReportAdapter(requireContext(), reportList, token,true,false);
+        recommendAdapter = new RecommendAdapter(requireContext(), recommendList, token,true, false);
+        binding.recyclerViewRecommendations.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.recyclerViewReports.setAdapter(reportAdapter);
+        binding.recyclerViewRecommendations.setAdapter(recommendAdapter);
+
     }
 
     private void loadRecommendations() {

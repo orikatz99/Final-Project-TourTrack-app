@@ -51,7 +51,23 @@ public class SignUp extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         findViews();
+        // Initialize Google Sign-In
+        googleSignIn();
 
+        // Signup --> Login
+        btnLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(SignUp.this, Login.class);
+            startActivity(intent);
+        });
+
+        editDate.setOnClickListener(v -> openTripDatePicker());
+        // Signup button listener
+        signupButtonListener();
+
+    }
+
+
+    private void googleSignIn() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("564552263007-2tt6sk9fql4s7dq2h9soncg7mbi84bkc.apps.googleusercontent.com")
                 .requestEmail()
@@ -62,104 +78,6 @@ public class SignUp extends AppCompatActivity {
             mGoogleSignInClient.signOut().addOnCompleteListener(this, task -> {
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
-            });
-        });
-
-        btnLogin.setOnClickListener(v -> {
-            Intent intent = new Intent(SignUp.this, Login.class);
-            startActivity(intent);
-        });
-
-        editDate.setOnClickListener(v -> openTripDatePicker());
-
-        btnSignup.setOnClickListener(v -> {
-            String firstName = editFirstN.getText().toString().trim();
-            String lastName = editLastN.getText().toString().trim();
-            String email = editEmail.getText().toString().trim();
-            String password = editPassword.getText().toString().trim();
-            String phone = editPhone.getText().toString().trim();
-
-            if (firstName.isEmpty()) {
-                editFirstN.setError("Please enter your first name");
-                return;
-            }
-            if (lastName.isEmpty()) {
-                editLastN.setError("Please enter your last name");
-                return;
-            }
-            if (email.isEmpty()) {
-                editEmail.setError("Please enter your email");
-                return;
-            }
-            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                editEmail.setError("Invalid email address");
-                return;
-            }
-            if (phone.isEmpty()) {
-                editPhone.setError("Please enter your phone number");
-                return;
-            }
-            if (!phone.matches("\\d{10}")) {
-                editPhone.setError("Phone number must be 10 digits");
-                return;
-            }
-            if (password.length() < 6) {
-                editPassword.setError("Password must be at least 6 characters");
-                return;
-            }
-            if (birthDate == null) {
-                editDate.setError("Please select your birth date");
-                return;
-            }
-
-            String birthDateStr = birthDate.get(Calendar.DAY_OF_MONTH) + "/" +
-                    (birthDate.get(Calendar.MONTH) + 1) + "/" +
-                    birthDate.get(Calendar.YEAR);
-
-            SignUpRequest request = new SignUpRequest(firstName, lastName, email, password, phone, birthDateStr);
-            ApiService apiService = RetrofitClient.getApiService();
-
-            apiService.signUp(request).enqueue(new Callback<SignUpResponse>() {
-                @Override
-                public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        String token = response.body().getToken();
-
-                        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-                        prefs.edit().putString("token", token).apply();
-                        String userId = response.body().getUser().getId();
-                        prefs.edit().putString("userId", userId).apply();
-
-                        Intent intent = new Intent(SignUp.this, PreferencesActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else if (response.code() == 409) {
-                        vibratePhone();
-                        try {
-                            String errorJson = response.errorBody().string();
-                            JSONObject jsonObject = new JSONObject(errorJson);
-                            String message = jsonObject.optString("message", "Email or phone already exists");
-
-                            if (message.contains("email") || message.contains("Email")) {
-                                editEmail.setError("Email already exists");
-                            }
-                            if (message.contains("phone") || message.contains("Phone")) {
-                                editPhone.setError("Phone already exists");
-                            }
-
-                            Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
-                        } catch (Exception e) {
-                            Toast.makeText(SignUp.this, "Conflict error occurred", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(SignUp.this, "Signup failed: " + response.code(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<SignUpResponse> call, Throwable t) {
-                    Toast.makeText(SignUp.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                }
             });
         });
     }
@@ -256,5 +174,97 @@ public class SignUp extends AppCompatActivity {
 
         datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
         datePickerDialog.show();
+    }
+    private void signupButtonListener() {
+        btnSignup.setOnClickListener(v -> {
+            String firstName = editFirstN.getText().toString().trim();
+            String lastName = editLastN.getText().toString().trim();
+            String email = editEmail.getText().toString().trim();
+            String password = editPassword.getText().toString().trim();
+            String phone = editPhone.getText().toString().trim();
+
+            if (firstName.isEmpty()) {
+                editFirstN.setError("Please enter your first name");
+                return;
+            }
+            if (lastName.isEmpty()) {
+                editLastN.setError("Please enter your last name");
+                return;
+            }
+            if (email.isEmpty()) {
+                editEmail.setError("Please enter your email");
+                return;
+            }
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                editEmail.setError("Invalid email address");
+                return;
+            }
+            if (phone.isEmpty()) {
+                editPhone.setError("Please enter your phone number");
+                return;
+            }
+            if (!phone.matches("\\d{10}")) {
+                editPhone.setError("Phone number must be 10 digits");
+                return;
+            }
+            if (password.length() < 6) {
+                editPassword.setError("Password must be at least 6 characters");
+                return;
+            }
+            if (birthDate == null) {
+                editDate.setError("Please select your birth date");
+                return;
+            }
+
+            String birthDateStr = birthDate.get(Calendar.DAY_OF_MONTH) + "/" +
+                    (birthDate.get(Calendar.MONTH) + 1) + "/" +
+                    birthDate.get(Calendar.YEAR);
+
+            SignUpRequest request = new SignUpRequest(firstName, lastName, email, password, phone, birthDateStr);
+            ApiService apiService = RetrofitClient.getApiService();
+
+            apiService.signUp(request).enqueue(new Callback<SignUpResponse>() {
+                @Override
+                public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        String token = response.body().getToken();
+
+                        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                        prefs.edit().putString("token", token).apply();
+                        String userId = response.body().getUser().getId();
+                        prefs.edit().putString("userId", userId).apply();
+
+                        Intent intent = new Intent(SignUp.this, PreferencesActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else if (response.code() == 409) {
+                        vibratePhone();
+                        try {
+                            String errorJson = response.errorBody().string();
+                            JSONObject jsonObject = new JSONObject(errorJson);
+                            String message = jsonObject.optString("message", "Email or phone already exists");
+
+                            if (message.contains("email") || message.contains("Email")) {
+                                editEmail.setError("Email already exists");
+                            }
+                            if (message.contains("phone") || message.contains("Phone")) {
+                                editPhone.setError("Phone already exists");
+                            }
+
+                            Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
+                            Toast.makeText(SignUp.this, "Conflict error occurred", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(SignUp.this, "Signup failed: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SignUpResponse> call, Throwable t) {
+                    Toast.makeText(SignUp.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        });
     }
 }

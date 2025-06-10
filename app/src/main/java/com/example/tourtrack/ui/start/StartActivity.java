@@ -19,19 +19,15 @@ public class StartActivity extends AppCompatActivity {
         Button btnLogin = findViewById(R.id.btnLogin);
         Button btnSignIn = findViewById(R.id.btnSignIn);
 
-        // LOGIN --> LOGIN
+        // Start --> LOGIN
         btnLogin.setOnClickListener(v -> {
             Intent intent = new Intent(StartActivity.this, Login.class);
             startActivity(intent);
-            finish(); // לא לחזור אחורה
+            finish();
         });
 
-        // SIGN UP --> sign up
+        // start --> sign up
         btnSignIn.setOnClickListener(v -> {
-          /*  Intent intent = new Intent(StartActivity.this, PreferencesActivity.class);
-            startActivity(intent);*/
-
-
             Intent intent = new Intent(StartActivity.this, SignUp.class);
             startActivity(intent);
         });

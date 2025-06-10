@@ -52,13 +52,31 @@ public class NotificationsFragment extends Fragment {
 
         setupSpinners();
         setupInputListeners();
+        // Initialize the rycler view and adapter
+        initRecyclerViewAndAdapter();
 
-        binding.recyclerRoutes.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new RoutesAdapter(requireContext(), visibleRoutes, visibleRoutesCount);
-        binding.recyclerRoutes.setAdapter(adapter);
+        //find the best routes button
+        findRoutesButtonListener();
 
+        //load more options button
+        loadMoreButtonListener();
+
+
+
+        return root;
+    }
+
+    private void loadMoreButtonListener() {
+        binding.btnLoadMore.setOnClickListener(v -> {
+            visibleRoutesCount += ROUTES_INCREMENT;
+            updateVisibleRoutes();
+        });
+    }
+
+    private void findRoutesButtonListener() {
         binding.btnFind.setOnClickListener(v -> {
             // Validate individual fields
+
             String region = binding.spiRegions.getSelectedItem().toString();
             String category = binding.spiTrailCatagories.getSelectedItem().toString();
             String attraction = binding.spiAttractions.getSelectedItem().toString();
@@ -106,14 +124,13 @@ public class NotificationsFragment extends Fragment {
             binding.btnFind.setEnabled(false);
             fetchUserPreferencesAndSend();
         });
+    }
 
-        binding.btnLoadMore.setOnClickListener(v -> {
-            visibleRoutesCount += ROUTES_INCREMENT;
-            updateVisibleRoutes();
-        });
+    private void initRecyclerViewAndAdapter() {
+        binding.recyclerRoutes.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new RoutesAdapter(requireContext(), visibleRoutes, visibleRoutesCount);
+        binding.recyclerRoutes.setAdapter(adapter);
 
-
-        return root;
     }
 
     private void setupSpinners() {

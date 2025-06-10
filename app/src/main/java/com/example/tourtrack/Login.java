@@ -53,19 +53,8 @@ public class Login extends AppCompatActivity {
         findViews();
 
         // Set up Google Sign-In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("564552263007-2tt6sk9fql4s7dq2h9soncg7mbi84bkc.apps.googleusercontent.com")
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        googleSignIn();
 
-        // Always sign out before opening the Google account picker
-        googleSignInBtn.setOnClickListener(v -> {
-            mGoogleSignInClient.signOut().addOnCompleteListener(this, task -> {
-                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent, RC_SIGN_IN);
-            });
-        });
 
         // Navigate to registration screen
         toRegisterBtn.setOnClickListener(v -> {
@@ -73,7 +62,12 @@ public class Login extends AppCompatActivity {
             finish();
         });
 
-        // Handle manual login (email + password)
+        // Handle manual login (email + password) - regular login
+        regularLogin();
+
+    }
+
+    private void regularLogin() {
         login.setOnClickListener(v -> {
             email = email_login.getText().toString();
             password = password_login.getText().toString();
@@ -99,6 +93,22 @@ public class Login extends AppCompatActivity {
             //get token from MongoDB
             getToken(apiService, loginRequest);
 
+        });
+    }
+
+    private void googleSignIn() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("564552263007-2tt6sk9fql4s7dq2h9soncg7mbi84bkc.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // Always sign out before opening the Google account picker
+        googleSignInBtn.setOnClickListener(v -> {
+            mGoogleSignInClient.signOut().addOnCompleteListener(this, task -> {
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, RC_SIGN_IN);
+            });
         });
     }
 
