@@ -140,11 +140,16 @@ router.get('/reports', getAllReports);
 const { getAllRecommendations } = require('../controllers/userController');
 router.get('/recommendations', getAllRecommendations);
 
+
+// Google button 
 const { checkUserExistsByEmail } = require('../controllers/userController');
 router.get('/exists/:email', checkUserExistsByEmail);   
 
 const { completeGoogleSignupByEmail } = require('../controllers/userController');
 router.put('/auth/google/complete-by-email/:email', completeGoogleSignupByEmail);
+
+const { loginGoogleUserByEmail } = require('../controllers/userController');
+router.post('/auth/google-login', loginGoogleUserByEmail);
 
 
 

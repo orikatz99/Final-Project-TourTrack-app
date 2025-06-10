@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 
-        // הדרך הנכונה לגשת ל־NavController
         NavHostFragment navHostFragment = (NavHostFragment)
                 getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
         NavController navController = navHostFragment.getNavController();

@@ -1,6 +1,11 @@
 package com.example.tourtrack.ui.profile;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +16,13 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.tourtrack.Login;
 import com.example.tourtrack.R;
 import com.example.tourtrack.network.ApiService;
 import com.example.tourtrack.models.PrivacyResponseWrapper;
 import com.example.tourtrack.network.RetrofitClient;
 import com.example.tourtrack.models.UserInfoResponse;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +35,7 @@ public class ProfileFragment extends Fragment {
     private TextView tv_email, tv_phone, tv_name,user_role;
     private CheckBox cb_location_sharing, cb_show_online_status, cb_allow_phone_calls,
             cb_enable_whatsapp, cb_show_email_to_others, cb_email_notifications, cb_push_notifications;
-    private ImageButton ib_edit_notifications, ib_edit_privacy;
+    private ImageButton ib_edit_notifications, ib_edit_privacy,ib_logout;
     private String token;
 
     @Override
@@ -40,7 +47,43 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // UI references
+        //initialize views
+        initializeViews(view);
+
+        // Get the token from SharedPreferences
+        getToken();
+            //buttons
+        //ib_edit_notifications.setOnClickListener(v -> updateNotificationSettings());
+        ib_edit_privacy.setOnClickListener(v -> updatePrivacySettings());
+        //logout button
+
+        ib_logout.setOnClickListener(v -> {
+            requireActivity().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+                    .edit().clear().apply();
+
+            Toast.makeText(getContext(), "Logged out successfully", Toast.LENGTH_SHORT).show();
+            vibrate(getContext());
+            FirebaseAuth.getInstance().signOut();
+
+            // Start LoginActivity and clear the back stack
+            Intent intent = new Intent(requireContext(), Login.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); //do not move back
+            startActivity(intent);
+        });
+
+
+    }
+    private void vibrate(Context context) {
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                vibrator.vibrate(100);
+            }
+        }
+    }
+    private void initializeViews(View view) {
         tv_email = view.findViewById(R.id.tv_email);
         tv_phone = view.findViewById(R.id.tv_phone);
         tv_name = view.findViewById(R.id.tv_name);
@@ -50,11 +93,13 @@ public class ProfileFragment extends Fragment {
         cb_enable_whatsapp = view.findViewById(R.id.cb_whatsapp_messaging);
         cb_show_email_to_others = view.findViewById(R.id.cb_show_email);
         //cb_email_notifications = view.findViewById(R.id.cb_email_notifications);
-       // cb_push_notifications = view.findViewById(R.id.cb_push_notifications);
+        // cb_push_notifications = view.findViewById(R.id.cb_push_notifications);
         //ib_edit_notifications = view.findViewById(R.id.IB_edit_notifications);
         ib_edit_privacy = view.findViewById(R.id.IB_edit_privacy);
         user_role = view.findViewById(R.id.user_role);
-
+        ib_logout = view.findViewById(R.id.IB_logOut);
+    }
+    private void getToken() {
         token = requireActivity().getSharedPreferences("MyAppPrefs", getContext().MODE_PRIVATE)
                 .getString("token", null);
 
@@ -66,9 +111,6 @@ public class ProfileFragment extends Fragment {
             tv_phone.setText("");
             tv_name.setText("");
         }
-
-        ib_edit_privacy.setOnClickListener(v -> updatePrivacySettings());
-        //ib_edit_notifications.setOnClickListener(v -> updateNotificationSettings());
     }
 
     private void fetchUserInfo(String token) {

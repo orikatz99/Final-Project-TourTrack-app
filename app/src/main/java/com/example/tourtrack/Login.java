@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 //import com.example.myapplication.R;
 import com.example.tourtrack.R;
+import com.example.tourtrack.models.GoogleEmailOnlyRequest;
 import com.example.tourtrack.models.LoginRequest;
 import com.example.tourtrack.models.LoginResponse;
 import com.example.tourtrack.network.ApiService;
@@ -95,32 +96,38 @@ public class Login extends AppCompatActivity {
             ApiService apiService = RetrofitClient.getApiService();
             LoginRequest loginRequest = new LoginRequest(email, password);
 
-            apiService.login(loginRequest).enqueue(new Callback<LoginResponse>() {
-                @Override
-                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        String token = response.body().getToken();
-                        String userId = response.body().getUser().getId();
+            //get token from MongoDB
+            getToken(apiService, loginRequest);
 
-                        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-                        prefs.edit()
-                                .putString("token", token)
-                                .putString("userId", userId)
-                                .apply();
+        });
+    }
 
-                        Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Login.this, MainActivity.class));
-                        finish();
-                    } else {
-                        Toast.makeText(Login.this, "Email or password incorrect", Toast.LENGTH_SHORT).show();
-                    }
+    private void getToken(ApiService apiService, LoginRequest loginRequest) {
+        apiService.login(loginRequest).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String token = response.body().getToken();
+                    String userId = response.body().getUser().getId();
+
+                    SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                    prefs.edit()
+                            .putString("token", token)
+                            .putString("userId", userId)
+                            .apply();
+
+                    Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Login.this, MainActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(Login.this, "Email or password incorrect", Toast.LENGTH_SHORT).show();
                 }
+            }
 
-                @Override
-                public void onFailure(Call<LoginResponse> call, Throwable t) {
-                    Toast.makeText(Login.this, "Server error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Toast.makeText(Login.this, "Server error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -155,7 +162,10 @@ public class Login extends AppCompatActivity {
                                     boolean exists = response.body();
                                     Intent intent;
                                     if (exists) {
-                                        intent = new Intent(Login.this, MainActivity.class);
+                                        //get token from google
+                                        getGoogleToken(apiService, email);
+
+                                        return;
                                     } else {
                                         intent = new Intent(Login.this, GoogleExtraInfoActivity.class);
                                     }
@@ -181,6 +191,36 @@ public class Login extends AppCompatActivity {
                 Toast.makeText(this, "Google sign-in failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    private void getGoogleToken(ApiService apiService, String email) {
+        //get token from google
+        apiService.googleLogin(new GoogleEmailOnlyRequest(email)).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String token = response.body().getToken();
+                    String userId = response.body().getUser().getId();
+
+                    SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                    prefs.edit()
+                            .putString("token", token)
+                            .putString("userId", userId)
+                            .apply();
+
+                    Intent intent = new Intent(Login.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(Login.this, "Google login failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Toast.makeText(Login.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private void findViews() {

@@ -559,3 +559,37 @@ exports.completeGoogleSignupByEmail = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+// Login Google user by email (if user already exists)  - ! will get the TOKEN !
+exports.loginGoogleUserByEmail = async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ message: 'Email is required' });
+    }
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const jwt = require('jsonwebtoken');
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+        res.status(200).json({
+            message: 'Google login successful',
+            token,
+            user: {
+                id: user._id,
+                email: user.email,
+                firstName: user.firstName,
+                preferences: user.preferences
+            }
+        });
+    } catch (err) {
+        console.error('❌ Error in loginGoogleUserByEmail:', err.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+

@@ -1,5 +1,6 @@
 package com.example.tourtrack.network;
 
+import com.example.tourtrack.models.GoogleEmailOnlyRequest;
 import com.example.tourtrack.models.GoogleExtraInfoRequest;
 import com.example.tourtrack.models.LocationUpdateRequest;
 import com.example.tourtrack.models.LoginRequest;
@@ -118,7 +119,7 @@ public interface ApiService {
     @DELETE("api/users/recommendation/{id}")
     Call<Void> deleteRecommendation(@Header("Authorization") String token, @Path("id") String recommendationId);
 
-    // Google Sign Up
+    // Google button
     @PUT("api/users/auth/google/complete-by-email/{email}")
     Call<LoginResponse> completeGoogleSignupByEmail(@Path("email") String email, @Body GoogleExtraInfoRequest request);
 
@@ -126,6 +127,8 @@ public interface ApiService {
     @GET("api/users/exists/{email}")
     Call<Boolean> checkUserExists(@Path("email") String email);
 
+    @POST("api/users/auth/google-login")
+    Call<LoginResponse> googleLogin(@Body GoogleEmailOnlyRequest request);
 
 
 
