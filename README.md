@@ -6,9 +6,12 @@
 # TourTrack
 
 **Developed by:** Shani Halali & Ori Katz  
-**Partnered with:** Lower Galilee Regional Council
+**Partnered with:** Lower Galilee Regional Council  
 
----
+**Demo video:**
+
+
+[![Demo Video](https://img.youtube.com/vi/oH4EgSAv1es/sddefault.jpg)](https://www.youtube.com/watch?v=oH4EgSAv1es)
 
 ## 📱 About the App
 
