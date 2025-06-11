@@ -35,6 +35,7 @@ import com.example.tourtrack.models.RouteModel;
 import com.example.tourtrack.models.UserLocationResponse;
 import com.example.tourtrack.models.UserRecommendationResponse;
 import com.example.tourtrack.models.UserReportResponse;
+import com.example.tourtrack.models.UserTypeResponse;
 import com.example.tourtrack.models.WeatherResponse;
 import com.example.tourtrack.network.ApiService;
 import com.example.tourtrack.network.RetrofitClient;
@@ -81,6 +82,8 @@ public class HomeFragment extends Fragment {
     private ReportAdapter reportAdapter;
     private RecommendAdapter recommendAdapter;
     private String token;
+    private String userType;
+    private boolean isAdmin ;
 
 
     @Override
@@ -91,10 +94,12 @@ public class HomeFragment extends Fragment {
             v.getParent().requestDisallowInterceptTouchEvent(true);
             return false;
         });
+        //isAdmin=false;
 
         requireActivity().setTitle("TourTrack");
         // Load token from SharedPreferences FIRST
         getToken();
+        getUserType();
 
         // Initialize views
         initlaizeView();
@@ -104,24 +109,48 @@ public class HomeFragment extends Fragment {
         mapInit();
         startLocationUpdates();
 
-        //initialize RecyclerViews
-        ryclerViewInit();
 
-
-        // Load reports from server
-        loadAllReports();
-        // Load recommendations
-        loadAllRecommendations();
         
         
         
         return binding.getRoot();
     }
 
+    private void getUserType() {
+        ApiService apiService = RetrofitClient.getApiService();
+        Call<UserTypeResponse> call = apiService.getUserType("Bearer " + token);
+        call.enqueue(new Callback<UserTypeResponse>() {
+            @Override
+            public void onResponse(Call<UserTypeResponse> call, Response<UserTypeResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    userType = response.body().getType();
+                    Log.d("UserType", "User type: " + userType);
+                    isAdmin = "Admin".equals(userType) || "Authority".equals(userType);
+                    //initialize RecyclerViews
+                    ryclerViewInit();
+                    // Load reports from server
+                    loadAllReports();
+                    // Load recommendations
+                    loadAllRecommendations();
+
+                } else {
+                    Log.e("UserType", "❌ Error: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserTypeResponse> call, Throwable t) {
+                Log.e("UserType", "❌ Network error: " + t.getMessage());
+            }
+        });
+
+
+    }
+
     private void ryclerViewInit() {
         binding.recyclerViewReports.setLayoutManager(new LinearLayoutManager(getContext()));
-        reportAdapter = new ReportAdapter(requireContext(), reportList, token, false, true);
-        recommendAdapter = new RecommendAdapter(requireContext(), recommendList, token,false,true);
+        reportAdapter = new ReportAdapter(requireContext(), reportList, token, isAdmin, true);
+        recommendAdapter = new RecommendAdapter(requireContext(), recommendList, token,isAdmin,true);
         binding.recyclerViewRecommendations.setLayoutManager(new LinearLayoutManager(getContext()));
 
         binding.recyclerViewReports.setAdapter(reportAdapter);
@@ -225,7 +254,11 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     reportList.clear();
                     reportList.addAll(response.body());
+                    for (UserReportResponse report : response.body()) {
+                        Log.d("CHECK_REPORT_ID", "reportId: " + report.getReportId());
+                    }
                     reportAdapter.notifyDataSetChanged();
+
                 } else {
                     Log.e("loadReports", "❌ Error: " + response.message());
                     Toast.makeText(getContext(), "Failed to load Reports", Toast.LENGTH_SHORT).show();

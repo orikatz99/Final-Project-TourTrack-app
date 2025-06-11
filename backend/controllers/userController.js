@@ -282,14 +282,13 @@ exports.postUserReport = async(req, res) => {
 exports.getAllReports = async (req, res) => {
     try {
         const reports = await Report.find()
-            .select('description location photo type updatedAt userId')
-            .populate({ path: 'userId', select: 'firstName lastName type' })
+            .select('_id description location photo type updatedAt userId')
+            .populate({ path: 'userId', select: 'firstName lastName' })
             .lean();
 
         const formatted = reports.map((rec) => {
-            console.log("🔍 userId type:", rec.userId?.type); // הדפסה לפני בניית האובייקט
             return {
-                recport_id: rec._id,
+                _id: rec._id,
                 location: rec.location,
                 description: rec.description,
                 type: rec.type,
@@ -298,7 +297,6 @@ exports.getAllReports = async (req, res) => {
                 user: {
                     firstName: rec.userId?.firstName || '',
                     lastName: rec.userId?.lastName || '',
-                    type: rec.userId?.type || ''
                 }
             };
         });
@@ -316,11 +314,11 @@ exports.getAllReports = async (req, res) => {
 exports.getAllRecommendations = async (req, res) => {
     try {
         const recommendations = await Recommendation.find()
-            .select('location description photo updatedAt userId')     
-            .populate({ path: 'userId', select: 'firstName lastName type' }).lean();;   
+            .select('_id location description photo updatedAt userId')     
+            .populate({ path: 'userId', select: 'firstName lastName' }).lean();;   
 
         const formatted = recommendations.map(rec => ({
-            recommend_id: rec._id,
+            _id: rec._id,
             location: rec.location,
             description: rec.description,
             updatedAt: rec.updatedAt, 
@@ -328,7 +326,6 @@ exports.getAllRecommendations = async (req, res) => {
             user: {
                 firstName: rec.userId?.firstName || '',
                 lastName: rec.userId?.lastName || '',
-                type: rec.userId?.type || '' 
             }
         }));
 
@@ -589,6 +586,27 @@ exports.loginGoogleUserByEmail = async (req, res) => {
         });
     } catch (err) {
         console.error('❌ Error in loginGoogleUserByEmail:', err.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+//Get user Type
+exports.getUserType = async (req, res) => {
+     console.log("🔥 getUserType called");
+
+    try {
+        const userId = req.user._id;
+
+        const user = await User.findById(userId).select('type');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ type: user.type });
+        console.log('User type :', user.type);
+    } catch (err) {
+        console.error('❌ Error fetching user type:', err.message);
         res.status(500).json({ message: 'Server error' });
     }
 };

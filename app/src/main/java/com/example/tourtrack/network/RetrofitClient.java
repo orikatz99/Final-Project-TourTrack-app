@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class RetrofitClient {
 
-    private static final String BASE_URL = "http://192.168.1.108:5000/";
+    private static final String BASE_URL = "http://172.20.10.10:5000/";
 
     private static Retrofit retrofit = null;
 
@@ -26,7 +26,7 @@ public class RetrofitClient {
         return retrofit.create(ApiService.class);
     }
 
-    // רטרופיט עם Authorization Header
+    //   Authorization Header
     public static ApiService getApiServiceWithAuth(String token) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {

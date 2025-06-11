@@ -85,15 +85,13 @@ public class UserRecommendationResponse {
         } else {
             return "Unknown User";
         }    }
-    public boolean isUserAdmin() {
-        return user != null && "Admin".equals(user.getType());
-    }
+
+
+
     public static class User {
         private String firstName;
         private String lastName;
-        @SerializedName("type")
 
-        private String type;
 
         public String getFirstName() {
             return firstName;
@@ -102,9 +100,7 @@ public class UserRecommendationResponse {
         public String getLastName() {
             return lastName;
         }
-        public String getType() {
-            return type;
-        }
+
     }
 }
 

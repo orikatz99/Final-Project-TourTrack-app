@@ -85,10 +85,8 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         } else {
             holder.image.setVisibility(View.GONE);
         }
-        Log.d("userType", "User Type: " + report.isUserAdmin());
-        Log.d("typeOfUser","type:" + report.getUserType());
         // Show or hide buttons:
-        if (showButtons || report.isUserAdmin() ) {
+        if (showButtons  ) {
             holder.btnEdit.setVisibility(View.VISIBLE);
             holder.btnDelete.setVisibility(View.VISIBLE);
 

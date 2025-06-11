@@ -19,6 +19,7 @@ import com.example.tourtrack.models.UserLocationResponse;
 import com.example.tourtrack.models.RouteModel;
 import com.example.tourtrack.models.UserReportResponse;
 import com.example.tourtrack.models.UserRecommendationResponse;
+import com.example.tourtrack.models.UserTypeResponse;
 import com.example.tourtrack.models.UsersResponse;
 
 
@@ -119,6 +120,7 @@ public interface ApiService {
     @DELETE("api/users/recommendation/{id}")
     Call<Void> deleteRecommendation(@Header("Authorization") String token, @Path("id") String recommendationId);
 
+
     // Google button
     @PUT("api/users/auth/google/complete-by-email/{email}")
     Call<LoginResponse> completeGoogleSignupByEmail(@Path("email") String email, @Body GoogleExtraInfoRequest request);
@@ -130,7 +132,9 @@ public interface ApiService {
     @POST("api/users/auth/google-login")
     Call<LoginResponse> googleLogin(@Body GoogleEmailOnlyRequest request);
 
-
+    //user type
+    @GET("api/users/user")
+    Call<UserTypeResponse> getUserType(@Header("Authorization") String token);
 
 
 

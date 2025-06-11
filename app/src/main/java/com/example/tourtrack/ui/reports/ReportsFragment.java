@@ -130,7 +130,7 @@ public class ReportsFragment extends Fragment {
                     recommendList.addAll(response.body());
                     recommendAdapter.notifyDataSetChanged();
                     Log.d("ReportsFragment", "Loaded " + recommendList.size() + " recommends");
-                    Toast.makeText(getContext(), "Recommendations loaded successfully", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "Recommendations loaded successfully", Toast.LENGTH_SHORT).show();
 
 
                 } else {

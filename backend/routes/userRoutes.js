@@ -151,6 +151,9 @@ router.put('/auth/google/complete-by-email/:email', completeGoogleSignupByEmail)
 const { loginGoogleUserByEmail } = require('../controllers/userController');
 router.post('/auth/google-login', loginGoogleUserByEmail);
 
+//Get user type
+const { getUserType } = require('../controllers/userController');
+router.get('/user', authMiddleware, getUserType);
 
 
 
