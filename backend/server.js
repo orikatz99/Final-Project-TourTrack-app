@@ -27,6 +27,10 @@ app.use('/api/routes', routeRoutes);
 
 app.use('/api', allPublicPosts);
 
+//Add default route to prevent 404/500 on root
+app.get('/', (req, res) => {
+  res.send('Welcome to TourTrack API!');
+});
 
 
 // Start the server localhost
@@ -36,6 +40,8 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on port ${PORT}`);
 */
 
-    module.exports = app;
-    console.log(`✅ Connected to MongoDB and Vercel`);
+module.exports = (req, res) => {
+  return app(req, res);
+};
+console.log(`✅ Connected to MongoDB and Vercel`);
 
