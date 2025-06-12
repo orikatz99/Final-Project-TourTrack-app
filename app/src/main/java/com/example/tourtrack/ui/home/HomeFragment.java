@@ -226,6 +226,8 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     recommendList.clear();
                     recommendList.addAll(response.body());
+                    //sort by updatedAt
+                    recommendList.sort((r1, r2) -> r2.getUpdatedAt().compareTo(r1.getUpdatedAt()));
                     recommendAdapter.notifyDataSetChanged();
                 } else {
                     Log.e("loadRecommendations", "❌ Error: " + response.message());
@@ -257,6 +259,9 @@ public class HomeFragment extends Fragment {
                     for (UserReportResponse report : response.body()) {
                         Log.d("CHECK_REPORT_ID", "reportId: " + report.getReportId());
                     }
+                    //sort by updatedAt
+                    reportList.sort((r1, r2) -> r2.getUpdatedAt().compareTo(r1.getUpdatedAt()));
+
                     reportAdapter.notifyDataSetChanged();
 
                 } else {

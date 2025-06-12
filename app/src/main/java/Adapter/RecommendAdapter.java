@@ -266,7 +266,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
     private void initializeSpinner(Spinner spinnerReportType) {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 context,
-                R.array.danger_types,
+                R.array.recommendation_types,
                 android.R.layout.simple_spinner_item
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
