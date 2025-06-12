@@ -29,8 +29,13 @@ app.use('/api', allPublicPosts);
 
 
 
-// Start the server
+// Start the server localhost
+/*
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on port ${PORT}`);
-});
+*/
+
+    module.exports = app;
+    console.log(`✅ Connected to MongoDB and Vercel`);
+
