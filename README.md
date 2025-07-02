@@ -1,4 +1,3 @@
-
 <p align="left">
   <img src="docs/logo.png" alt="TourTrack Logo" width="120"/>
 </p>
@@ -21,27 +20,31 @@ Developed in collaboration with the Lower Galilee Regional Council, the app enha
 ---
 
 ## 🚀 Features
-
+- 🔐 Secure authentication with private sign-up and optional Google login for quick access
+- 👤 Role-based access control for travelers, local council members, and administrators
 - 🧭 Smart trail recommendations based on user preferences, location, and weather conditions  
 - 👥 Live display of nearby travelers and social connectivity  
 - 🗺️ Interactive Google Maps integration with real-time weather display  
-- 📌 Clickable trail pins 
-- 📩 Reporting system – report issues or recommend trails  
-- 🔐 Role-based access for travelers, council members, and admins  
-- 🔐 Google Sign-In integration for quick and secure login  
-- 📢 In-app ads using AdMob SDK  
+- 📌 Interactive trail markers pins - that open directly in Google Maps for seamless navigation and route discovery
+- 📩 Reporting system – report issues or recommend trails
+- 📞 Direct communication buttons for phone calling or messaging users via WhatsApp
+- 🔎 Real-time display of connected users currently active in the app
 - 📱 Responsive and user-friendly design 
 
 ---
+### 🛠️ Tech Stack
 
-## 🛠️ Tech Stack
+**Frontend**: Android (Java, XML)  
+**Backend**: Node.js + Express, deployed on **Vercel**  
+**Database**: MongoDB (cloud-based)  
+**Cloud Storage**: Firebase Storage (for uploading user files and images)  
+**Authentication**: Google Sign-In via **Firebase Authentication** and custom email/password stored in **MongoDB**  
+**APIs**: Google Maps API, OpenWeatherMap API, WhatsApp API  
+**Other Tools**: Retrofit, SharedPreferences  
+**Version Control**: Git & GitHub
 
-**Frontend:** Android (Java, XML)  
-**Backend:** Node.js + Express  
-**Database:** MongoDB  
-**APIs:** Google Maps API, OpenWeatherMap API, WhatsApp API  
-**Other Tools:** Retrofit, SharedPreferences  
-**Version Control:** Git & GitHub
+
+
 
 ---
 
@@ -79,26 +82,9 @@ Final-Project-TourTrack-app/
 > <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">YOUR_KEY_HERE</string>
 > ```
 
----
+### 🌐 Backend Hosting
 
-### 🌐 Running the Backend Server
+The backend server is deployed on [Vercel](https://vercel.com) and is automatically available via: "https://tourtrack.vercel.app/"
+>  The app is already configured to use this backend via Retrofit,  
+> so no changes to the API base URL are required.
 
-1. Navigate to the `backend/` folder
-2. Create a `.env` file in the root of the backend and define the required variables:
-   ```env
-   PORT=your_port
-   MONGO_URI=MONGO_URI=mongodb+srv://your-username:your-password@your-cluster.mongodb.net/musicapp?retryWrites=true&w=majority
-   JWT_SECRET=your_jwt_secret
-   OPENWEATHER_API_KEY=your_openweather_api_key
-   ```
-
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-4. Start the server:
-   ```bash
-   npm run dev
-   ```
-
-> The backend uses `config/db.js` to connect to MongoDB using the `MONGO_URI` from your `.env` file.
