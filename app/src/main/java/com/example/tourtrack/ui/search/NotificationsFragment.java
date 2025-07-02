@@ -1,7 +1,10 @@
 package com.example.tourtrack.ui.search;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +13,14 @@ import android.widget.Toast;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.adslib.AdView;
+import com.example.adslib.AdsManager;
+import com.example.adslib.CityCallback;
+import com.example.adslib.LocationHelper;
 import com.example.tourtrack.R;
 import com.example.tourtrack.databinding.FragmentNotificationsBinding;
 import com.example.tourtrack.models.RouteModel;
@@ -43,12 +51,30 @@ public class NotificationsFragment extends Fragment {
     private static final int ROUTES_INCREMENT = 1;
     private int visibleRoutesCount = 3;
     private RoutesAdapter adapter;
+    private AdView adView;
+    private AdsManager adsManager;
+    private String userCity;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        adView = binding.adView;
+        adsManager = new AdsManager(getContext()); // Uses your app's package name automatically
+        adsManager.setAdView(adView);
+        adView.setAdsManager(adsManager);
+
+
+
+        //adsManager.showHotelsAd();
+        // adsManager.showRestaurantsAd(null);
+        //adsManager.showRandomAdFromByLocation("Tel Aviv");
+        adsManager.showExitButton(10);
+
+
 
         setupSpinners();
         setupInputListeners();
@@ -313,10 +339,56 @@ public class NotificationsFragment extends Fragment {
         return true;
     }
 
+    private void getUserCityAndLoadAd() {
+        LocationHelper.getCityNameFromDevice(getContext(), new CityCallback() {
+            @Override
+            public void onCityLoaded(String city) {
+                userCity = city;
+                if(userCity == null || userCity.isEmpty()) {
+                    userCity = "Tel Aviv"; // Fallback city if none found
+                }
+                Log.d("CITY_RESULT", "User's city: " + userCity);
+               // adsManager.showRandomAdFromByLocation(userCity);
+                adsManager.showRandomAdFromByLocation("Tel Aviv");            }
+
+            @Override
+            public void onError(String reason) {
+                Log.e("CITY_ERROR", "Could not get city: " + reason);
+                adsManager.showRandomAdFromByLocation("Tel Aviv"); //default -for example- tel aviv
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        //user permission for location
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 101 && grantResults.length > 0 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getUserCityAndLoadAd();
+        } else {
+            Log.e("CITY_ERROR", "Permission denied – showing fallback ad");
+            adsManager.showRandomAdFromByLocation("Tel Aviv"); //default
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+        } else {
+            getUserCityAndLoadAd();
+        }
+    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
+
 }

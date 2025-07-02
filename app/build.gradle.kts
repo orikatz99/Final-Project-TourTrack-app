@@ -66,17 +66,18 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-// Firebase Storage
+    // Firebase Storage
     implementation("com.google.firebase:firebase-storage:20.3.0")
-// Google Services
+    // Google Services
     implementation("com.google.gms:google-services:4.4.1")
 
     // Firebase Authentication
     implementation ("com.google.firebase:firebase-auth:22.3.1")
 
-// Google Sign-In
+    // Google Sign-In
     implementation ("com.google.android.gms:play-services-auth:21.1.1")
 
-
+    //AdsLib
+    implementation("com.github.ShaniHalali:SDK_ADS_Android_Library:1.0.0") // Include the AdsLib library from GitHub
 
 }
