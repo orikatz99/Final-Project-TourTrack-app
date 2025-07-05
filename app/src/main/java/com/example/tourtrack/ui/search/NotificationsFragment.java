@@ -344,12 +344,9 @@ public class NotificationsFragment extends Fragment {
             @Override
             public void onCityLoaded(String city) {
                 userCity = city;
-                if(userCity == null || userCity.isEmpty()) {
-                    userCity = "Tel Aviv"; // Fallback city if none found
-                }
                 Log.d("CITY_RESULT", "User's city: " + userCity);
-               // adsManager.showRandomAdFromByLocation(userCity);
-                adsManager.showRandomAdFromByLocation("Tel Aviv");            }
+                adsManager.showRandomAdFromByLocation(userCity);
+            }
 
             @Override
             public void onError(String reason) {

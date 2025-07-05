@@ -78,6 +78,6 @@ dependencies {
     implementation ("com.google.android.gms:play-services-auth:21.1.1")
 
     //AdsLib
-    implementation("com.github.ShaniHalali:SDK_ADS_Android_Library:1.0.0") // Include the AdsLib library from GitHub
+    implementation("com.github.ShaniHalali:SDK_ADS_Android_Library:1.0.1") // Include the AdsLib library from GitHub
 
 }
