@@ -6,9 +6,9 @@
 
 **Developed by:** Shani Halali & Ori Katz  
 **Partnered with:** Lower Galilee Regional Council  
+**FINAL PROJECT GRADE: 98**
 
 **Demo video:**
-
 
 [![Demo Video](https://img.youtube.com/vi/oH4EgSAv1es/sddefault.jpg)](https://www.youtube.com/watch?v=oH4EgSAv1es)
 
