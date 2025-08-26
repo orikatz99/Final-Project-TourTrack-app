@@ -363,10 +363,12 @@ public class NotificationsFragment extends Fragment {
 
         if (requestCode == 101 && grantResults.length > 0 &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getUserCityAndLoadAd();
+           // getUserCityAndLoadAd();
+            // demo - show ads only from lower Galilee
+            adsManager.showRandomAdFromByLocation("Lower Galilee");
         } else {
             Log.e("CITY_ERROR", "Permission denied – showing fallback ad");
-            adsManager.showRandomAdFromByLocation("Tel Aviv"); //default
+            adsManager.showRandomAdFromByLocation("Lower Galilee"); //default
         }
     }
 
@@ -377,7 +379,9 @@ public class NotificationsFragment extends Fragment {
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
         } else {
-            getUserCityAndLoadAd();
+            //getUserCityAndLoadAd();
+            // demo - show ads only from lower Galilee
+            adsManager.showRandomAdFromByLocation("Lower Galilee");
         }
     }
 
